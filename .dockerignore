@@ -1,0 +1,14 @@
+**/.git
+**/.gitignore
+**/node_modules
+**/dist
+**/build
+**/.env
+**/.env.*
+!**/.env.example
+**/coverage
+**/.vscode
+**/.idea
+**/*.md
+**/Dockerfile*
+**/docker-compose*.yml
