@@ -8,5 +8,11 @@
     "docker:up": "docker compose up --build",
     "docker:down": "docker compose down",
     "docker:reset": "docker compose down -v"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^9.0.3"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10"
   }
 }
