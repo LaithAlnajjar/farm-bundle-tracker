@@ -17,20 +17,28 @@ export class DrizzleUserRepository implements UserRepository {
     });
   }
 
+  async findById(id: number): Promise<User | null> {
+    const [user] = await this.db.select().from(users).where(eq(users.id, id));
+
+    return user ? this.toEntity(user) : null;
+  }
+
   async findByEmail(email: string): Promise<User | null> {
     const [user] = await this.db
       .select()
       .from(users)
       .where(eq(users.email, email));
 
-    return user
-      ? new User(
-          user.id,
-          user.email,
-          user.hashedPassword,
-          user.createdAt,
-          user.updatedAt,
-        )
-      : null;
+    return user ? this.toEntity(user) : null;
+  }
+
+  private toEntity(user: typeof users.$inferSelect): User {
+    return new User(
+      user.id,
+      user.email,
+      user.hashedPassword,
+      user.createdAt,
+      user.updatedAt,
+    );
   }
 }
