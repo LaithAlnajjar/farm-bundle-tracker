@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import jwt, { type SignOptions } from 'jsonwebtoken';
 import type { TokenIssuer } from '../domain/interfaces/tokenIssuer';
 import { AUTH_CONFIG } from '../auth.tokens';
-import type { AuthConfig } from './auth.config';
+import type { AuthConfig } from '../domain/interfaces/authConfig';
 
 @Injectable()
 export class JwtTokenIssuer implements TokenIssuer {
@@ -10,7 +10,7 @@ export class JwtTokenIssuer implements TokenIssuer {
 
   issue(payload: { userId: number; email: string }): string {
     const options: SignOptions = {
-      expiresIn: this.authConfig.jwtExpiresIn as SignOptions['expiresIn'],
+      expiresIn: this.authConfig.jwtAccessExpiresIn as SignOptions['expiresIn'],
       algorithm: this.authConfig.jwtAlgorithm,
     };
 
