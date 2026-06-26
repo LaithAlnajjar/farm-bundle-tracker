@@ -1,111 +1,206 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Core shadcn tokens — light/dark aware.
+ * These are the single source of truth for the UI surface colors.
+ */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --background: #e8d5a3;
+  --foreground: #3d2b1f;
+  --card: #faf0d7;
+  --card-foreground: #3d2b1f;
+  --popover: #faf0d7;
+  --popover-foreground: #3d2b1f;
+  --primary: #4a6741;
+  --primary-foreground: #faf0d7;
+  --secondary: #8b5e3c;
+  --secondary-foreground: #faf0d7;
+  --muted: #d4b896;
+  --muted-foreground: #6b4226;
+  --accent: #c17f3e;
+  --accent-foreground: #3d2b1f;
+  --destructive: #c84b2d;
+  --destructive-foreground: #faf0d7;
+  --border: rgb(61 43 31 / 0.3);
+  --input: #faf0d7;
+  --ring: #4a6741;
+  --radius: 0.1875rem;
+}
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+.dark {
+  --background: #241a10;
+  --foreground: #f3e6c8;
+  --card: #322417;
+  --card-foreground: #f3e6c8;
+  --popover: #322417;
+  --popover-foreground: #f3e6c8;
+  --primary: #7fa86a;
+  --primary-foreground: #1c2417;
+  --secondary: #b3855a;
+  --secondary-foreground: #1c150d;
+  --muted: #3d2e1d;
+  --muted-foreground: #c9a87c;
+  --accent: #d39a55;
+  --accent-foreground: #241a10;
+  --destructive: #e0664a;
+  --destructive-foreground: #1c150d;
+  --border: rgb(243 230 200 / 0.18);
+  --input: #322417;
+  --ring: #7fa86a;
+}
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Map the light/dark variables onto Tailwind's color utilities. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 6px);
+}
+
+/*
+ * Cozy design-system palette — the Stardew/Pelican-Town aesthetic.
+ * Decorative hues stay constant across light/dark; declared once so no
+ * component ever hardcodes a hex value.
+ */
+@theme {
+  --font-body: 'Nunito', sans-serif;
+  --font-pixel: 'VT323', monospace;
+  --font-arcade: 'Press Start 2P', monospace;
+
+  --color-ink-soft: #5a3520;
+  --color-wood-light: #7a5230;
+  --color-wood: #6b4226;
+  --color-wood-dark: #3d2b1f;
+  --color-wood-darker: #2a1d12;
+  --color-cork: #8b6848;
+  --color-parchment: #faf0d7;
+  --color-surface: #e2cc98;
+  --color-surface-alt: #d8c084;
+  --color-gold: #d4b070;
+  --color-tan: #c9a87c;
+  --color-track: #ddd0b0;
+  --color-slot: #e4d5b0;
+  --color-slot-done: #c8e6c9;
+  --color-primary-edge: #2d4028;
+  --color-spring: #5a8a3a;
+  --color-summer: #c89a2a;
+  --color-fall: #a05a2c;
+  --color-winter: #3a6a8a;
+  --color-ore: #7a5a28;
+  --color-amber: #b87a2a;
+
+  --shadow-pixel-sm: 3px 3px 0 rgb(61 43 31 / 0.35);
+  --shadow-pixel: 4px 4px 0 rgb(61 43 31 / 0.25);
+  --shadow-pixel-md: 6px 6px 0 rgb(61 43 31 / 0.2);
+  --shadow-pixel-lg: 8px 8px 0 rgb(61 43 31 / 0.18);
+}
+
+/*
+ * Reusable surface textures. Defined once here instead of repeating the
+ * gradient strings inline on every wooden board / parchment note.
+ */
+@utility wood-plank {
+  background-color: var(--color-wood);
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0 28px,
+      rgb(0 0 0 / 0.06) 28px 30px
+    ),
+    linear-gradient(
+      180deg,
+      var(--color-wood-light) 0%,
+      var(--color-wood) 35%,
+      var(--color-wood-light) 65%,
+      var(--color-wood) 100%
+    );
+}
+
+@utility parchment {
+  background-color: var(--color-parchment);
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgb(139 94 60 / 0.04) 0 1px,
+    transparent 1px 18px
+  );
+}
+
+@utility cork {
+  background-color: var(--color-cork);
+  background-image: radial-gradient(circle, rgb(0 0 0 / 0.06) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+@utility dot-grid {
+  background-color: var(--color-surface);
+  background-image: radial-gradient(circle, rgb(107 66 38 / 0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/*
+ * Pixel-striped progress fills, one per tone. Applied to the shadcn Progress
+ * indicator so the bar component stays a thin wrapper over the primitive.
+ */
+@utility bar-spring {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-spring) 0 7px,
+    color-mix(in srgb, var(--color-spring) 73%, transparent) 7px 14px
+  );
+}
+
+@utility bar-winter {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-winter) 0 7px,
+    color-mix(in srgb, var(--color-winter) 73%, transparent) 7px 14px
+  );
+}
+
+@utility bar-ore {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-ore) 0 7px,
+    color-mix(in srgb, var(--color-ore) 73%, transparent) 7px 14px
+  );
+}
+
+@utility bar-primary {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-primary) 0 7px,
+    color-mix(in srgb, var(--color-primary) 73%, transparent) 7px 14px
+  );
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  body {
+    @apply bg-background text-foreground font-body;
   }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-}
-
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
 }
