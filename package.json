@@ -5,9 +5,11 @@
     "apps/*"
   ],
   "scripts": {
-    "docker:up": "docker compose up --build",
-    "docker:down": "docker compose down",
-    "docker:reset": "docker compose down -v"
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "db:reset": "docker compose down -v",
+    "dev:backend": "DOTENV_CONFIG_PATH=../../.env npm run start:dev -w backend",
+    "dev:frontend": "DOTENV_CONFIG_PATH=../../.env npm run dev -w frontend"
   },
   "dependencies": {
     "jsonwebtoken": "^9.0.3"

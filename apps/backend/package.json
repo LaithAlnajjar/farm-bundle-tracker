@@ -17,7 +17,10 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "db:push": "DOTENV_CONFIG_PATH=../../.env drizzle-kit push",
+    "db:generate": "DOTENV_CONFIG_PATH=../../.env drizzle-kit generate",
+    "db:migrate": "DOTENV_CONFIG_PATH=../../.env drizzle-kit migrate"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
