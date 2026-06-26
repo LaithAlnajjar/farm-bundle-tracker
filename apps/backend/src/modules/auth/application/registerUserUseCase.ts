@@ -4,6 +4,11 @@ import { USER_REPOSITORY } from '@/modules/users/users.tokens';
 import type { PasswordHasher } from '../domain/interfaces/passwordHasher';
 import { PASSWORD_HASHER } from '../auth.tokens';
 
+export type RegisterInput = {
+  email: string;
+  password: string;
+};
+
 @Injectable()
 export class RegisterUserUseCase {
   constructor(
@@ -11,14 +16,14 @@ export class RegisterUserUseCase {
     @Inject(PASSWORD_HASHER) private readonly passwordHasher: PasswordHasher,
   ) {}
 
-  async execute(email: string, password: string): Promise<void> {
-    const user = await this.userRepository.findByEmail(email);
+  async execute(input: RegisterInput): Promise<void> {
+    const user = await this.userRepository.findByEmail(input.email);
     if (user) {
       throw new ConflictException();
     }
 
-    const hashedPassword = await this.passwordHasher.hash(password);
+    const hashedPassword = await this.passwordHasher.hash(input.password);
 
-    await this.userRepository.create({ email, hashedPassword });
+    await this.userRepository.create({ email: input.email, hashedPassword });
   }
 }
