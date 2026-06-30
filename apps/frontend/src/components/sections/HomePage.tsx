@@ -2,7 +2,6 @@ import { Navbar } from '@/components/sections/Navbar';
 import { Hero } from '@/components/sections/Hero';
 import { Features } from '@/components/sections/Features';
 import { BundleBoard } from '@/components/sections/BundleBoard';
-import { SoloVsCoop } from '@/components/sections/SoloVsCoop';
 import { CallToAction } from '@/components/sections/CallToAction';
 import { Footer } from '@/components/sections/Footer';
 
@@ -15,7 +14,6 @@ export function HomePage() {
         <Hero />
         <Features />
         <BundleBoard />
-        <SoloVsCoop />
         <CallToAction />
       </main>
       <Footer />
