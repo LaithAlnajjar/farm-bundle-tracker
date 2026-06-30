@@ -89,6 +89,10 @@ npm run db:generate -w backend
 npm run db:migrate -w backend
 ```
 
+## Documentation
+
+- [Frontend architecture](./docs/frontend/architecture.md)
+
 ## Environment variables
 
 The backend expects these in the root `.env`:
