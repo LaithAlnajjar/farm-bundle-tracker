@@ -159,6 +159,123 @@
   background-size: 22px 22px;
 }
 
+@utility page-container {
+  width: 100%;
+  max-width: 70rem;
+  margin-inline: auto;
+}
+
+@utility narrow-container {
+  width: 100%;
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+@utility hero-glow {
+  background: radial-gradient(circle, rgb(220 190 100 / 0.18) 0%, transparent 65%);
+}
+
+@utility cta-glow {
+  background: radial-gradient(circle, rgb(220 190 80 / 0.15) 0%, transparent 60%);
+}
+
+@utility text-shadow-strong {
+  text-shadow: 1px 1px 0 rgb(0 0 0 / 0.5);
+}
+
+@utility text-shadow-soft {
+  text-shadow: 1px 1px 0 rgb(0 0 0 / 0.4);
+}
+
+@utility board-string {
+  background: repeating-linear-gradient(
+    90deg,
+    #a07040 0 6px,
+    #c09050 6px 12px
+  );
+}
+
+@utility nail-head {
+  background: radial-gradient(circle at 38% 38%, #d4c4a8, #8a7660);
+  box-shadow:
+    0 1px 3px rgb(0 0 0 / 0.4),
+    inset 0 1px 0 rgb(255 255 255 / 0.2);
+}
+
+@utility pin-highlight {
+  background: radial-gradient(
+    circle at 33% 33%,
+    rgb(255 255 255 / 0.45),
+    transparent 60%
+  );
+}
+
+@utility nav-shadow {
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.32);
+}
+
+@utility footer-shadow {
+  box-shadow: 0 -4px 12px rgb(0 0 0 / 0.2);
+}
+
+@utility pixel-badge-shadow {
+  box-shadow: 3px 3px 0 rgb(45 64 40 / 0.4);
+}
+
+@utility sign-in-shadow {
+  box-shadow: 3px 3px 0 rgb(0 0 0 / 0.35);
+}
+
+@utility chunky-primary-shadow {
+  box-shadow: 5px 5px 0 var(--color-primary-edge);
+}
+
+@utility chunky-primary-shadow-pressed {
+  box-shadow: 2px 2px 0 var(--color-primary-edge);
+}
+
+@utility chunky-secondary-shadow {
+  box-shadow: 5px 5px 0 rgb(61 43 31 / 0.35);
+}
+
+@utility chunky-secondary-shadow-pressed {
+  box-shadow: 2px 2px 0 rgb(61 43 31 / 0.4);
+}
+
+@utility wood-board-shadow {
+  box-shadow:
+    7px 7px 0 rgb(0 0 0 / 0.28),
+    inset 0 0 30px rgb(0 0 0 / 0.18);
+}
+
+@utility cork-inset-shadow {
+  box-shadow: inset 0 0 30px rgb(0 0 0 / 0.16);
+}
+
+@utility pin-shadow {
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.4);
+}
+
+@utility progress-inset-shadow {
+  box-shadow: inset 1px 1px 0 rgb(0 0 0 / 0.08);
+}
+
+@utility slot-done-shadow {
+  box-shadow:
+    inset 1px 1px 0 rgb(255 255 255 / 0.4),
+    2px 2px 0 rgb(74 103 65 / 0.2);
+}
+
+@utility slot-empty-shadow {
+  box-shadow:
+    inset 1px 1px 0 rgb(255 255 255 / 0.3),
+    2px 2px 0 rgb(61 43 31 / 0.12);
+}
+
+@utility marketing-hero-grid {
+  grid-template-columns: 1fr 1.05fr;
+}
+
 /*
  * Pixel-striped progress fills, one per tone. Applied to the shadcn Progress
  * indicator so the bar component stays a thin wrapper over the primitive.
