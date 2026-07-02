@@ -1,4 +1,4 @@
-const DEFAULT_API_URL = 'http://localhost:3000';
+const DEFAULT_API_URL = 'http://localhost:3001';
 const REFRESH_PATH = '/auth/refresh';
 
 type QueryValue = string | number | boolean | null | undefined;
@@ -96,7 +96,10 @@ function createRequestInit(options: ApiRequestOptions = {}) {
 
   if (body !== undefined && body !== null) {
     if (isJsonBody(body)) {
-      requestHeaders.set('Content-Type', requestHeaders.get('Content-Type') ?? 'application/json');
+      requestHeaders.set(
+        'Content-Type',
+        requestHeaders.get('Content-Type') ?? 'application/json',
+      );
       requestInit.body = JSON.stringify(body);
     } else {
       requestInit.body = body;
