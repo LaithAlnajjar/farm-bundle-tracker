@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import { BRAND, NAV_LINKS } from '@/features/marketing/content/homeContent';
 
 /** Sticky wooden top bar with brand, nav links and sign-in. */
@@ -27,12 +28,12 @@ export function Navbar() {
               </li>
             ))}
           </ul>
-          <button
-            type="button"
+          <Link
+            to="/signin"
             className="sign-in-shadow cursor-pointer border-2 border-primary-edge bg-primary px-4 py-1 font-pixel text-[17px] tracking-[0.05em] text-primary-foreground"
           >
             Sign In
-          </button>
+          </Link>
         </div>
       </div>
     </nav>
