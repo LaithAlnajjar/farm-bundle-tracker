@@ -22,10 +22,16 @@ import { Sha256TokenHasher } from './infrastructure/sha256TokenHasher';
 import { LogoutController } from './presentation/logout.controller';
 import { RefreshController } from './presentation/refresh.controller';
 import { SignInController } from './presentation/signIn.controller';
+import { RegisterController } from './presentation/register.controller';
 
 @Module({
   imports: [DrizzleModule, UsersModule],
-  controllers: [SignInController, RefreshController, LogoutController],
+  controllers: [
+    RegisterController,
+    SignInController,
+    RefreshController,
+    LogoutController,
+  ],
   providers: [
     { provide: AUTH_CONFIG, useFactory: createAuthConfig },
     { provide: PASSWORD_HASHER, useClass: BcryptPasswordHasher },

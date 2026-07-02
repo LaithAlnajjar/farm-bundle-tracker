@@ -16,14 +16,17 @@ export class RegisterUserUseCase {
     @Inject(PASSWORD_HASHER) private readonly passwordHasher: PasswordHasher,
   ) {}
 
-  async execute(input: RegisterInput): Promise<void> {
+  async execute(input: RegisterInput): Promise<{ email: string }> {
     const user = await this.userRepository.findByEmail(input.email);
+
     if (user) {
-      throw new ConflictException();
+      throw new ConflictException('Email is already registered');
     }
 
     const hashedPassword = await this.passwordHasher.hash(input.password);
 
     await this.userRepository.create({ email: input.email, hashedPassword });
+
+    return { email: input.email };
   }
 }
