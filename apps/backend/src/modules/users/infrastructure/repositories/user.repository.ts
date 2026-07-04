@@ -10,10 +10,15 @@ import { eq } from 'drizzle-orm';
 export class DrizzleUserRepository implements UserRepository {
   constructor(@InjectDb() private readonly db: DBClient) {}
 
-  async create(user: { email: string; hashedPassword: string }): Promise<void> {
+  async create(user: {
+    email: string;
+    hashedPassword: string;
+    username: string;
+  }): Promise<void> {
     await this.db.insert(users).values({
       email: user.email,
       hashedPassword: user.hashedPassword,
+      username: user.username,
     });
   }
 
@@ -32,10 +37,20 @@ export class DrizzleUserRepository implements UserRepository {
     return user ? this.toEntity(user) : null;
   }
 
+  async findByUsername(username: string): Promise<User | null> {
+    const [user] = await this.db
+      .select()
+      .from(users)
+      .where(eq(users.username, username));
+
+    return user ? this.toEntity(user) : null;
+  }
+
   private toEntity(user: typeof users.$inferSelect): User {
     return new User(
       user.id,
       user.email,
+      user.username,
       user.hashedPassword,
       user.createdAt,
       user.updatedAt,

@@ -39,7 +39,8 @@ export class SignInUserUseCase {
   ) {}
 
   async execute(input: SignInInput): Promise<SignInResult> {
-    const user = await this.userRepository.findByEmail(input.email);
+    const email = input.email.trim().toLowerCase();
+    const user = await this.userRepository.findByEmail(email);
     if (!user) {
       throw new InvalidCredentialsError();
     }
