@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { AuthForm } from '@/features/auth/components/AuthForm';
+import { AuthLayout, SignInForm } from '@/features/auth/components';
 import { useSignIn } from '@/features/auth/hooks';
 
 export function SignInPage() {
@@ -9,18 +9,22 @@ export function SignInPage() {
   });
 
   return (
-    <AuthForm
+    <AuthLayout
       alternateAction={{
         href: '/register',
         label: 'Create one',
         text: 'Need an account?',
       }}
-      error={signInMutation.error?.message}
-      isPending={signInMutation.isPending}
-      onSubmit={(values) => signInMutation.mutate(values)}
-      pendingLabel="Signing in..."
-      submitLabel="Sign in"
+      eyebrow="RETURNING FARMER"
+      icon="🏡"
+      subtitle="Pick up where your farm left off"
       title="Sign in"
-    />
+    >
+      <SignInForm
+        error={signInMutation.error?.message}
+        isPending={signInMutation.isPending}
+        onSubmit={(values) => signInMutation.mutate(values)}
+      />
+    </AuthLayout>
   );
 }
