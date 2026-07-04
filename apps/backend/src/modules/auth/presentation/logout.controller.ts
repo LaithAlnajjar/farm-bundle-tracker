@@ -1,4 +1,5 @@
 import { Controller, HttpCode, Inject, Post, Req, Res } from '@nestjs/common';
+import { Public } from '@/common/decorators/public.decorator';
 import type { Request, Response } from 'express';
 import { LogoutUseCase } from '../application/logoutUseCase';
 import { AUTH_CONFIG } from '../auth.tokens';
@@ -8,6 +9,7 @@ import {
   getRefreshTokenFromRequest,
 } from './helpers/refreshTokenCookie';
 
+@Public()
 @Controller('auth/logout')
 export class LogoutController {
   constructor(

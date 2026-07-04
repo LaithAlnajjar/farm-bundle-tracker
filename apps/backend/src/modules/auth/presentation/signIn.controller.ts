@@ -1,4 +1,5 @@
 import { Body, Controller, Inject, Post, Res } from '@nestjs/common';
+import { Public } from '@/common/decorators/public.decorator';
 import type { Response } from 'express';
 import { SignInUserUseCase } from '../application/signInUserUseCase';
 import { AUTH_CONFIG } from '../auth.tokens';
@@ -6,6 +7,7 @@ import type { AuthConfig } from '../domain/interfaces/authConfig';
 import { SignInRequestDto, type SignInResponseDto } from './dtos';
 import { setRefreshTokenCookie } from './helpers/refreshTokenCookie';
 
+@Public()
 @Controller('auth/signin')
 export class SignInController {
   constructor(

@@ -4,6 +4,7 @@ import type { PasswordHasher } from './domain/interfaces/passwordHasher';
 import type { RefreshTokenGenerator } from './domain/interfaces/refreshTokenGenerator';
 import type { TokenHasher } from './domain/interfaces/tokenHasher';
 import type { TokenIssuer } from './domain/interfaces/tokenIssuer';
+import type { TokenVerifier } from './domain/interfaces/tokenVerifier';
 import type { RefreshTokenRepository } from './domain/repositories/refreshToken.repository';
 
 export const PASSWORD_HASHER: InjectionToken<PasswordHasher> =
@@ -15,3 +16,5 @@ export const REFRESH_TOKEN_GENERATOR: InjectionToken<RefreshTokenGenerator> =
 export const REFRESH_TOKEN_REPOSITORY: InjectionToken<RefreshTokenRepository> =
   Symbol('REFRESH_TOKEN_REPOSITORY');
 export const AUTH_CONFIG: InjectionToken<AuthConfig> = Symbol('AUTH_CONFIG');
+export const TOKEN_VERIFIER: InjectionToken<TokenVerifier> =
+  Symbol('TOKEN_VERIFIER');

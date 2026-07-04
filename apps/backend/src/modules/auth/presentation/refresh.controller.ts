@@ -1,4 +1,5 @@
 import { Controller, Inject, Post, Req, Res } from '@nestjs/common';
+import { Public } from '@/common/decorators/public.decorator';
 import type { Request, Response } from 'express';
 import { RefreshAccessTokenUseCase } from '../application/refreshAccessTokenUseCase';
 import { AUTH_CONFIG } from '../auth.tokens';
@@ -10,6 +11,7 @@ import {
 } from './helpers/refreshTokenCookie';
 import type { RefreshResponseDto } from './dtos';
 
+@Public()
 @Controller('auth/refresh')
 export class RefreshController {
   constructor(
