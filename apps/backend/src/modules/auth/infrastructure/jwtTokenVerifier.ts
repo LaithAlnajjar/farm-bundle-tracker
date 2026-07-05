@@ -1,14 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import jwt from 'jsonwebtoken';
+import jwt, { type JwtPayload } from 'jsonwebtoken';
 import { AUTH_CONFIG } from '../auth.tokens';
 import { InvalidAccessTokenError } from '../domain/errors/invalidAccessToken.error';
 import type { AuthConfig } from '../domain/interfaces/authConfig';
 import type { TokenVerifier } from '../domain/interfaces/tokenVerifier';
-
-interface TokenPayload extends jwt.JwtPayload {
-  userId: number;
-  email: string;
-}
 
 @Injectable()
 export class JwtTokenVerifier implements TokenVerifier {
@@ -18,14 +13,32 @@ export class JwtTokenVerifier implements TokenVerifier {
     try {
       const payload = jwt.verify(token, this.authConfig.jwtSecret, {
         algorithms: [this.authConfig.jwtAlgorithm],
-      }) as TokenPayload;
+      });
+
+      if (!this.isAccessTokenPayload(payload)) {
+        throw new InvalidAccessTokenError();
+      }
 
       return {
-        userId: payload.userId,
+        userId: Number(payload.userId),
         email: payload.email,
       };
     } catch {
       throw new InvalidAccessTokenError();
     }
+  }
+
+  private isAccessTokenPayload(
+    payload: string | JwtPayload,
+  ): payload is JwtPayload & { userId: string | number; email: string } {
+    if (typeof payload === 'string') {
+      return false;
+    }
+
+    return (
+      (typeof payload.userId === 'string' || typeof payload.userId === 'number') &&
+      Number.isInteger(Number(payload.userId)) &&
+      typeof payload.email === 'string'
+    );
   }
 }

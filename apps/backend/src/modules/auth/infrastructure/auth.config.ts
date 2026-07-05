@@ -7,8 +7,12 @@ export function createAuthConfig(): AuthConfig {
   if (!jwtSecret) {
     throw new Error('JWT_SECRET is required');
   }
+  if (process.env.NODE_ENV === 'production' && jwtSecret === 'secret') {
+    throw new Error('JWT_SECRET must be changed in production');
+  }
 
   const jwtRefreshExpiresIn = process.env.JWT_REFRESH_EXPIRES_IN ?? '7d';
+  const sameSite = process.env.REFRESH_COOKIE_SAME_SITE;
 
   return {
     jwtSecret,
@@ -20,6 +24,6 @@ export function createAuthConfig(): AuthConfig {
     refreshCookieMaxAgeMs: parseDurationToMs(jwtRefreshExpiresIn),
     refreshCookieSecure: process.env.NODE_ENV === 'production',
     refreshCookieSameSite:
-      process.env.REFRESH_COOKIE_SAME_SITE === 'strict' ? 'strict' : 'lax',
+      sameSite === 'strict' || sameSite === 'none' ? sameSite : 'lax',
   };
 }

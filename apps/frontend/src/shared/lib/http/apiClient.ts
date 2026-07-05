@@ -1,4 +1,4 @@
-const DEFAULT_API_URL = 'http://localhost:3001';
+const DEFAULT_API_URL = 'http://localhost:3000';
 const REFRESH_PATH = '/auth/refresh';
 
 type QueryValue = string | number | boolean | null | undefined;

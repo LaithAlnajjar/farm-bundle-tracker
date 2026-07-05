@@ -15,7 +15,7 @@ export class JwtTokenIssuer implements TokenIssuer {
     };
 
     return jwt.sign(
-      { sub: payload.userId, email: payload.email },
+      { userId: payload.userId, email: payload.email },
       this.authConfig.jwtSecret,
       options,
     );

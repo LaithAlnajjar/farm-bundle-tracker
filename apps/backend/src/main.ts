@@ -7,8 +7,13 @@ import { DomainExceptionFilter } from '@/modules/auth/presentation/filters/domai
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const frontendOrigins = (process.env.FRONTEND_URL ?? 'http://localhost:5173')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
   app.enableCors({
-    origin: [process.env.FRONTEND_URL ?? 'http://localhost:5173'],
+    origin: frontendOrigins,
     credentials: true,
   });
   app.use(cookieParser());
@@ -16,7 +21,7 @@ async function bootstrap() {
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
   );
   app.useGlobalFilters(new DomainExceptionFilter());
-  await app.listen(process.env.PORT ?? 3001);
+  await app.listen(process.env.PORT ?? 3000);
 }
 
 void bootstrap();

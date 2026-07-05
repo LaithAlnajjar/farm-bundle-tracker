@@ -1,7 +1,8 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { TOKEN_VERIFIER } from '../auth.tokens';
 import type { TokenVerifier } from '../domain/interfaces/tokenVerifier';
 
+@Injectable()
 export class VerifyTokenUseCase {
   constructor(
     @Inject(TOKEN_VERIFIER) private readonly tokenVerifier: TokenVerifier,

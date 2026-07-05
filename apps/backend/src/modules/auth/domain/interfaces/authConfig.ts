@@ -7,5 +7,5 @@ export interface AuthConfig {
   refreshCookiePath: string;
   refreshCookieMaxAgeMs: number;
   refreshCookieSecure: boolean;
-  refreshCookieSameSite: 'strict' | 'lax';
+  refreshCookieSameSite: 'strict' | 'lax' | 'none';
 }
