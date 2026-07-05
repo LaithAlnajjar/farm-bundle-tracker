@@ -3,6 +3,7 @@ import { DrizzleModule } from '@/infrastructure/database/drizzle/drizzle.module'
 import { UsersModule } from '@/modules/users/users.module';
 import { LogoutUseCase } from './application/logoutUseCase';
 import { RefreshAccessTokenUseCase } from './application/refreshAccessTokenUseCase';
+import { GetCurrentUserUseCase } from './application/getCurrentUserUseCase';
 import { RegisterUserUseCase } from './application/registerUserUseCase';
 import { SignInUserUseCase } from './application/signInUserUseCase';
 import { VerifyTokenUseCase } from './application/verifyTokenUseCase';
@@ -23,6 +24,7 @@ import { JwtTokenVerifier } from './infrastructure/jwtTokenVerifier';
 import { DrizzleRefreshTokenRepository } from './infrastructure/repositories/refreshToken.repository';
 import { Sha256TokenHasher } from './infrastructure/sha256TokenHasher';
 import { LogoutController } from './presentation/logout.controller';
+import { MeController } from './presentation/me.controller';
 import { RefreshController } from './presentation/refresh.controller';
 import { SignInController } from './presentation/signIn.controller';
 import { RegisterController } from './presentation/register.controller';
@@ -36,6 +38,7 @@ import { APP_GUARD } from '@nestjs/core';
     SignInController,
     RefreshController,
     LogoutController,
+    MeController,
   ],
   providers: [
     { provide: AUTH_CONFIG, useFactory: createAuthConfig },
@@ -57,6 +60,7 @@ import { APP_GUARD } from '@nestjs/core';
     RefreshAccessTokenUseCase,
     LogoutUseCase,
     VerifyTokenUseCase,
+    GetCurrentUserUseCase,
   ],
   exports: [RegisterUserUseCase, SignInUserUseCase],
 })

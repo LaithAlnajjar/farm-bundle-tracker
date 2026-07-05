@@ -26,6 +26,7 @@ export class SignInController {
     return {
       id: result.id,
       email: result.email,
+      username: result.username,
       accessToken: result.accessToken,
     };
   }

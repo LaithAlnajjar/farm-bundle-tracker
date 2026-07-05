@@ -67,6 +67,12 @@ export class SignInUserUseCase {
       expiresAt: addDurationFromNow(this.authConfig.jwtRefreshExpiresIn),
     });
 
-    return { id: user.id, email: user.email, accessToken, refreshToken };
+    return {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      accessToken,
+      refreshToken,
+    };
   }
 }
