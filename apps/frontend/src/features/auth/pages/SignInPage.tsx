@@ -1,12 +1,29 @@
-import { useNavigate } from 'react-router';
-import { AuthLayout, SignInForm } from '@/features/auth/components';
-import { useSignIn } from '@/features/auth/hooks';
+import { Navigate, useLocation, useNavigate } from 'react-router';
+import {
+  AuthLayout,
+  AuthLoadingScreen,
+  SignInForm,
+} from '@/features/auth/components';
+import { useAuth, useSignIn } from '@/features/auth/hooks';
 
 export function SignInPage() {
+  const location = useLocation();
   const navigate = useNavigate();
+  const { isAuthenticated, status } = useAuth();
+  const redirectPath =
+    (location.state as { from?: { pathname?: string } } | null)?.from
+      ?.pathname ?? '/dashboard';
   const signInMutation = useSignIn({
-    onSuccess: () => navigate('/'),
+    onSuccess: () => navigate(redirectPath, { replace: true }),
   });
+
+  if (status === 'loading') {
+    return <AuthLoadingScreen />;
+  }
+
+  if (isAuthenticated) {
+    return <Navigate replace to="/dashboard" />;
+  }
 
   return (
     <AuthLayout

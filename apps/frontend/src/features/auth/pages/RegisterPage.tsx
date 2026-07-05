@@ -1,9 +1,22 @@
 import { Navigate } from 'react-router';
-import { AuthLayout, RegisterForm } from '@/features/auth/components';
-import { useRegister } from '@/features/auth/hooks';
+import {
+  AuthLayout,
+  AuthLoadingScreen,
+  RegisterForm,
+} from '@/features/auth/components';
+import { useAuth, useRegister } from '@/features/auth/hooks';
 
 export function RegisterPage() {
+  const { isAuthenticated, status } = useAuth();
   const registerMutation = useRegister();
+
+  if (status === 'loading') {
+    return <AuthLoadingScreen />;
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   if (registerMutation.isSuccess) {
     return <Navigate to="/signin" replace />;

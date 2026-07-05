@@ -1,8 +1,13 @@
 import { Link } from 'react-router';
+import { useAuth } from '@/features/auth';
 import { BRAND, NAV_LINKS } from '@/features/marketing/content/homeContent';
 
 /** Sticky wooden top bar with brand, nav links and sign-in. */
 export function Navbar() {
+  const { isAuthenticated } = useAuth();
+  const accountHref = isAuthenticated ? '/dashboard' : '/signin';
+  const accountLabel = isAuthenticated ? 'Dashboard' : 'Sign In';
+
   return (
     <nav className="wood-plank nav-shadow sticky top-0 z-50 border-b-4 border-wood-darker">
       <div className="page-container flex h-14.5 items-center justify-between px-6">
@@ -29,10 +34,10 @@ export function Navbar() {
             ))}
           </ul>
           <Link
-            to="/signin"
+            to={accountHref}
             className="sign-in-shadow cursor-pointer border-2 border-primary-edge bg-primary px-4 py-1 font-pixel text-[17px] tracking-[0.05em] text-primary-foreground"
           >
-            Sign In
+            {accountLabel}
           </Link>
         </div>
       </div>
