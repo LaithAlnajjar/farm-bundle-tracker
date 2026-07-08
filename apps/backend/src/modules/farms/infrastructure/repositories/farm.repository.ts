@@ -62,20 +62,32 @@ export class DrizzleFarmRepository implements FarmRepository {
         name: farm.name,
         updatedAt: new Date(),
       })
-      .where(and(eq(farms.id, farm.id)))
+      .where(
+        and(
+          eq(farms.id, farm.id),
+          eq(farms.userId, farm.userId),
+          isNull(farms.deletedAt),
+        ),
+      )
       .returning();
 
     return updateFarm ? this.toEntity(updateFarm) : null;
   }
 
-  async softDelete(id: number): Promise<boolean> {
+  async softDelete(id: number, userId: number): Promise<boolean> {
     const [row] = await this.db
       .update(farms)
       .set({
         deletedAt: new Date(),
         updatedAt: new Date(),
       })
-      .where(and(eq(farms.id, id)))
+      .where(
+        and(
+          eq(farms.id, id),
+          eq(farms.userId, userId),
+          isNull(farms.deletedAt),
+        ),
+      )
       .returning({ id: farms.id });
 
     return Boolean(row);
