@@ -1,4 +1,6 @@
+import { farms } from '@/modules/farms/infrastructure/persistence/drizzle/farms.schema';
 import { pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
@@ -8,3 +10,7 @@ export const users = pgTable('users', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
+
+export const userRelations = relations(users, ({ many }) => ({
+  farms: many(farms),
+}));
