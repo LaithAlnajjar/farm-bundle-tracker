@@ -1,207 +1,257 @@
+import type { AvatarName, IconName } from '@/shared/components/farm-ui';
 import type {
-  Bundle,
-  BundlePreview,
-  Feature,
-  FarmModePanel,
-  LegendEntry,
+  FeatureCard,
+  HowItWorksStep,
   NavLink,
-  QuickFact,
+  SeasonPanel,
+  ShowcaseBundle,
 } from '@/features/marketing/types/home.types';
 
 export const BRAND = {
-  name: 'Valley Bundles',
-  emoji: '🌾',
-  tagline: 'A fan-made companion tool',
+  name: 'Bundle Board',
+  tagline: 'Co-op farm tracker',
+  footerTagline: 'Made with real pixels',
 } as const;
 
 export const NAV_LINKS: NavLink[] = [
-  { label: 'Bundles', href: '#bundles' },
+  { label: 'How it works', href: '#how' },
+  { label: 'Features', href: '#features' },
+  { label: 'The board', href: '#board' },
   { label: 'Seasons', href: '#seasons' },
-  { label: 'My Farm', href: '#farm' },
-  { label: 'Guide', href: '#guide' },
 ];
 
-export const FOOTER_LINKS: NavLink[] = [
-  { label: 'About', href: '#about' },
-  { label: 'Bundle Guide', href: '#guide' },
-  { label: 'Seasons', href: '#seasons' },
-  { label: 'Privacy', href: '#privacy' },
-];
+export const HERO = {
+  kicker: 'For co-op farms & completionist crews',
+  title: 'Everything your farm needs, pinned to one board.',
+  description:
+    "The shared notice board where your whole crew pins what's needed, claims what they'll grab, and stamps it done — live, together, season by season.",
+  primaryCta: 'Start your board',
+  secondaryCta: 'See a live board',
+  onlineAvatars: ['abby', 'sam', 'lena', 'marcus'] satisfies AvatarName[],
+  onlineNote: '5 farmhands on the board right now',
+  rewardChip: 'Bridge repaired!',
+} as const;
 
-export const HERO_QUICK_FACTS: QuickFact[] = [
-  { icon: '🏛️', stat: '6 Rooms', note: 'to restore' },
-  { icon: '📦', stat: '30 Bundles', note: 'to complete' },
-  { icon: '🤝', stat: '1–4 Players', note: 'per farm' },
-];
-
-/** Compact teasers pinned to the hero notice board. */
-export const HERO_BUNDLE_PREVIEWS: BundlePreview[] = [
-  {
-    id: 'spring-crops',
-    headerLabel: '🌱 Spring Crops',
-    tone: 'spring',
-    pin: 'red',
-    rotate: -2.2,
-    items: [
-      { emoji: '🥬', done: true },
-      { emoji: '🫘', done: true },
-      { emoji: '🥦', done: false },
-      { emoji: '🥔', done: false },
-    ],
-  },
-  {
-    id: 'lake-fish',
-    headerLabel: '🐟 Lake Fish',
-    tone: 'winter',
-    pin: 'blue',
-    rotate: 1.8,
-    items: [
-      { emoji: '🐡', done: true },
-      { emoji: '🎣', done: true },
-      { emoji: '🐠', done: true },
-      { emoji: '🐟', done: false },
-    ],
-  },
-];
-
-export const HERO_BOILER_PREVIEW: BundlePreview = {
-  id: 'boiler-room',
-  headerLabel: '⚙️ Boiler Room',
-  tone: 'ore',
-  pin: 'amber',
-  rotate: -1,
+export const HERO_BUNDLE: ShowcaseBundle = {
+  name: 'Fall Foraging',
+  chip: { kind: 'season', season: 'fall', suffix: 'in season' },
+  frame: 'fall',
   items: [
-    { emoji: '🪨', done: true },
-    { emoji: '🔥', done: true },
-    { emoji: '💎', done: false },
-    { emoji: '🔩', done: false },
-    { emoji: '🥇', done: false },
+    { icon: 'mushroom', label: 'Common Mushroom', state: 'collected' },
+    { icon: 'jar', label: 'Wild Plum jam', state: 'collected' },
+    { icon: 'logs', label: 'Hazelnut', state: 'claimed', claimedBy: 'marcus' },
+    { icon: 'sprout', label: 'Blackberry', state: 'needed' },
   ],
+  progress: { value: 2, max: 4 },
+  footerNote: '2 of 4',
+  reward: { icon: 'sprout', label: '30 Fall Seeds' },
 };
 
-export const FEATURES: Feature[] = [
+export const HERO_LIVE_NOTE = {
+  avatar: 'sam' satisfies AvatarName,
+  actor: 'Sam',
+  action: 'caught the Walleye',
+  meta: 'just now · live',
+  icon: 'fish' satisfies IconName,
+} as const;
+
+export const TRUST_STRIP = {
+  text: 'One board your whole crew shares — live on desktop & phone.',
+  icons: [
+    'parsnip',
+    'fish',
+    'mushroom',
+    'egg',
+    'gem',
+    'star',
+  ] satisfies IconName[],
+} as const;
+
+export const HOW_IT_WORKS: HowItWorksStep[] = [
   {
-    id: 'track',
-    icon: '📋',
-    title: 'Track Bundles',
-    tone: 'primary',
-    body: "Mark items as collected, missing, or claimed by a specific farmhand. See each room's completion at a glance.",
-    note: 'Pantry · Crafts Room · Fish Tank · Vault · Bulletin Board · Boiler Room',
+    number: '01',
+    title: "Pin what's needed",
+    description:
+      'Build rooms and bundles, or start from a template. Every item your farm still needs goes up on the board.',
+    icon: 'pin',
+    frame: 'bark',
   },
   {
-    id: 'friends',
-    icon: '👥',
-    title: 'Play With Friends',
-    tone: 'winter',
-    body: 'Share a farm link and collaborate in real time. Assign items to farmhands so no one brings duplicates.',
-    note: 'Up to 4 players per shared farm',
+    number: '02',
+    title: 'Claim your runs',
+    description:
+      "Call dibs on an item so nobody double-grabs. Your face pins to it until it's turned in.",
+    icon: 'fish',
+    frame: 'harvest',
+    claimedBy: 'sam',
   },
   {
-    id: 'seasons',
-    icon: '📅',
-    title: 'Plan Each Season',
-    tone: 'fall',
-    body: 'Know exactly which crops, fish, and forageables are available right now. Never miss a time-sensitive bundle item again.',
-    note: 'Spring · Summer · Fall · Winter',
+    number: '03',
+    title: 'Stamp it collected',
+    description:
+      'Two taps to mark an item done. A satisfying stamp pop lands it and the board updates for everyone instantly.',
+    icon: 'check',
+    frame: 'leaf',
+  },
+  {
+    number: '04',
+    title: 'Finish the bundle',
+    description:
+      'Complete a bundle and the whole farm sees the stars. Rewards unlock, rooms fill in.',
+    icon: 'star',
+    frame: 'gold',
   },
 ];
 
-export const CRAFTS_ROOM_BUNDLES: Bundle[] = [
+export const FEATURES: FeatureCard[] = [
   {
-    id: 'spring-crops-bundle',
-    headerLabel: '🌱 Spring Crops Bundle',
+    icon: { kind: 'live' },
+    title: 'Live, always in sync',
+    description:
+      'A teammate\'s change glows gold for two seconds, then settles. No refresh, no "who\'s got the Eel?" texts.',
+  },
+  {
+    icon: { kind: 'avatar', avatar: 'lena' },
+    title: "Claim, don't collide",
+    description:
+      "Dibs pin your avatar to an item so no one wastes a night catching a fish that's already handled.",
+  },
+  {
+    icon: { kind: 'sprite', icon: 'check', frame: 'leaf' },
+    title: 'Two-tap collect',
+    description:
+      'Big hit-targets, one-handed, right next to the keyboard. Stamp an item the moment it lands in your inventory.',
+  },
+  {
+    icon: { kind: 'sprite', icon: 'pumpkin', frame: 'fall' },
+    title: 'Season-aware',
+    description:
+      "Items light up when they're catchable, plantable or forageable — and dim when the season passes.",
+  },
+  {
+    icon: { kind: 'sprite', icon: 'coin', frame: 'soil' },
+    title: 'Rooms & rewards',
+    description:
+      'Organize bundles by room and see the reward each one unlocks — bridge repairs, quarry access, and more.',
+  },
+  {
+    icon: { kind: 'sprite', icon: 'jar', frame: 'winter' },
+    title: 'Works offline',
+    description:
+      'Lost the barn Wi-Fi? Your stamps queue locally and reconcile the second you reconnect. Nothing gets dropped.',
+  },
+];
+
+export const BOARD_SHOWCASE = {
+  farmName: 'Willow Creek Farm',
+  farmMeta: 'Year 2 · Fall · Community Center 14/30',
+  onlineAvatars: ['abby', 'sam', 'lena', 'pia'] satisfies AvatarName[],
+  filters: { active: 'All bundles', inSeason: 'In season', rest: 'Still needed' },
+  filterSummary: '6 rooms · 30 bundles · 16 to go',
+  room: {
+    icon: 'fish' satisfies IconName,
+    name: 'Fish Tank',
+    progress: { value: 2, max: 6 },
+    progressNote: '2 of 6 bundles',
+    reward: 'Glittering Boulder removed',
+  },
+} as const;
+
+export const SHOWCASE_BUNDLES: ShowcaseBundle[] = [
+  {
+    name: 'Night Fishing',
+    chip: { kind: 'season', season: 'fall', suffix: 'now' },
+    frame: 'fall',
+    items: [
+      { icon: 'fish', label: 'Walleye', state: 'collected', live: true },
+      { icon: 'fish', label: 'Bream', state: 'needed' },
+      { icon: 'fish', label: 'Eel', state: 'claimed', claimedBy: 'sam' },
+    ],
+    progress: { value: 1, max: 3 },
+    footerNote: '1 of 3',
+    reward: { icon: 'gem', label: 'Small Glow Ring' },
+  },
+  {
+    name: 'River Fish',
+    chip: { kind: 'complete' },
+    frame: 'gold',
+    items: [
+      { icon: 'fish', label: 'Sunfish', state: 'golden' },
+      { icon: 'fish', label: 'Catfish', state: 'golden' },
+      { icon: 'fish', label: 'Shad', state: 'golden' },
+      { icon: 'fish', label: 'Tiger Trout', state: 'golden' },
+    ],
+    footerNote: '4 of 4 — turned in!',
+    reward: { icon: 'jar', label: 'by Abby' },
+  },
+  {
+    name: 'Crab Pot',
+    chip: { kind: 'note', text: 'Any 5 of 10' },
+    frame: 'sand',
+    items: [
+      { icon: 'fish', label: 'Crayfish', state: 'collected' },
+      { icon: 'fish', label: 'Mussel', state: 'collected' },
+      { icon: 'fish', label: 'Cockle', state: 'needed' },
+      { icon: 'fish', label: 'Clam', state: 'needed' },
+    ],
+    overflow: 6,
+    slotSize: 'sm',
+    progress: { value: 2, max: 5 },
+    footerNote: '2 of 5',
+    reward: { icon: 'pot', label: 'Crab Cakes' },
+  },
+];
+
+export const SEASONS: SeasonPanel[] = [
+  {
     season: 'spring',
-    tone: 'spring',
-    pin: 'red',
-    rotate: -1.2,
-    columns: 4,
-    items: [
-      { emoji: '🥬', label: 'Parsnip', done: true },
-      { emoji: '🫘', label: 'Gr. Bean', done: true },
-      { emoji: '🥦', label: 'Cauliflower', done: false, assigned: 'J' },
-      { emoji: '🥔', label: 'Potato', done: false },
-    ],
+    icon: 'sprout',
+    title: 'Spring',
+    description:
+      "Foraged blossoms, first fish, and the year's opening plantings.",
   },
   {
-    id: 'lake-fish-bundle',
-    headerLabel: '🐟 Lake Fish Bundle',
-    season: 'any',
-    tone: 'winter',
-    pin: 'blue',
-    rotate: 0.6,
-    columns: 4,
-    items: [
-      { emoji: '🐡', label: 'Catfish', done: true },
-      { emoji: '🎣', label: 'Shad', done: true },
-      { emoji: '🐠', label: 'Bullhead', done: true },
-      { emoji: '🐟', label: 'Carp', done: false },
-    ],
+    season: 'summer',
+    icon: 'star',
+    title: 'Summer',
+    description:
+      'Peak harvests and the long-daylight catches worth staying up for.',
   },
   {
-    id: 'boiler-room-bundle',
-    headerLabel: '⚙️ Boiler Room Bundle',
-    season: 'any',
-    tone: 'ore',
-    pin: 'amber',
-    rotate: -0.7,
-    columns: 3,
-    items: [
-      { emoji: '🪨', label: 'Quartz', done: true },
-      { emoji: '🔥', label: 'Coal', done: true },
-      { emoji: '💎', label: 'Diamond', done: false },
-      { emoji: '🔩', label: 'Iron Bar', done: false, assigned: 'M' },
-      { emoji: '🥇', label: 'Gold Bar', done: false },
-      { emoji: '🌑', label: 'E. Crystal', done: false },
-    ],
+    season: 'fall',
+    icon: 'pumpkin',
+    title: 'Fall',
+    description:
+      'Foraging season and the last window on a handful of tricky fish.',
+  },
+  {
+    season: 'winter',
+    icon: 'gem',
+    title: 'Winter',
+    description:
+      'Mining hauls, gems, and the rare cold-water fish to close things out.',
   },
 ];
 
-export const BUNDLE_LEGEND: LegendEntry[] = [
-  {
-    glyph: '✔',
-    label: 'Collected',
-    swatchClassName: 'bg-slot-done border-primary text-primary',
-  },
-  {
-    glyph: '…',
-    label: 'Not yet',
-    swatchClassName: 'bg-slot border-wood/45 text-primary',
-  },
-  {
-    glyph: 'J',
-    label: 'Assigned',
-    badge: true,
-    swatchClassName: 'bg-winter border-winter text-parchment',
-  },
-];
+export const QUOTE = {
+  text: '"We cleared the Community Center two seasons faster once nobody was re-catching the same fish."',
+  avatar: 'abby' satisfies AvatarName,
+  author: 'Abby',
+  farm: 'Willow Creek Farm',
+  crews: ['Willow Creek', 'Pelican Co-op', 'Star Drop Guild', 'Ferngill Collective'],
+} as const;
 
-export const FARM_MODE_PANELS: FarmModePanel[] = [
-  {
-    mode: 'solo',
-    icon: '🏠',
-    title: 'Solo Farm',
-    tone: 'primary',
-    body: 'Play at your own pace. Track your personal progress through all six Community Center rooms and plan ahead for each new season without any coordination overhead.',
-    bullets: [
-      'Personal bundle board, synced across devices',
-      'Season planner shows what to gather now',
-      'In-game reminder notes for each bundle',
-      'Pick up where you left off, any time',
-    ],
-  },
-  {
-    mode: 'shared',
-    icon: '🤝',
-    title: 'Shared Farm',
-    tone: 'winter',
-    body: 'Invite your whole crew. Everyone sees the same board and can mark items collected or claim them for themselves — no more doubled effort or missed bundles.',
-    bullets: [
-      'Shared board visible to all farmhands',
-      'Claim items so no one doubles up',
-      'See who checked off what',
-      'Invite via a shareable farm link',
-    ],
-  },
-];
+export const CTA = {
+  kicker: 'Pin your first bundle in a minute',
+  title: "Start your farm's board",
+  description:
+    'Free for your whole crew. No card, no setup — invite your farmhands and start stamping.',
+  primaryCta: 'Start a board',
+  secondaryCta: 'Browse templates',
+} as const;
 
-export const CTA_CROPS: string[] = ['🌱', '🌾', '🥕', '🍓', '🌻', '🍂', '🧊', '🌱'];
+export const FOOTER = {
+  legal:
+    '© Year 2 · Bundle Board. A fan-made co-op tracker, not affiliated with any game.',
+  motto: 'Pins never floating · shadows never blurred',
+} as const;

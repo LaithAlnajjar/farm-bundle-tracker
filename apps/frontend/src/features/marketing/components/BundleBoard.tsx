@@ -1,120 +1,124 @@
-import { BUNDLE_LEGEND, CRAFTS_ROOM_BUNDLES } from '@/features/marketing/content/homeContent';
-import type { Bundle } from '@/features/marketing/types/home.types';
+import { BundleCard } from '@/features/marketing/components/BundleCard';
+import { LogoSquare } from '@/features/marketing/components/BrandMark';
 import {
-  NoteCard,
-  ProgressBar,
-  SeasonTag,
+  BOARD_SHOWCASE,
+  SHOWCASE_BUNDLES,
+} from '@/features/marketing/content/homeContent';
+import {
+  Pin,
+  PixelAvatar,
+  PixelIcon,
   SectionHeading,
-  Slot,
-  toneText,
-  WoodBoard,
+  SegmentProgress,
 } from '@/shared/components/farm-ui';
 import { cn } from '@/shared/lib/utils';
 
-const GRID_COLS: Record<number, string> = {
-  3: 'grid-cols-3',
-  4: 'grid-cols-4',
-};
-
-function BundleNote({ bundle }: { bundle: Bundle }) {
-  const collected = bundle.items.filter((item) => item.done).length;
-  const total = bundle.items.length;
-  const pct = total > 0 ? Math.round((collected / total) * 100) : 0;
-
-  return (
-    <NoteCard
-      headerLabel={bundle.headerLabel}
-      tone={bundle.tone}
-      pin={bundle.pin}
-      rotate={bundle.rotate}
-    >
-      <SeasonTag season={bundle.season} />
-
-      <div className={cn('my-2.5 grid gap-1.75', GRID_COLS[bundle.columns])}>
-        {bundle.items.map((item) => (
-          <Slot key={item.label ?? item.emoji} item={item} />
-        ))}
-      </div>
-
-      <ProgressBar
-        value={collected}
-        max={total}
-        tone={bundle.tone}
-        label={`${bundle.headerLabel}: ${collected} of ${total} collected`}
-      />
-
-      <div className="mt-1.75 flex justify-between font-body text-[11px] font-bold text-secondary">
-        <span>
-          {collected} / {total} collected
-        </span>
-        <span className={toneText[bundle.tone]}>{pct}%</span>
-      </div>
-    </NoteCard>
-  );
-}
-
-/** Preview of a Community Center room and its bundles on a wooden board. */
+/** Product showcase: the whole app frame with a room of bundle notes. */
 export function BundleBoard() {
-  const collected = CRAFTS_ROOM_BUNDLES.reduce(
-    (sum, bundle) => sum + bundle.items.filter((item) => item.done).length,
-    0,
-  );
-  const total = CRAFTS_ROOM_BUNDLES.reduce((sum, bundle) => sum + bundle.items.length, 0);
+  const { farmName, farmMeta, onlineAvatars, filters, filterSummary, room } =
+    BOARD_SHOWCASE;
 
   return (
-    <section id="bundles" className="px-6 py-18">
-      <div className="page-container">
-        <SectionHeading subtitle="Your board always knows what's left">
-          The bundle board
+    <section id="board" className="scroll-mt-20 border-b-4 border-bark bg-board">
+      <div className="page-container px-8 py-21">
+        <SectionHeading
+          kicker="The whole thing, one screen"
+          subtitle="Every room, bundle and item in one place — always in sync, whether you're at the desk or out in the field on your phone."
+        >
+          This is your farm's board
         </SectionHeading>
 
-        <WoodBoard>
-          <div className="text-shadow-soft mb-6 text-center font-pixel text-[15px] tracking-[0.18em] text-gold">
-            ══ CRAFTS ROOM ══
-          </div>
-
-          <div className="mb-5.5 grid gap-6 md:grid-cols-3">
-            {CRAFTS_ROOM_BUNDLES.map((bundle) => (
-              <BundleNote key={bundle.id} bundle={bundle} />
-            ))}
-          </div>
-
-          <div className="parchment flex items-center gap-3.5 border-2 border-wood/40 px-4 py-3">
-            <span className="font-pixel text-sm tracking-[0.04em] whitespace-nowrap text-foreground">
-              Crafts Room:
-            </span>
-            <div className="flex-1">
-              <ProgressBar
-                value={collected}
-                max={total}
-                tone="primary"
-                label={`Crafts Room: ${collected} of ${total} items`}
-              />
+        {/* App frame */}
+        <div className="overflow-hidden rounded-[7px] border-4 border-bark bg-background shadow-drop-10">
+          {/* Top bar */}
+          <div className="flex flex-wrap items-center gap-4 border-b-4 border-bark bg-soil px-6 py-3.5">
+            <div className="flex items-center gap-3">
+              <LogoSquare size={38} iconSize={22} />
+              <div className="leading-tight">
+                <div className="font-display text-2xl font-bold text-paper">
+                  {farmName}
+                </div>
+                <div className="font-body text-[17px] text-linen">
+                  {farmMeta}
+                </div>
+              </div>
             </div>
-            <span className="font-body text-xs font-bold whitespace-nowrap text-secondary">
-              {collected} / {total} items
+            <div className="flex-1" />
+            <span className="inline-flex items-center gap-2 rounded-full border-2 border-bark bg-black/20 px-3 py-1 font-body text-[17px] text-leaf-soft">
+              <span
+                aria-hidden
+                className="size-2.5 animate-ping-dot bg-leaf-bright"
+              />
+              Live
+            </span>
+            <div className="flex">
+              {onlineAvatars.map((avatar, index) => (
+                <PixelAvatar
+                  key={avatar}
+                  name={avatar}
+                  size={32}
+                  className={cn(index > 0 && '-ml-2.25')}
+                />
+              ))}
+            </div>
+            <span className="inline-flex items-center gap-1.5 rounded-sm border-3 border-bark bg-harvest px-3 py-1.5 font-display text-[17px] font-bold text-paper shadow-drop-3">
+              + Invite
             </span>
           </div>
 
-          <ul className="mt-3.5 flex list-none flex-wrap justify-center gap-4.5 p-0">
-            {BUNDLE_LEGEND.map((entry) => (
-              <li key={entry.label} className="flex items-center gap-1.5">
-                <span
-                  className={cn(
-                    'flex size-3.5 items-center justify-center border-1.5 font-body font-extrabold',
-                    entry.badge ? 'rounded-full text-[8px]' : 'rounded-none text-[9px]',
-                    entry.swatchClassName,
-                  )}
-                >
-                  {entry.glyph}
+          {/* Filter shelf */}
+          <div className="flex flex-wrap items-center gap-2 border-b-3 border-bark bg-paper px-6 py-2.5">
+            <span className="mr-0.5 font-micro text-[10px] tracking-[1.5px] uppercase text-soil">
+              View
+            </span>
+            <span className="rounded-sm border-3 border-bark bg-bark px-3 py-1 font-body text-lg text-paper">
+              {filters.active}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-sm border-3 border-fall bg-fall-soft px-3 py-1 font-body text-lg text-fall-ink">
+              <PixelIcon name="pumpkin" size={18} />
+              {filters.inSeason}
+            </span>
+            <span className="rounded-sm border-3 border-sand-strong bg-paper px-3 py-1 font-body text-lg text-ink">
+              {filters.rest}
+            </span>
+            <div className="flex-1" />
+            <span className="font-body text-lg text-soil">{filterSummary}</span>
+          </div>
+
+          {/* Cork board with the open room */}
+          <div className="cork-tight p-6">
+            <div className="relative rounded-[5px] border-4 border-bark bg-paper shadow-drop-6">
+              <Pin className="left-8 ml-0" />
+              <div className="flex flex-wrap items-center gap-3.5 rounded-t-[2px] border-b-3 border-bark bg-parchment px-5.5 py-3.5">
+                <PixelIcon name={room.icon} size={32} />
+                <span className="font-display text-[26px] font-bold text-ink">
+                  {room.name}
                 </span>
-                <span className="font-body text-[11px] font-bold text-secondary">
-                  {entry.label}
+                <SegmentProgress
+                  value={room.progress.value}
+                  max={room.progress.max}
+                  className="ml-1"
+                />
+                <span className="font-body text-[19px] text-ink-soft">
+                  {room.progressNote}
                 </span>
-              </li>
-            ))}
-          </ul>
-        </WoodBoard>
+                <div className="flex-1" />
+                <span className="font-body text-lg text-soil">
+                  Reward: <span className="text-ink">{room.reward}</span>
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-4.5 px-5.5 py-4.5">
+                {SHOWCASE_BUNDLES.map((bundle) => (
+                  <BundleCard
+                    key={bundle.name}
+                    bundle={bundle}
+                    className="w-80.5"
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

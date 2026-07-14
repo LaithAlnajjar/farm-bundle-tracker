@@ -1,45 +1,53 @@
 import { Link } from 'react-router';
 import { useAuth } from '@/features/auth';
-import { BRAND, NAV_LINKS } from '@/features/marketing/content/homeContent';
+import { BrandMark } from '@/features/marketing/components/BrandMark';
+import { NAV_LINKS } from '@/features/marketing/content/homeContent';
+import { chunkyButtonVariants } from '@/shared/components/farm-ui';
+import { cn } from '@/shared/lib/utils';
 
-/** Sticky wooden top bar with brand, nav links and sign-in. */
+/** Sticky wooden top bar with brand, section links and sign-in. */
 export function Navbar() {
   const { isAuthenticated } = useAuth();
   const accountHref = isAuthenticated ? '/dashboard' : '/signin';
-  const accountLabel = isAuthenticated ? 'Dashboard' : 'Sign In';
+  const accountLabel = isAuthenticated ? 'Dashboard' : 'Sign in';
+  const startHref = isAuthenticated ? '/dashboard' : '/register';
 
   return (
-    <nav className="wood-plank nav-shadow sticky top-0 z-50 border-b-4 border-wood-darker">
-      <div className="page-container flex h-14.5 items-center justify-between px-6">
-        <a href="#top" className="flex items-center gap-2.5">
-          <span aria-hidden className="text-[22px]">
-            {BRAND.emoji}
-          </span>
-          <span className="text-shadow-strong font-arcade text-[9px] leading-normal tracking-[0.06em] text-parchment">
-            {BRAND.name}
-          </span>
+    <nav className="sticky top-0 z-50 border-b-4 border-bark bg-soil shadow-drop-4">
+      <div className="page-container flex items-center gap-5 px-8 py-3">
+        <a href="#top">
+          <BrandMark />
         </a>
 
-        <div className="flex items-center gap-7">
-          <ul className="flex items-center gap-7">
-            {NAV_LINKS.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  className="font-pixel text-[19px] tracking-[0.05em] text-tan transition-colors hover:text-parchment"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
+        <div className="flex-1" />
+
+        <div className="hidden items-center gap-6 md:flex">
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="font-body text-[21px] text-parchment transition-colors hover:text-paper"
+            >
+              {link.label}
+            </a>
+          ))}
           <Link
             to={accountHref}
-            className="sign-in-shadow cursor-pointer border-2 border-primary-edge bg-primary px-4 py-1 font-pixel text-[17px] tracking-[0.05em] text-primary-foreground"
+            className="font-body text-[21px] text-parchment transition-colors hover:text-paper"
           >
             {accountLabel}
           </Link>
         </div>
+
+        <Link
+          to={startHref}
+          className={cn(
+            chunkyButtonVariants({ variant: 'primary' }),
+            'px-4 py-2 shadow-drop-4 hover:shadow-drop-2',
+          )}
+        >
+          + Start a board
+        </Link>
       </div>
     </nav>
   );

@@ -1,38 +1,42 @@
-import { BRAND, FOOTER_LINKS } from '@/features/marketing/content/homeContent';
+import { Link } from 'react-router';
+import { BrandMark } from '@/features/marketing/components/BrandMark';
+import { BRAND, FOOTER, NAV_LINKS } from '@/features/marketing/content/homeContent';
 
-/** Wooden footer with brand, secondary links and a fan-project disclaimer. */
+/** Wooden footer with brand, section links and the fan-project disclaimer. */
 export function Footer() {
   return (
-    <footer className="wood-plank footer-shadow border-t-4 border-wood-darker px-6 py-8">
-      <div className="page-container flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-2.5">
-          <span aria-hidden className="text-xl">
-            {BRAND.emoji}
+    <footer className="bg-soil">
+      <div className="page-container flex flex-wrap items-center gap-7 px-8 py-9">
+        <BrandMark compact tagline={BRAND.footerTagline} />
+        <div className="flex-1" />
+        <div className="flex flex-wrap gap-6">
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="font-body text-xl text-parchment transition-colors hover:text-paper"
+            >
+              {link.label}
+            </a>
+          ))}
+          <Link
+            to="/register"
+            className="font-body text-xl text-parchment transition-colors hover:text-paper"
+          >
+            Start a board
+          </Link>
+        </div>
+      </div>
+
+      <div className="border-t-3 border-bark bg-bark">
+        <div className="page-container flex flex-wrap justify-between gap-4 px-8 py-3">
+          <span className="font-body text-[17px] text-linen-dim">
+            {FOOTER.legal}
           </span>
-          <span className="font-pixel text-[17px] tracking-[0.06em] text-parchment">
-            {BRAND.name}
-          </span>
-          <span className="ml-1.5 font-body text-[11px] font-bold text-tan">
-            {BRAND.tagline}
+          <span className="font-body text-[17px] text-linen-dim">
+            {FOOTER.motto}
           </span>
         </div>
-
-        <ul className="flex list-none gap-5.5 p-0">
-          {FOOTER_LINKS.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                className="font-pixel text-base tracking-[0.04em] text-cork transition-colors hover:text-tan"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        <p className="font-body text-[11px] font-semibold text-wood-light">
-          Not affiliated with ConcernedApe or Stardew Valley.
-        </p>
       </div>
     </footer>
   );
