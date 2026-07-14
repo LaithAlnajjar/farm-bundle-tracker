@@ -1,29 +1,21 @@
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef } from 'react';
 
-type AuthTextFieldProps = Omit<ComponentPropsWithoutRef<'input'>, 'className'> & {
-  icon?: ReactNode;
+type AuthTextFieldProps = Omit<
+  ComponentPropsWithoutRef<'input'>,
+  'className'
+> & {
   id: string;
   label: string;
 };
 
-export function AuthTextField({
-  icon,
-  id,
-  label,
-  ...inputProps
-}: AuthTextFieldProps) {
+export function AuthTextField({ id, label, ...inputProps }: AuthTextFieldProps) {
   return (
     <label className="block" htmlFor={id}>
-      <span className="mb-1.5 flex items-center gap-2 font-body text-sm font-extrabold text-secondary">
-        {icon ? (
-          <span aria-hidden className="text-base leading-none">
-            {icon}
-          </span>
-        ) : null}
+      <span className="mb-1.5 block font-micro text-[10px] tracking-[2px] uppercase text-soil">
         {label}
       </span>
       <input
-        className="w-full border-2 border-wood/45 bg-parchment px-3.5 py-2.5 font-body text-base font-bold text-foreground shadow-[3px_3px_0_rgb(61_43_31_/_0.1)] outline-none placeholder:text-secondary/55 focus:border-primary focus:ring-3 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
+        className="w-full rounded-sm border-3 border-bark bg-parchment px-3.5 py-2.5 font-body text-xl text-ink outline-none placeholder:text-oat-ink focus:border-harvest focus:ring-3 focus:ring-harvest/25 disabled:cursor-not-allowed disabled:opacity-70"
         id={id}
         {...inputProps}
       />

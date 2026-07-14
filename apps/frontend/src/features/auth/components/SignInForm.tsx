@@ -28,7 +28,6 @@ export function SignInForm({ error, isPending, onSubmit }: SignInFormProps) {
     <form className="space-y-5" onSubmit={handleSubmit}>
       <AuthTextField
         autoComplete="email"
-        icon="📬"
         id="signin-email"
         label="Email"
         name="email"
@@ -39,7 +38,6 @@ export function SignInForm({ error, isPending, onSubmit }: SignInFormProps) {
 
       <AuthTextField
         autoComplete="current-password"
-        icon="🔑"
         id="signin-password"
         label="Password"
         minLength={8}

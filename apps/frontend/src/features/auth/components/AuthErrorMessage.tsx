@@ -9,10 +9,13 @@ export function AuthErrorMessage({ message }: AuthErrorMessageProps) {
 
   return (
     <p
-      className="flex items-start gap-2 border-2 border-destructive/45 bg-destructive/10 px-3 py-2.5 font-body text-sm font-extrabold text-destructive shadow-[3px_3px_0_rgb(200_75_45_/_0.12)]"
+      className="flex items-start gap-2.5 rounded-sm border-3 border-berry bg-berry-mist px-3.5 py-2.5 font-body text-lg leading-snug text-berry-ink shadow-drop-2"
       role="alert"
     >
-      <span aria-hidden className="leading-5">
+      <span
+        aria-hidden
+        className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-[3px] border-2 border-berry-ink bg-berry font-display text-sm font-bold text-paper"
+      >
         !
       </span>
       <span>{message}</span>

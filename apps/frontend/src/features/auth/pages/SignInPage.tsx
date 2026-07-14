@@ -32,9 +32,8 @@ export function SignInPage() {
         label: 'Create one',
         text: 'Need an account?',
       }}
-      eyebrow="RETURNING FARMER"
-      icon="🏡"
-      subtitle="Pick up where your farm left off"
+      kicker="Returning farmer"
+      subtitle="Pick up where your farm left off."
       title="Sign in"
     >
       <SignInForm

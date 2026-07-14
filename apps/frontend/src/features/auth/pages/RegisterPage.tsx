@@ -29,11 +29,9 @@ export function RegisterPage() {
         label: 'Sign in',
         text: 'Already have an account?',
       }}
-      eyebrow="STARTING YOUR FARM"
-      icon="📝"
-      subtitle="Account details for your bundle board"
+      kicker="Starting your farm"
+      subtitle="Account details for your bundle board."
       title="Create account"
-      tone="accent"
     >
       <RegisterForm
         error={registerMutation.error?.message}

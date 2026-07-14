@@ -36,7 +36,6 @@ export function RegisterForm({
       <AuthTextField
         autoCapitalize="none"
         autoComplete="username"
-        icon="👩‍🌾"
         id="register-username"
         label="Username"
         maxLength={32}
@@ -52,7 +51,6 @@ export function RegisterForm({
 
       <AuthTextField
         autoComplete="email"
-        icon="📬"
         id="register-email"
         label="Email"
         name="email"
@@ -63,7 +61,6 @@ export function RegisterForm({
 
       <AuthTextField
         autoComplete="new-password"
-        icon="🔑"
         id="register-password"
         label="Password"
         minLength={8}
