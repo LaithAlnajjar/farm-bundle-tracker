@@ -1,19 +1,23 @@
 import { cn } from '@/shared/lib/utils';
 import { Progress } from '@/shared/components/ui/progress';
-import { barFillByTone } from './farmUi.styles';
 import type { ProgressTone } from './farmUi.types';
 
-/** Pixel-striped progress bar built on the shadcn Progress primitive. */
+const FILL: Record<ProgressTone, string> = {
+  leaf: '[&>[data-slot=progress-indicator]]:bg-leaf',
+  harvest: '[&>[data-slot=progress-indicator]]:bg-harvest',
+};
+
+/** Room/farm total progress bar built on the shadcn Progress primitive. */
 export function ProgressBar({
   value,
   max,
-  tone,
+  tone = 'leaf',
   className,
   label,
 }: {
   value: number;
   max: number;
-  tone: ProgressTone;
+  tone?: ProgressTone;
   className?: string;
   label?: string;
 }) {
@@ -24,10 +28,9 @@ export function ProgressBar({
       value={pct}
       aria-label={label}
       className={cn(
-        'h-3 rounded-none border-2 border-wood/35 bg-track p-0',
-        'progress-inset-shadow',
-        '[&>[data-slot=progress-indicator]]:rounded-none',
-        barFillByTone[tone],
+        'h-4.5 rounded-[3px] border-3 border-bark bg-parchment p-0',
+        '[&>[data-slot=progress-indicator]]:rounded-none [&>[data-slot=progress-indicator]]:border-r-3 [&>[data-slot=progress-indicator]]:border-bark',
+        FILL[tone],
         className,
       )}
     />

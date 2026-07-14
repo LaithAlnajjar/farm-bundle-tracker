@@ -5,50 +5,51 @@
 /*
  * Core shadcn tokens — light/dark aware.
  * These are the single source of truth for the UI surface colors.
+ * Palette: "The Notice Board" design system (warm parchment & bark).
  */
 :root {
-  --background: #e8d5a3;
-  --foreground: #3d2b1f;
-  --card: #faf0d7;
-  --card-foreground: #3d2b1f;
-  --popover: #faf0d7;
-  --popover-foreground: #3d2b1f;
-  --primary: #4a6741;
-  --primary-foreground: #faf0d7;
-  --secondary: #8b5e3c;
-  --secondary-foreground: #faf0d7;
-  --muted: #d4b896;
-  --muted-foreground: #6b4226;
-  --accent: #c17f3e;
-  --accent-foreground: #3d2b1f;
-  --destructive: #c84b2d;
-  --destructive-foreground: #faf0d7;
-  --border: rgb(61 43 31 / 0.3);
-  --input: #faf0d7;
-  --ring: #4a6741;
-  --radius: 0.1875rem;
+  --background: #f1e3c4;
+  --foreground: #3e2712;
+  --card: #fff7e6;
+  --card-foreground: #3e2712;
+  --popover: #fff7e6;
+  --popover-foreground: #3e2712;
+  --primary: #d98e2b;
+  --primary-foreground: #fff7e6;
+  --secondary: #8a5a2b;
+  --secondary-foreground: #fff7e6;
+  --muted: #f6ead2;
+  --muted-foreground: #6b4a26;
+  --accent: #f2c53d;
+  --accent-foreground: #3e2712;
+  --destructive: #c8553d;
+  --destructive-foreground: #fff7e6;
+  --border: #5b3a1e;
+  --input: #f6ead2;
+  --ring: #d98e2b;
+  --radius: 0.25rem;
 }
 
 .dark {
-  --background: #241a10;
-  --foreground: #f3e6c8;
-  --card: #322417;
-  --card-foreground: #f3e6c8;
-  --popover: #322417;
-  --popover-foreground: #f3e6c8;
-  --primary: #7fa86a;
-  --primary-foreground: #1c2417;
-  --secondary: #b3855a;
-  --secondary-foreground: #1c150d;
-  --muted: #3d2e1d;
-  --muted-foreground: #c9a87c;
-  --accent: #d39a55;
-  --accent-foreground: #241a10;
+  --background: #2a1c0e;
+  --foreground: #f6ead2;
+  --card: #3e2712;
+  --card-foreground: #f6ead2;
+  --popover: #3e2712;
+  --popover-foreground: #f6ead2;
+  --primary: #d98e2b;
+  --primary-foreground: #fff7e6;
+  --secondary: #8a5a2b;
+  --secondary-foreground: #fff7e6;
+  --muted: #4a301d;
+  --muted-foreground: #e7cfa6;
+  --accent: #f2c53d;
+  --accent-foreground: #3e2712;
   --destructive: #e0664a;
-  --destructive-foreground: #1c150d;
-  --border: rgb(243 230 200 / 0.18);
-  --input: #322417;
-  --ring: #7fa86a;
+  --destructive-foreground: #fff7e6;
+  --border: #5b3a1e;
+  --input: #3e2712;
+  --ring: #d98e2b;
 }
 
 /* Map the light/dark variables onto Tailwind's color utilities. */
@@ -80,236 +81,178 @@
 }
 
 /*
- * Cozy design-system palette — the Stardew/Pelican-Town aesthetic.
- * Decorative hues stay constant across light/dark; declared once so no
- * component ever hardcodes a hex value.
+ * "The Notice Board" design-system palette. Decorative hues stay constant
+ * across light/dark; declared once so no component ever hardcodes a hex.
  */
 @theme {
-  --font-body: 'Nunito', sans-serif;
-  --font-pixel: 'VT323', monospace;
-  --font-arcade: 'Press Start 2P', monospace;
+  --font-display: 'Pixelify Sans', cursive;
+  --font-body: 'VT323', monospace;
+  --font-micro: 'Silkscreen', monospace;
 
-  --color-ink-soft: #5a3520;
-  --color-wood-light: #7a5230;
-  --color-wood: #6b4226;
-  --color-wood-dark: #3d2b1f;
-  --color-wood-darker: #2a1d12;
-  --color-cork: #8b6848;
-  --color-parchment: #faf0d7;
-  --color-surface: #e2cc98;
-  --color-surface-alt: #d8c084;
-  --color-gold: #d4b070;
-  --color-tan: #c9a87c;
-  --color-track: #ddd0b0;
-  --color-slot: #e4d5b0;
-  --color-slot-done: #c8e6c9;
-  --color-primary-edge: #2d4028;
-  --color-spring: #5a8a3a;
-  --color-summer: #c89a2a;
-  --color-fall: #a05a2c;
-  --color-winter: #3a6a8a;
-  --color-ore: #7a5a28;
-  --color-amber: #b87a2a;
+  /* Surfaces */
+  --color-paper: #fff7e6;
+  --color-parchment: #f6ead2;
+  --color-parchment-deep: #f1e3c4;
+  --color-board: #eedcb6;
 
-  --shadow-pixel-sm: 3px 3px 0 rgb(61 43 31 / 0.35);
-  --shadow-pixel: 4px 4px 0 rgb(61 43 31 / 0.25);
-  --shadow-pixel-md: 6px 6px 0 rgb(61 43 31 / 0.2);
-  --shadow-pixel-lg: 8px 8px 0 rgb(61 43 31 / 0.18);
+  /* Wood & ink */
+  --color-soil: #8a5a2b;
+  --color-bark: #5b3a1e;
+  --color-ink: #3e2712;
+  --color-ink-soft: #6b4a26;
+  --color-linen: #e7cfa6;
+  --color-linen-dim: #d9be93;
+  --color-cream: #f6ead2;
+
+  /* Action hues */
+  --color-harvest: #d98e2b;
+  --color-leaf: #6a994e;
+  --color-leaf-dark: #3e5b22;
+  --color-leaf-deep: #4e7031;
+  --color-leaf-soft: #e4edd3;
+  --color-leaf-bright: #8ae06b;
+  --color-berry: #c8553d;
+  --color-berry-dark: #a23b28;
+  --color-berry-ink: #8a2f1d;
+  --color-berry-soft: #f7dfcb;
+  --color-berry-mist: #fbeae5;
+  --color-gold: #f2c53d;
+  --color-gold-deep: #c79b22;
+  --color-gold-soft: #fdf3d7;
+  --color-gold-fill: #f2e3ae;
+  --color-gold-ink: #77590a;
+
+  /* Muted / disabled */
+  --color-sand: #b9945f;
+  --color-sand-strong: #c9ae7e;
+  --color-oat: #efdfbd;
+  --color-oat-ink: #a98f63;
+
+  /* Season accents */
+  --color-spring: #7fb069;
+  --color-spring-soft: #eaf2dc;
+  --color-spring-ink: #3e5b22;
+  --color-summer: #f2a541;
+  --color-summer-soft: #fdefd3;
+  --color-summer-ink: #8a5510;
+  --color-fall: #c8553d;
+  --color-fall-soft: #f7dfcb;
+  --color-fall-ink: #8a2f1d;
+  --color-winter: #7ea8be;
+  --color-winter-soft: #e3eef3;
+  --color-winter-ink: #2f586e;
+
+  /* Pixel avatar backdrops */
+  --color-ava-abby: #f6ead2;
+  --color-ava-sam: #dce9ef;
+  --color-ava-lena: #f7dfcb;
+  --color-ava-marcus: #eaf2dc;
+  --color-ava-pia: #fdefd3;
+  --color-ava-theo: #e3eef3;
+
+  /*
+   * Depth is always a solid offset — shadows are never blurred.
+   * Number = vertical offset in px.
+   */
+  --shadow-drop-2: 0 2px 0 rgb(62 39 18 / 0.4);
+  --shadow-drop-3: 0 3px 0 rgb(62 39 18 / 0.4);
+  --shadow-drop-4: 0 4px 0 rgb(62 39 18 / 0.35);
+  --shadow-drop-5: 0 5px 0 rgb(62 39 18 / 0.4);
+  --shadow-drop-6: 0 6px 0 rgb(62 39 18 / 0.28);
+  --shadow-drop-8: 0 8px 0 rgb(62 39 18 / 0.32);
+  --shadow-drop-10: 0 10px 0 rgb(62 39 18 / 0.3);
+  --shadow-drop-gold-4: 0 4px 0 rgb(151 113 17 / 0.32);
+  --shadow-drop-gold-6: 0 6px 0 rgb(151 113 17 / 0.3);
 }
 
 /*
- * Reusable surface textures. Defined once here instead of repeating the
- * gradient strings inline on every wooden board / parchment note.
+ * Reusable surface textures & pixel-art helpers.
  */
-@utility wood-plank {
-  background-color: var(--color-wood);
-  background-image:
-    repeating-linear-gradient(
-      180deg,
-      transparent 0 28px,
-      rgb(0 0 0 / 0.06) 28px 30px
-    ),
-    linear-gradient(
-      180deg,
-      var(--color-wood-light) 0%,
-      var(--color-wood) 35%,
-      var(--color-wood-light) 65%,
-      var(--color-wood) 100%
-    );
-}
-
-@utility parchment {
-  background-color: var(--color-parchment);
-  background-image: repeating-linear-gradient(
-    0deg,
-    rgb(139 94 60 / 0.04) 0 1px,
-    transparent 1px 18px
-  );
-}
-
 @utility cork {
-  background-color: var(--color-cork);
-  background-image: radial-gradient(circle, rgb(0 0 0 / 0.06) 1px, transparent 1px);
-  background-size: 8px 8px;
+  background-color: #a9835a;
+  background-image: url('/assets/tex-cork.png');
+  background-size: 60px;
 }
 
-@utility dot-grid {
-  background-color: var(--color-surface);
-  background-image: radial-gradient(circle, rgb(107 66 38 / 0.06) 1px, transparent 1px);
-  background-size: 22px 22px;
+@utility cork-tight {
+  background-color: #a9835a;
+  background-image: url('/assets/tex-cork.png');
+  background-size: 56px;
+}
+
+@utility pixelated {
+  image-rendering: pixelated;
+}
+
+/* "Still needed" — dashed seams between board sections. */
+@utility seam-dashed {
+  border-top: 2px dashed rgb(91 58 30 / 0.25);
 }
 
 @utility page-container {
   width: 100%;
-  max-width: 70rem;
+  max-width: 80rem;
   margin-inline: auto;
 }
 
-@utility narrow-container {
-  width: 100%;
-  max-width: 40rem;
-  margin-inline: auto;
+@utility text-shadow-board {
+  text-shadow: 0 3px 0 rgb(62 39 18 / 0.45);
 }
 
-@utility hero-glow {
-  background: radial-gradient(circle, rgb(220 190 100 / 0.18) 0%, transparent 65%);
-}
-
-@utility cta-glow {
-  background: radial-gradient(circle, rgb(220 190 80 / 0.15) 0%, transparent 60%);
-}
-
-@utility text-shadow-strong {
-  text-shadow: 1px 1px 0 rgb(0 0 0 / 0.5);
-}
-
-@utility text-shadow-soft {
-  text-shadow: 1px 1px 0 rgb(0 0 0 / 0.4);
-}
-
-@utility board-string {
-  background: repeating-linear-gradient(
-    90deg,
-    #a07040 0 6px,
-    #c09050 6px 12px
-  );
-}
-
-@utility nail-head {
-  background: radial-gradient(circle at 38% 38%, #d4c4a8, #8a7660);
-  box-shadow:
-    0 1px 3px rgb(0 0 0 / 0.4),
-    inset 0 1px 0 rgb(255 255 255 / 0.2);
-}
-
-@utility pin-highlight {
-  background: radial-gradient(
-    circle at 33% 33%,
-    rgb(255 255 255 / 0.45),
-    transparent 60%
-  );
-}
-
-@utility nav-shadow {
-  box-shadow: 0 4px 16px rgb(0 0 0 / 0.32);
-}
-
-@utility footer-shadow {
-  box-shadow: 0 -4px 12px rgb(0 0 0 / 0.2);
-}
-
-@utility pixel-badge-shadow {
-  box-shadow: 3px 3px 0 rgb(45 64 40 / 0.4);
-}
-
-@utility sign-in-shadow {
-  box-shadow: 3px 3px 0 rgb(0 0 0 / 0.35);
-}
-
-@utility chunky-primary-shadow {
-  box-shadow: 5px 5px 0 var(--color-primary-edge);
-}
-
-@utility chunky-primary-shadow-pressed {
-  box-shadow: 2px 2px 0 var(--color-primary-edge);
-}
-
-@utility chunky-secondary-shadow {
-  box-shadow: 5px 5px 0 rgb(61 43 31 / 0.35);
-}
-
-@utility chunky-secondary-shadow-pressed {
-  box-shadow: 2px 2px 0 rgb(61 43 31 / 0.4);
-}
-
-@utility wood-board-shadow {
-  box-shadow:
-    7px 7px 0 rgb(0 0 0 / 0.28),
-    inset 0 0 30px rgb(0 0 0 / 0.18);
-}
-
-@utility cork-inset-shadow {
-  box-shadow: inset 0 0 30px rgb(0 0 0 / 0.16);
-}
-
-@utility pin-shadow {
-  box-shadow: 0 2px 4px rgb(0 0 0 / 0.4);
-}
-
-@utility progress-inset-shadow {
-  box-shadow: inset 1px 1px 0 rgb(0 0 0 / 0.08);
-}
-
-@utility slot-done-shadow {
-  box-shadow:
-    inset 1px 1px 0 rgb(255 255 255 / 0.4),
-    2px 2px 0 rgb(74 103 65 / 0.2);
-}
-
-@utility slot-empty-shadow {
-  box-shadow:
-    inset 1px 1px 0 rgb(255 255 255 / 0.3),
-    2px 2px 0 rgb(61 43 31 / 0.12);
-}
-
-@utility marketing-hero-grid {
-  grid-template-columns: 1fr 1.05fr;
+@utility text-shadow-kicker {
+  text-shadow: 0 2px 0 rgb(62 39 18 / 0.4);
 }
 
 /*
- * Pixel-striped progress fills, one per tone. Applied to the shadcn Progress
- * indicator so the bar component stays a thin wrapper over the primitive.
+ * Motion — game-feel, never busy. Whole-pixel movement only.
  */
-@utility bar-spring {
-  background: repeating-linear-gradient(
-    90deg,
-    var(--color-spring) 0 7px,
-    color-mix(in srgb, var(--color-spring) 73%, transparent) 7px 14px
-  );
+/* Keeps the note's hard drop shadow — animating box-shadow replaces it. */
+@keyframes live-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 5px 0 rgb(91 58 30 / 0.28),
+      0 0 0 0 rgb(242 197 61 / 0);
+  }
+  45% {
+    box-shadow:
+      0 5px 0 rgb(91 58 30 / 0.28),
+      0 0 0 8px rgb(242 197 61 / 0.5);
+  }
 }
 
-@utility bar-winter {
-  background: repeating-linear-gradient(
-    90deg,
-    var(--color-winter) 0 7px,
-    color-mix(in srgb, var(--color-winter) 73%, transparent) 7px 14px
-  );
+@keyframes ping-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.28;
+  }
 }
 
-@utility bar-ore {
-  background: repeating-linear-gradient(
-    90deg,
-    var(--color-ore) 0 7px,
-    color-mix(in srgb, var(--color-ore) 73%, transparent) 7px 14px
-  );
+@keyframes star-spin {
+  0% {
+    transform: rotate(-10deg) scale(1);
+  }
+  50% {
+    transform: rotate(10deg) scale(1.14);
+  }
+  100% {
+    transform: rotate(-10deg) scale(1);
+  }
 }
 
-@utility bar-primary {
-  background: repeating-linear-gradient(
-    90deg,
-    var(--color-primary) 0 7px,
-    color-mix(in srgb, var(--color-primary) 73%, transparent) 7px 14px
-  );
+@utility animate-live-pulse {
+  animation: live-pulse 2.4s infinite;
+}
+
+@utility animate-ping-dot {
+  animation: ping-dot 2s infinite;
+}
+
+@utility animate-star-spin {
+  animation: star-spin 2.6s infinite;
 }
 
 @layer base {
@@ -317,7 +260,23 @@
     @apply border-border outline-ring/50;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground font-body;
+  }
+
+  ::selection {
+    @apply bg-gold text-ink;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-live-pulse,
+    .animate-ping-dot,
+    .animate-star-spin {
+      animation: none;
+    }
   }
 }

@@ -1,23 +1,25 @@
 export { ChunkyButton } from './ChunkyButton';
-export { Nail } from './Nail';
 export { NoteCard } from './NoteCard';
 export { Pin } from './Pin';
+export { PixelAvatar, AVATAR_LABELS } from './PixelAvatar';
+export { PixelIcon } from './PixelIcon';
 export { ProgressBar } from './ProgressBar';
 export { SeasonTag } from './SeasonTag';
 export { SectionHeading } from './SectionHeading';
+export { SegmentProgress } from './SegmentProgress';
 export { Slot } from './Slot';
 export { WoodBoard } from './WoodBoard';
 export {
-  barFillByTone,
-  pinBg,
+  avatarBg,
+  chunkyButtonVariants,
+  seasonPanel,
   seasonTag,
-  toneHeaderBg,
-  toneText,
 } from './farmUi.styles';
 export type {
+  AvatarName,
   BundleItem,
-  PinColor,
+  IconName,
   ProgressTone,
   Season,
-  Tone,
+  SlotState,
 } from './farmUi.types';

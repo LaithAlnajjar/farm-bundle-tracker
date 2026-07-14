@@ -1,54 +1,84 @@
-import { Check } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
+import { PixelAvatar } from './PixelAvatar';
+import { PixelIcon } from './PixelIcon';
 import type { BundleItem } from './farmUi.types';
 
 type SlotSize = 'sm' | 'md';
 
-const SIZE: Record<SlotSize, { box: string; check: number; label: string }> = {
-  sm: { box: 'size-6.5 text-[13px]', check: 10, label: 'max-w-8' },
-  md: { box: 'size-9 text-lg', check: 14, label: 'max-w-10.5' },
+const SIZE: Record<
+  SlotSize,
+  { box: string; icon: number; badge: string; badgeIcon: number; avatar: number }
+> = {
+  sm: {
+    box: 'size-13',
+    icon: 28,
+    badge: 'size-5 -right-1.75 -top-1.75',
+    badgeIcon: 12,
+    avatar: 24,
+  },
+  md: {
+    box: 'size-16',
+    icon: 32,
+    badge: 'size-5.5 -right-1.75 -top-1.75',
+    badgeIcon: 14,
+    avatar: 26,
+  },
 };
 
-/** A single collectible slot: emoji, completion state and assignee badge. */
-export function Slot({ item, size = 'md' }: { item: BundleItem; size?: SlotSize }) {
-  const { emoji, label, done, assigned } = item;
+const STATE_BOX = {
+  needed: 'border-3 border-dashed border-sand bg-parchment',
+  claimed: 'border-3 border-harvest bg-paper',
+  collected: 'border-3 border-leaf bg-leaf-soft',
+  golden: 'border-3 border-gold-deep bg-gold-fill',
+} as const;
+
+/** Item slot — the atom of the board: sprite, state and claim badge. */
+export function Slot({
+  item,
+  size = 'md',
+  className,
+}: {
+  item: BundleItem;
+  size?: SlotSize;
+  className?: string;
+}) {
+  const { icon, label, state, claimedBy } = item;
   const sizing = SIZE[size];
 
   return (
-    <div className="flex flex-col items-center gap-0.75">
-      <div
-        className={cn(
-          'relative flex shrink-0 items-center justify-center rounded-none border-2 leading-none',
-          sizing.box,
-          done
-            ? 'slot-done-shadow border-primary bg-slot-done'
-            : 'slot-empty-shadow border-wood/45 bg-slot',
-        )}
-      >
-        <span className="relative z-1 leading-none">{emoji}</span>
+    <div
+      className={cn(
+        'relative flex shrink-0 items-center justify-center rounded-sm',
+        sizing.box,
+        STATE_BOX[state],
+        className,
+      )}
+    >
+      <PixelIcon
+        name={icon}
+        alt={label}
+        size={sizing.icon}
+        className={cn(state === 'needed' && 'opacity-35 grayscale-[0.7]')}
+      />
 
-        {done && (
-          <span className="absolute inset-0 z-2 flex items-center justify-center bg-primary/50">
-            <Check size={sizing.check} strokeWidth={3} className="text-white" />
-          </span>
-        )}
-
-        {assigned && !done && (
-          <span className="absolute -right-0.5 -bottom-0.5 z-3 flex size-3 items-center justify-center rounded-full border-1.5 border-parchment bg-winter font-body text-[7px] font-extrabold text-parchment">
-            {assigned}
-          </span>
-        )}
-      </div>
-
-      {label && (
+      {state === 'collected' && (
         <span
+          aria-hidden
           className={cn(
-            'text-center font-body text-[9px] font-bold leading-tight text-wood',
-            sizing.label,
+            'absolute flex items-center justify-center rounded-[3px] border-2 border-bark bg-leaf',
+            sizing.badge,
           )}
         >
-          {label}
+          <PixelIcon name="check" size={sizing.badgeIcon} className="brightness-[3]" />
         </span>
+      )}
+
+      {state === 'claimed' && claimedBy && (
+        <PixelAvatar
+          name={claimedBy}
+          size={sizing.avatar}
+          className="absolute -right-2.25 -bottom-2.25 border-2"
+        />
       )}
     </div>
   );

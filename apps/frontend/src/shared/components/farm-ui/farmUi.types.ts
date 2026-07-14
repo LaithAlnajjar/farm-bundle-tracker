@@ -1,21 +1,38 @@
-/** Decorative hue used for note headers, feature cards and panels. */
-export type Tone = 'spring' | 'summer' | 'fall' | 'winter' | 'ore' | 'primary';
-
-/** Subset of {@link Tone} that has a matching striped progress-bar fill. */
-export type ProgressTone = 'spring' | 'winter' | 'ore' | 'primary';
-
-/** Push-pin colors available for pinned note cards. */
-export type PinColor = 'red' | 'blue' | 'amber' | 'green';
-
-/** Stardew season a bundle item belongs to. */
+/** Season a bundle item belongs to. */
 export type Season = 'spring' | 'summer' | 'fall' | 'winter' | 'any';
+
+/** Pixel-sprite glyphs available under /assets/icon-*.png. */
+export type IconName =
+  | 'check'
+  | 'coin'
+  | 'egg'
+  | 'fish'
+  | 'gem'
+  | 'jar'
+  | 'logs'
+  | 'mushroom'
+  | 'parsnip'
+  | 'pin'
+  | 'pot'
+  | 'pumpkin'
+  | 'sprout'
+  | 'star';
+
+/** Pixel farmhand portraits available under /assets/ava-*.png. */
+export type AvatarName = 'abby' | 'lena' | 'marcus' | 'pia' | 'sam' | 'theo';
+
+/** Lifecycle of an item slot on the board. */
+export type SlotState = 'needed' | 'claimed' | 'collected' | 'golden';
+
+/** Fill hue for progress readouts. */
+export type ProgressTone = 'leaf' | 'harvest';
 
 /** A single collectible item shown inside a bundle. */
 export interface BundleItem {
-  emoji: string;
-  /** Human label shown under the slot (omitted in compact previews). */
-  label?: string;
-  done: boolean;
-  /** Initial of the farmhand who claimed this item, if any. */
-  assigned?: string;
+  icon: IconName;
+  /** Item name, used for alt text and row labels. */
+  label: string;
+  state: SlotState;
+  /** Farmhand whose avatar pins to the slot while claimed. */
+  claimedBy?: AvatarName;
 }
