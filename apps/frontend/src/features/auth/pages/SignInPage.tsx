@@ -12,7 +12,7 @@ export function SignInPage() {
   const { isAuthenticated, status } = useAuth();
   const redirectPath =
     (location.state as { from?: { pathname?: string } } | null)?.from
-      ?.pathname ?? '/dashboard';
+      ?.pathname ?? '/farms';
   const signInMutation = useSignIn({
     onSuccess: () => navigate(redirectPath, { replace: true }),
   });
@@ -22,7 +22,7 @@ export function SignInPage() {
   }
 
   if (isAuthenticated) {
-    return <Navigate replace to="/dashboard" />;
+    return <Navigate replace to="/farms" />;
   }
 
   return (

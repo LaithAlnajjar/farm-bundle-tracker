@@ -8,9 +8,9 @@ import { cn } from '@/shared/lib/utils';
 /** Sticky wooden top bar with brand, section links and sign-in. */
 export function Navbar() {
   const { isAuthenticated } = useAuth();
-  const accountHref = isAuthenticated ? '/dashboard' : '/signin';
-  const accountLabel = isAuthenticated ? 'Dashboard' : 'Sign in';
-  const startHref = isAuthenticated ? '/dashboard' : '/register';
+  const accountHref = isAuthenticated ? '/farms' : '/signin';
+  const accountLabel = isAuthenticated ? 'My farms' : 'Sign in';
+  const startHref = isAuthenticated ? '/farms' : '/register';
 
   return (
     <nav className="sticky top-0 z-50 border-b-4 border-bark bg-soil shadow-drop-4">

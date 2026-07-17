@@ -1,7 +1,7 @@
-import { Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 import { RequireAuth } from '@/features/auth/components';
 import { RegisterPage, SignInPage } from '@/features/auth/pages';
-import { DashboardPage } from '@/features/dashboard/pages/DashboardPage';
+import { FarmsPage } from '@/features/farms';
 import { HomePage } from '@/features/marketing/pages/HomePage';
 
 export function AppRoutes() {
@@ -11,13 +11,14 @@ export function AppRoutes() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/signin" element={<SignInPage />} />
       <Route
-        path="/dashboard"
+        path="/farms"
         element={
           <RequireAuth>
-            <DashboardPage />
+            <FarmsPage />
           </RequireAuth>
         }
       />
+      <Route path="/dashboard" element={<Navigate replace to="/farms" />} />
     </Routes>
   );
 }

@@ -15,7 +15,7 @@ export function RegisterPage() {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/farms" replace />;
   }
 
   if (registerMutation.isSuccess) {
