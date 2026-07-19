@@ -50,6 +50,7 @@ export const catalogBundles = pgTable('catalog_bundles', {
   catalogRoomId: integer('catalog_room_id').references(() => catalogRooms.id, {
     onDelete: 'set null',
   }),
+  slotRequiredCount: integer('slot_required_count').notNull().default(1),
   slug: varchar('slug', { length: 255 }).notNull().unique(),
   name: varchar('name', { length: 255 }).notNull(),
   completionReward: varchar('completion_reward', { length: 255 }),
@@ -60,6 +61,13 @@ export const catalogBundles = pgTable('catalog_bundles', {
 
 export const catalogItems = pgTable('catalog_items', {
   id: serial('id').primaryKey(),
+  catalogBundlesId: integer('catalog_bundle_id').references(
+    () => catalogBundles.id,
+    {
+      onDelete: 'set null',
+    },
+  ),
+  slotRequiredCount: integer('slot_required_count').notNull().default(1),
   slug: varchar('slug', { length: 255 }).notNull().unique(),
   name: varchar('name', { length: 255 }).notNull(),
   category: catalogItemCategory('category').notNull(),
