@@ -51,7 +51,18 @@ PostgreSQL runs at `localhost:5432` with the credentials from `.env`.
 npm run db:push -w backend
 ```
 
-### 5. Start the backend
+### 5. Seed the catalog
+
+Seed the versioned standard Community Center catalog after applying the schema:
+
+```bash
+npm run db:seed:catalog -w backend
+```
+
+The command is safe to rerun. It validates the full manifest, performs all
+writes in one transaction, and refuses unexpected structural drift.
+
+### 6. Start the backend
 
 ```bash
 npm run dev:backend
@@ -59,7 +70,7 @@ npm run dev:backend
 
 API runs at http://localhost:3000
 
-### 6. Start the frontend (when initialized)
+### 7. Start the frontend (when initialized)
 
 ```bash
 npm run dev:frontend
@@ -87,6 +98,7 @@ npm run db:reset
 npm run db:push -w backend
 npm run db:generate -w backend
 npm run db:migrate -w backend
+npm run db:seed:catalog -w backend
 ```
 
 ## Documentation
