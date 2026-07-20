@@ -1,4 +1,7 @@
-import { farms } from '@/modules/farms/infrastructure/persistence/drizzle/farms.schema';
+import {
+  farmInvites,
+  farmMemberships,
+} from '@/modules/farms/infrastructure/persistence/drizzle/farms.schema';
 import { pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
@@ -12,5 +15,6 @@ export const users = pgTable('users', {
 });
 
 export const userRelations = relations(users, ({ many }) => ({
-  farms: many(farms),
+  farmMemberships: many(farmMemberships),
+  createdFarmInvites: many(farmInvites),
 }));

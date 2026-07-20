@@ -18,6 +18,7 @@ import { DeleteFarmUseCase } from '../application/deleteFarmUseCase';
 import { GetFarmUseCase } from '../application/getFarmUseCase';
 import { ListFarmsUseCase } from '../application/listFarmsUseCase';
 import { UpdateFarmUseCase } from '../application/updateFarmUseCase';
+import { AuthorizeFarmActionUseCase } from '../application/authorizeFarmActionUseCase';
 import {
   CreateFarmRequestDto,
   type FarmResponseDto,
@@ -32,6 +33,7 @@ export class FarmsController {
     private readonly getFarmUseCase: GetFarmUseCase,
     private readonly listFarmsUseCase: ListFarmsUseCase,
     private readonly updateFarmUseCase: UpdateFarmUseCase,
+    private readonly authorizeFarmActionUseCase: AuthorizeFarmActionUseCase,
   ) {}
 
   @Post()
@@ -59,6 +61,7 @@ export class FarmsController {
     @Param('id', ParseIntPipe) id: number,
     @CurrentUser() user: AuthUser,
   ): Promise<FarmResponseDto> {
+    await this.authorizeFarmActionUseCase.execute(id, user.id, 'view');
     const farm = await this.getFarmUseCase.execute({ id, userId: user.id });
 
     return this.toResponse(farm);
@@ -70,6 +73,7 @@ export class FarmsController {
     @Body() dto: UpdateFarmRequestDto,
     @CurrentUser() user: AuthUser,
   ): Promise<FarmResponseDto> {
+    await this.authorizeFarmActionUseCase.execute(id, user.id, 'rename');
     const farm = await this.updateFarmUseCase.execute({
       id,
       name: dto.name,
@@ -85,6 +89,7 @@ export class FarmsController {
     @Param('id', ParseIntPipe) id: number,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
+    await this.authorizeFarmActionUseCase.execute(id, user.id, 'delete');
     await this.deleteFarmUseCase.execute({ id, userId: user.id });
   }
 
@@ -93,6 +98,7 @@ export class FarmsController {
       id: farm.id,
       name: farm.name,
       userId: farm.userId,
+      membershipRole: farm.membershipRole ?? 'owner',
       createdAt: farm.createdAt.toISOString(),
       updatedAt: farm.updatedAt.toISOString(),
     };

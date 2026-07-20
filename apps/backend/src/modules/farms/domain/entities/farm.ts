@@ -6,5 +6,8 @@ export class Farm {
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
     public readonly deletedAt?: Date | null,
+    public readonly membershipRole?: FarmRole,
   ) {}
 }
+
+export type FarmRole = 'owner' | 'editor' | 'viewer';

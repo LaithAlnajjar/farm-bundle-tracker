@@ -1,91 +1,172 @@
+import { Injectable } from '@nestjs/common';
+import { and, asc, eq, exists, isNull } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/pg-core';
 import { InjectDb } from '@/infrastructure/database/drizzle/drizzle.provider';
 import type { DBClient } from '@/infrastructure/database/drizzle/db';
+import { Farm, type FarmRole } from '../../domain/entities/farm';
 import {
   type CreateFarmData,
-  FarmRepository,
+  type FarmRepository,
   type UpdateFarmNameData,
 } from '../../domain/repositories/farm.repository';
-import { farms } from '../persistence/drizzle/farms.schema';
-import { Injectable } from '@nestjs/common';
-import { and, asc, eq, isNull } from 'drizzle-orm';
-import { Farm } from '../../domain/entities/farm';
+import { farmMemberships, farms } from '../persistence/drizzle/farms.schema';
+
+const currentMembership = alias(farmMemberships, 'current_membership');
+const ownerMembership = alias(farmMemberships, 'owner_membership');
+
+const farmSelection = {
+  id: farms.id,
+  name: farms.name,
+  ownerUserId: ownerMembership.userId,
+  createdAt: farms.createdAt,
+  updatedAt: farms.updatedAt,
+  deletedAt: farms.deletedAt,
+  membershipRole: currentMembership.role,
+};
+
+type FarmRow = {
+  id: number;
+  name: string;
+  ownerUserId: number;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
+  membershipRole: FarmRole;
+};
 
 @Injectable()
 export class DrizzleFarmRepository implements FarmRepository {
   constructor(@InjectDb() private readonly db: DBClient) {}
 
-  async create(farm: CreateFarmData): Promise<Farm> {
-    const [row] = await this.db
-      .insert(farms)
-      .values({
-        name: farm.name,
-        userId: farm.userId,
-      })
-      .returning();
+  async create(data: CreateFarmData): Promise<Farm> {
+    return this.db.transaction(async (tx) => {
+      const [farm] = await tx
+        .insert(farms)
+        .values({ name: data.name })
+        .returning();
+      if (!farm) throw new Error('Failed to create farm');
 
-    if (!row) {
-      throw new Error('Failed to create farm');
-    }
+      await tx.insert(farmMemberships).values({
+        farmId: farm.id,
+        userId: data.userId,
+        role: 'owner',
+      });
 
-    return this.toEntity(row);
+      return new Farm(
+        farm.id,
+        farm.name,
+        data.userId,
+        farm.createdAt,
+        farm.updatedAt,
+        farm.deletedAt,
+        'owner',
+      );
+    });
   }
 
   async findByIdForUser(id: number, userId: number): Promise<Farm | null> {
-    const [farm] = await this.db
-      .select()
+    const [row] = await this.db
+      .select(farmSelection)
       .from(farms)
-      .where(
+      .innerJoin(
+        currentMembership,
         and(
-          eq(farms.id, id),
-          eq(farms.userId, userId),
-          isNull(farms.deletedAt),
+          eq(currentMembership.farmId, farms.id),
+          eq(currentMembership.userId, userId),
         ),
-      );
+      )
+      .innerJoin(
+        ownerMembership,
+        and(
+          eq(ownerMembership.farmId, farms.id),
+          eq(ownerMembership.role, 'owner'),
+        ),
+      )
+      .where(and(eq(farms.id, id), isNull(farms.deletedAt)));
 
-    return farm ? this.toEntity(farm) : null;
+    return row ? this.toEntity(row) : null;
   }
 
   async listByUserId(userId: number): Promise<Farm[]> {
-    const userFarms = await this.db
-      .select()
+    const rows = await this.db
+      .select(farmSelection)
       .from(farms)
-      .where(and(eq(farms.userId, userId), isNull(farms.deletedAt)))
+      .innerJoin(
+        currentMembership,
+        and(
+          eq(currentMembership.farmId, farms.id),
+          eq(currentMembership.userId, userId),
+        ),
+      )
+      .innerJoin(
+        ownerMembership,
+        and(
+          eq(ownerMembership.farmId, farms.id),
+          eq(ownerMembership.role, 'owner'),
+        ),
+      )
+      .where(isNull(farms.deletedAt))
       .orderBy(asc(farms.createdAt), asc(farms.id));
 
-    return userFarms.map((farm) => this.toEntity(farm));
+    return rows.map((row) => this.toEntity(row));
   }
 
-  async updateName(farm: UpdateFarmNameData): Promise<Farm | null> {
-    const [updateFarm] = await this.db
+  async updateName(data: UpdateFarmNameData): Promise<Farm | null> {
+    const [updated] = await this.db
       .update(farms)
-      .set({
-        name: farm.name,
-        updatedAt: new Date(),
-      })
+      .set({ name: data.name, updatedAt: new Date() })
       .where(
         and(
-          eq(farms.id, farm.id),
-          eq(farms.userId, farm.userId),
+          eq(farms.id, data.id),
           isNull(farms.deletedAt),
+          exists(
+            this.db
+              .select({ id: farmMemberships.id })
+              .from(farmMemberships)
+              .where(
+                and(
+                  eq(farmMemberships.farmId, farms.id),
+                  eq(farmMemberships.userId, data.userId),
+                  eq(farmMemberships.role, 'owner'),
+                ),
+              ),
+          ),
         ),
       )
       .returning();
 
-    return updateFarm ? this.toEntity(updateFarm) : null;
+    if (!updated) return null;
+    return new Farm(
+      updated.id,
+      updated.name,
+      data.userId,
+      updated.createdAt,
+      updated.updatedAt,
+      updated.deletedAt,
+      'owner',
+    );
   }
 
   async softDelete(id: number, userId: number): Promise<boolean> {
     const [row] = await this.db
       .update(farms)
-      .set({
-        deletedAt: new Date(),
-        updatedAt: new Date(),
-      })
+      .set({ deletedAt: new Date(), updatedAt: new Date() })
       .where(
         and(
           eq(farms.id, id),
-          eq(farms.userId, userId),
           isNull(farms.deletedAt),
+          exists(
+            this.db
+              .select({ id: farmMemberships.id })
+              .from(farmMemberships)
+              .where(
+                and(
+                  eq(farmMemberships.farmId, farms.id),
+                  eq(farmMemberships.userId, userId),
+                  eq(farmMemberships.role, 'owner'),
+                ),
+              ),
+          ),
         ),
       )
       .returning({ id: farms.id });
@@ -93,14 +174,15 @@ export class DrizzleFarmRepository implements FarmRepository {
     return Boolean(row);
   }
 
-  private toEntity(farm: typeof farms.$inferSelect): Farm {
+  private toEntity(row: FarmRow): Farm {
     return new Farm(
-      farm.id,
-      farm.name,
-      farm.userId,
-      farm.createdAt,
-      farm.updatedAt,
-      farm.deletedAt,
+      row.id,
+      row.name,
+      row.ownerUserId,
+      row.createdAt,
+      row.updatedAt,
+      row.deletedAt,
+      row.membershipRole,
     );
   }
 }
