@@ -45,10 +45,10 @@ npm run db:up
 
 PostgreSQL runs at `localhost:5432` with the credentials from `.env`.
 
-### 4. Apply database schema
+### 4. Apply database migrations
 
 ```bash
-npm run db:push -w backend
+npm run db:migrate -w backend
 ```
 
 ### 5. Seed the catalog
@@ -95,7 +95,6 @@ npm run db:down
 npm run db:reset
 
 # Drizzle (from repo root)
-npm run db:push -w backend
 npm run db:generate -w backend
 npm run db:migrate -w backend
 npm run db:seed:catalog -w backend
