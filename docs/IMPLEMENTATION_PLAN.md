@@ -1,10 +1,26 @@
 # Farm Bundle Tracker — v1 Implementation Plan
 
-Status: agreed plan (2026-07-09)
+Status: living v1 roadmap
+Last reconciled with the repository: 2026-07-20
 Scope source: [PRD.md](./PRD.md) — this plan describes **what** to build and in
 what order, not how. Each phase states its goal and its done criteria. Sizing
 assumes ~5 focused hours/week with no hard deadline; a "phase" is roughly one
 to three weeks at that pace.
+
+## Progress Snapshot
+
+Work has overlapped the original phase boundaries; a phase is complete only
+when its done criteria are met, not when its main code exists.
+
+| Phase | Status | Delivered | Remaining before done |
+|---|---|---|---|
+| 0 — Test & CI Foundation | In progress | Backend use-case tests and a minimal CI test job | Real-Postgres HTTP tests, full lint/typecheck/build gates, committed migrations |
+| 1 — Complete the Bundle Catalog | In progress | Schema, full 1.6.15 manifest, validation, provenance, transactional idempotent seed | Read-only catalog API and broader automated seed coverage |
+| 2 — Membership, Invites & Authorization | In progress | Memberships, roles, direct add, eight-day multi-use invites, ownership transfer, authorization policy, management UI | Permission-matrix integration coverage and end-to-end acceptance of both join paths |
+| 3 — Bundle Tracking Core | Planned | Product and domain requirements agreed | Per-farm state, claims, board API and UI, derived progress |
+| 4 — Production Deployment & CD | Planned | Deployment goals agreed | Production topology, automated delivery, backups and tested restore |
+| 5 — Real-Time Collaboration | Planned | Collaboration requirements agreed | Transport decision, authenticated push, reconciliation and tests |
+| 6 — Hardening & v1 Close-Out | Planned | Success criteria agreed | Browser E2E, resilience, operational hardening and real-usage review |
 
 ## Ordering Rationale
 
@@ -38,6 +54,10 @@ Two deliberate ordering choices, both worth knowing before reading the phases:
 
 ## Phase 0 — Test & CI Foundation
 
+**Status:** in progress. Unit-level backend coverage and a minimal GitHub
+Actions job exist. The real-database integration harness, complete CI gates,
+and committed migration workflow are still required by this phase.
+
 **Goal:** every subsequent phase is developed against a pipeline that already
 gates changes, using test patterns proven on the existing code.
 
@@ -66,14 +86,18 @@ a real Postgres in CI; schema changes flow through committed migrations.
 
 ## Phase 1 — Complete the Bundle Catalog
 
+**Status:** in progress. The versioned schema, complete standard manifest,
+validation, provenance record, checksum, and guarded seed are implemented. The
+read-only catalog API and explicit automated seed coverage remain.
+
 **Goal:** the full vanilla Community Center dataset exists in the database as
 versioned reference data, exposed read-only.
 
 **What:**
 
-- Extend the catalog domain to what the PRD §6 requires and the current
-  schema lacks: the bundle↔item association with per-slot quantity and
-  minimum quality, and the per-bundle slots-required count.
+- Model the catalog required by PRD §6: the bundle↔item association with
+  per-slot quantity and minimum quality, and the per-bundle slots-required
+  count. This schema work is implemented.
 - Build an idempotent seeding mechanism for catalog data — re-runnable
   without duplicating or clobbering, since the same mechanism must later run
   against production.
@@ -100,6 +124,11 @@ learning-over-speed choice, and it's what makes production seeding safe later.
 
 ## Phase 2 — Membership, Invites & Authorization
 
+**Status:** in progress. The backend and frontend collaboration flows are
+implemented, including direct addition, ownership transfer, and invite
+management. The phase remains open until its permission matrix and join flows
+have integration coverage and acceptance evidence.
+
 **Goal:** farms stop being single-user; access is governed by a real
 role-based authorization layer.
 
@@ -108,10 +137,9 @@ role-based authorization layer.
 - Introduce farm membership with the three roles (owner/editor/viewer);
   creating a farm makes the creator its owner; "my farms" becomes "farms I'm
   a member of."
-- Invites, both flavors from the PRD: shareable code/link with expiry,
-  revocation, and single-vs-multi-use semantics decided and documented; and
-  direct add by username/email. Redeeming an invite creates an editor
-  membership.
+- Invites, both flavors from the PRD: a shareable link that is multi-use for
+  eight days unless revoked, and direct add by username/email. Redeeming an
+  active invite creates an editor membership and does not consume the link.
 - Membership management for owners: change roles, remove members; sensible
   edge rules decided and tested (owner can't demote themselves into an
   ownerless farm; leaving vs. removal).
@@ -134,6 +162,8 @@ story); testing depth (the matrix suite).
 ---
 
 ## Phase 3 — Bundle Tracking Core
+
+**Status:** planned.
 
 **Goal:** the actual product: a farm's bundle board where members mark items
 collected and claim outstanding work. **Milestone M1.**
@@ -170,6 +200,8 @@ PRD.
 
 ## Phase 4 — Production Deployment & Continuous Delivery
 
+**Status:** planned.
+
 **Goal:** the tracker is live and friends are using it. **Milestone M2.**
 
 **What:**
@@ -199,6 +231,8 @@ phases; that's the point.
 ---
 
 ## Phase 5 — Real-Time Collaboration
+
+**Status:** planned. The transport choice remains open until this phase starts.
 
 **Goal:** members viewing the same farm see each other's changes within ~2
 seconds, no refresh. **Milestone M3.**
@@ -237,6 +271,8 @@ option; SSE is the fallback if proxy/ops friction eats the phase.
 
 ## Phase 6 — Hardening & v1 Close-Out
 
+**Status:** planned.
+
 **Goal:** close the gap between "works" and "finished"; check off PRD §10.
 **Milestone M4.**
 
@@ -249,8 +285,9 @@ option; SSE is the fallback if proxy/ops friction eats the phase.
 - Light operational hardening appropriate to scale: rate limiting on auth and
   invite redemption, structured logs, a health endpoint wired into deploy
   smoke checks.
-- Documentation debt: README that lets a stranger run the project, docs/
-  updated to match reality (this plan included).
+- Keep the engineering handbook aligned with delivered behavior and add
+  production operations, backup, and restore documentation from the topology
+  implemented in Phase 4.
 - A v1 review against PRD §10, item by item, with whatever small fixes fall
   out of a real season of group usage.
 
@@ -267,7 +304,7 @@ things" signal.
 - **Layering:** new backend modules follow the established
   domain / application / infrastructure / presentation structure with
   dependencies pointing inward; the frontend follows
-  [frontend/architecture.md](./frontend/architecture.md) — new features as
+  [architecture/frontend.md](./architecture/frontend.md) — new features as
   `features/<name>` with pages/components/hooks/services, shared primitives
   only when genuinely shared.
 - **Migrations:** from Phase 0 onward, every schema change is a committed,

@@ -110,21 +110,17 @@ Two clearly separated areas, matching the existing module layout:
 - `Item` — a game item with a category (crops, fish, minerals, …).
 - `BundleItem` — the association: which item, in which bundle, at what
   **quantity** and **minimum quality**. This is the unit everything per-farm
-  points at.
-
-> The existing `catalogs` schema already models versions/rooms/bundles/items
-> but is missing `BundleItem` (the bundle↔item association with quantity and
-> quality) and the bundle's slots-required count. Completing this is part of
-> v1.
+  points at. The implemented schema names this record `bundle_item_slots` and
+  already stores both the slot requirements and each bundle's required count.
 
 **Farm collaboration (per-farm, user-written):**
 
-- `Farm` — exists today; a shared save. Gains a reference to the catalog
-  version it plays against.
+- `Farm` — a shared save. In v1 it gains a reference to the catalog version it
+  plays against.
 - `FarmMembership` — user ↔ farm with a role (owner / editor / viewer).
-  Replaces the current implicit "owner is the only user" model.
-- `FarmInvite` — a shareable code with lifecycle (created, expires, revoked,
-  redeemed-by).
+- `FarmInvite` — a shareable, multi-use code with lifecycle (created, expires,
+  revoked). Redemption creates an editor membership and does not consume an
+  otherwise active invite.
 - `ItemCollection` — per farm × bundle-item slot: collected or not, by whom,
   when. Absence of a record means "needed."
 - `Claim` — per farm × bundle-item slot: which member intends to get it.
