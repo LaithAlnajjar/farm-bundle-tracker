@@ -1,14 +1,16 @@
-import { useMutation } from '@tanstack/react-query';
-import { Link, useNavigate } from 'react-router';
-import { useAuth } from '@/features/auth';
-import { FarmCard } from '@/features/farms/components/FarmCard';
-import { useFarms } from '@/features/farms/hooks/useFarms';
+import { useMutation } from "@tanstack/react-query";
+import { Link, useNavigate } from "react-router";
+import { useAuth } from "@/features/auth";
+import { FarmCard } from "@/features/farms/components/FarmCard";
+import { CreateFarmForm } from "@/features/farms/components/CreateFarmForm";
+import { useCreateFarm } from "@/features/farms/hooks/useCreateFarm";
+import { useFarms } from "@/features/farms/hooks/useFarms";
 import {
   ChunkyButton,
   NoteCard,
   PixelIcon,
   WoodBoard,
-} from '@/shared/components/farm-ui';
+} from "@/shared/components/farm-ui";
 
 export function FarmsPage() {
   const navigate = useNavigate();
@@ -16,8 +18,9 @@ export function FarmsPage() {
   const farmsQuery = useFarms();
   const logoutMutation = useMutation({
     mutationFn: logout,
-    onSuccess: () => navigate('/', { replace: true }),
+    onSuccess: () => navigate("/", { replace: true }),
   });
+  const createMutation = useCreateFarm();
 
   return (
     <main className="min-h-screen bg-background">
@@ -35,7 +38,7 @@ export function FarmsPage() {
               My farms
             </h1>
             <p className="mt-2 font-body text-xl text-ink-soft sm:text-2xl">
-              Welcome back, {user?.username ?? 'farmer'}.
+              Welcome back, {user?.username ?? "farmer"}.
             </p>
           </div>
 
@@ -45,11 +48,16 @@ export function FarmsPage() {
             onClick={() => logoutMutation.mutate()}
             variant="secondary"
           >
-            {logoutMutation.isPending ? 'Signing out…' : 'Sign out'}
+            {logoutMutation.isPending ? "Signing out…" : "Sign out"}
           </ChunkyButton>
         </header>
 
         <WoodBoard innerClassName="p-5 sm:p-7">
+          <CreateFarmForm
+            error={createMutation.error?.message}
+            isPending={createMutation.isPending}
+            onSubmit={(name) => createMutation.mutate(name)}
+          />
           {farmsQuery.isPending ? (
             <NoteCard pin className="mx-auto max-w-xl p-7 text-center">
               <p

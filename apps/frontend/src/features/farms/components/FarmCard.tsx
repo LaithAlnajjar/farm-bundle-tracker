@@ -1,11 +1,7 @@
-import type { Farm } from '@/features/farms/types/farm.types';
-import { NoteCard, PixelIcon } from '@/shared/components/farm-ui';
-
-const dateFormatter = new Intl.DateTimeFormat(undefined, {
-  day: 'numeric',
-  month: 'short',
-  year: 'numeric',
-});
+import type { Farm } from "@/features/farms/types/farm.types";
+import { NoteCard, PixelIcon } from "@/shared/components/farm-ui";
+import { formatDate } from "@/shared/lib/formatDate";
+import { Link } from "react-router";
 
 interface FarmCardProps {
   farm: Farm;
@@ -30,10 +26,16 @@ export function FarmCard({ farm, rotate }: FarmCardProps) {
       </div>
 
       <div className="seam-dashed mt-auto pt-4 font-body text-lg text-ink-soft">
-        Added{' '}
-        <time dateTime={farm.createdAt}>
-          {dateFormatter.format(new Date(farm.createdAt))}
-        </time>
+        <div className="flex items-center justify-between gap-3">
+          <span className="capitalize">{farm.membershipRole}</span>
+          <time dateTime={farm.createdAt}>{formatDate(farm.createdAt)}</time>
+        </div>
+        <Link
+          className="mt-3 inline-flex font-display text-lg font-bold text-berry underline decoration-2 underline-offset-3"
+          to={`/farms/${farm.id}/manage`}
+        >
+          Manage farm
+        </Link>
       </div>
     </NoteCard>
   );
