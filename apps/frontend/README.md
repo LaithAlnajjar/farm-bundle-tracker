@@ -1,18 +1,20 @@
-# Frontend
+# Frontend workspace
 
-The frontend follows a feature-first layout, with app composition and shared UI kept separate from domain screens.
+The frontend workspace contains the React and Vite web client. Product code is
+feature-first under `src/features`; application composition lives in `src/app`,
+and reusable primitives and utilities live in `src/shared`.
 
-## Source Layout
+Run workspace commands from the repository root:
 
-- `src/app` owns application composition: providers, routes, and the root app component.
-- `src/features/<feature>` owns feature-specific pages, components, content, hooks, and types.
-- `src/shared/components/ui` contains shadcn/Radix primitives that should stay generic.
-- `src/shared/components/farm-ui` contains the themed pixel/farm UI kit used by product features.
-- `src/shared/lib` contains cross-feature utilities.
-- `src/index.css` is the Tailwind v4 token and utility source of truth.
+```bash
+npm run dev -w frontend
+npm run build -w frontend
+npm run lint -w frontend
+```
 
-## Styling
+Use the repository-level [`dev:frontend`](../../package.json) script during
+normal development so the root environment file is selected consistently.
 
-Prefer canonical Tailwind utilities for spacing, borders, sizing, z-index, and transforms. Use custom `@utility` classes in `src/index.css` for named visual effects such as pixel shadows, textures, and glows instead of repeating long arbitrary class strings in components.
-
-Feature components should compose shared UI primitives and feature content; shared UI should not import from feature folders.
+- [Frontend architecture](../../docs/architecture/frontend.md)
+- [Development setup](../../docs/development/setup.md)
+- [Testing strategy](../../docs/development/testing.md)

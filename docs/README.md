@@ -1,12 +1,51 @@
-# Documentation
+# Documentation handbook
 
-This directory contains engineering documentation for the Farm Bundle Tracker codebase.
+This handbook explains the product, the implemented system, and the direction
+of the v1 build. It is organized so a reader can stop at the level of detail
+they need.
 
-## Product
+## Evaluate the project
 
-- [PRD (v1)](./PRD.md) — problem, scope, domain model, and success criteria
-- [Implementation Plan (v1)](./IMPLEMENTATION_PLAN.md) — phased milestones from test foundation to live real-time collaboration
+- [Repository overview](../README.md) — product, current capabilities, stack,
+  and engineering highlights
+- [Product requirements](./PRD.md) — users, flows, domain, non-goals, and v1
+  success criteria
+- [Implementation plan](./IMPLEMENTATION_PLAN.md) — current progress,
+  milestone order, and remaining work
+- [Architecture decisions](./decisions.md) — why the consequential technical
+  choices were made
 
-## Frontend
+## Understand the system
 
-- [Frontend Architecture](./frontend/architecture.md)
+1. [Architecture overview](./architecture/overview.md) — runtime boundaries,
+   request flow, module ownership, and intended evolution
+2. [Frontend architecture](./architecture/frontend.md) — feature ownership,
+   state, session handling, and UI composition
+3. [Backend architecture](./architecture/backend.md) — modules, layers, ports,
+   authorization, and request lifecycle
+4. [Data architecture](./architecture/data.md) — schema ownership, invariants,
+   catalog releases, and persistence workflow
+5. [API contract](./reference/api.md) — implemented route groups, session
+   behavior, permissions, validation, and errors
+
+## Run or change the project
+
+- [Development setup](./development/setup.md) is the source of truth for
+  installation, environment variables, PostgreSQL, seeding, and troubleshooting.
+- [Testing strategy](./development/testing.md) separates the suite that exists
+  today from the v1 testing target.
+- [Contributing](../CONTRIBUTING.md) defines placement rules, expected checks,
+  documentation ownership, and the definition of done.
+- [Catalog seed provenance](../apps/backend/src/modules/catalogs/infrastructure/seed/README.md)
+  documents the source dataset and its guarded update policy.
+
+## How these documents stay honest
+
+Architecture pages describe the current implementation first, then explain the
+direction already committed in the product plan. The PRD owns product intent;
+the implementation plan owns delivery status. A missing feature should not be
+described as available merely because its shape is known.
+
+Package READMEs are local signposts. Setup defaults, API behavior, and
+architecture conventions remain authoritative here so they do not drift across
+several copies.

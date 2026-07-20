@@ -1,129 +1,97 @@
 # Farm Bundle Tracker
 
-Monorepo for a React (Vite) frontend, NestJS backend, and PostgreSQL database.
+Farm Bundle Tracker is a shared planning board for friends playing the same
+Stardew Valley farm. It is designed to replace scattered chat messages with one
+place to see the farm, invite the group, and—once the tracking board lands—show
+which Community Center items are still needed and who has claimed them.
 
-## Project layout
+The project is also a deliberately complete engineering exercise: a React
+client, a layered NestJS API, PostgreSQL persistence, rotating sessions,
+role-based collaboration, validated reference data, and a roadmap toward
+real-time synchronization and production delivery.
 
-```text
-farm-bundle-tracker/
-├── apps/
-│   ├── frontend/          # React + Vite
-│   └── backend/           # NestJS API
-├── docker-compose.yml     # PostgreSQL only
-├── .env.example
-└── package.json
-```
+![Farm collaboration management screen](./docs/assets/farm-management.png)
 
-## Prerequisites
+*The current farm-management screen: owners can add members, assign roles,
+share expiring invite links, and manage farm settings.*
 
-- Node.js 22+
-- [Docker](https://docs.docker.com/get-docker/) and Docker Compose v2 (database only)
+## What works today
+
+| Area | Current implementation | Next step |
+| --- | --- | --- |
+| Accounts | Registration, sign-in, rotating refresh sessions, sign-out | Integration and browser coverage |
+| Farm collaboration | Farm CRUD, owner/editor/viewer membership, direct add, ownership transfer, multi-use invites | Complete permission-matrix tests |
+| Community Center catalog | Versioned 1.6.15 manifest, 6 rooms, 30 bundles, 129 possible slots, validated idempotent seed | Read-only board API |
+| Bundle tracking | Product and data-model requirements are agreed | Farm board, collection state, claims, and derived progress |
+| Live updates and delivery | Designed in the v1 roadmap | Production deployment, then authenticated real-time sync |
+
+The [living implementation plan](./docs/IMPLEMENTATION_PLAN.md) records what is
+delivered and what remains without presenting roadmap work as finished.
+
+## Engineering highlights
+
+- The frontend is organized by product feature, with application composition
+  and reusable UI kept at explicit boundaries.
+- Backend modules separate HTTP presentation, application use cases, domain
+  contracts, and Drizzle adapters. Repository ports keep persistence choices at
+  the edge.
+- Short-lived access tokens live only in memory. Rotating refresh tokens are
+  stored as hashes and delivered through an HTTP-only cookie.
+- Farm access is expressed as capabilities, not controller-specific role
+  conditionals. Non-members cannot use authorization responses to discover a
+  farm.
+- The Community Center catalog is a versioned manifest with provenance,
+  structural validation, a checksum, and guarded, transactional seeding.
+
+## Stack
+
+| Layer | Technology |
+| --- | --- |
+| Web client | React 19, TypeScript, Vite, React Router, TanStack Query, Tailwind CSS |
+| API | NestJS 11, TypeScript, class-validator |
+| Data | PostgreSQL 16, Drizzle ORM |
+| Authentication | JWT access tokens, rotating refresh tokens, bcrypt |
+| Tooling | npm workspaces, Jest, ESLint, GitHub Actions |
 
 ## Quick start
 
-### 1. Install dependencies
-
-From the repo root:
+You need Node.js 24 and Docker with Compose v2.
 
 ```bash
 npm install
-```
-
-### 2. Configure environment
-
-```bash
 cp .env.example .env
-```
-
-Edit `.env` if you need different ports or database credentials. The backend reads env vars from the root `.env` file.
-
-### 3. Start PostgreSQL
-
-```bash
 npm run db:up
-```
-
-PostgreSQL runs at `localhost:5432` with the credentials from `.env`.
-
-### 4. Apply database migrations
-
-```bash
-npm run db:migrate -w backend
-```
-
-### 5. Seed the catalog
-
-Seed the versioned standard Community Center catalog after applying the schema:
-
-```bash
+npm run db:push -w backend
 npm run db:seed:catalog -w backend
 ```
 
-The command is safe to rerun. It validates the full manifest, performs all
-writes in one transaction, and refuses unexpected structural drift.
-
-### 6. Start the backend
+Start the API and web client in separate terminals:
 
 ```bash
 npm run dev:backend
-```
-
-API runs at http://localhost:3000
-
-### 7. Start the frontend (when initialized)
-
-```bash
 npm run dev:frontend
 ```
 
-Frontend runs at http://localhost:5173
+The frontend runs at <http://localhost:5173> and the API at
+<http://localhost:3000>. See the [development setup guide](./docs/development/setup.md)
+for environment details, database lifecycle commands, and troubleshooting.
 
-| Service    | URL                    |
-|------------|------------------------|
-| Frontend   | http://localhost:5173  |
-| Backend    | http://localhost:3000  |
-| PostgreSQL | localhost:5432         |
+## Architecture at a glance
 
-## Useful commands
+The browser application talks to a NestJS HTTP API, which owns authentication,
+farm collaboration, catalog persistence, and PostgreSQL access. React Query
+manages remote state in the client; domain-facing use cases and repository
+ports keep backend policy separate from controllers and Drizzle queries.
 
-```bash
-# Start / stop the database
-npm run db:up
-npm run db:down
-
-# Wipe database volume (destructive)
-npm run db:reset
-
-# Drizzle (from repo root)
-npm run db:generate -w backend
-npm run db:migrate -w backend
-npm run db:seed:catalog -w backend
-```
+Start with the [architecture overview](./docs/architecture/overview.md), then
+continue into the [frontend](./docs/architecture/frontend.md),
+[backend](./docs/architecture/backend.md), or
+[data](./docs/architecture/data.md) guide.
 
 ## Documentation
 
-- [Frontend architecture](./docs/frontend/architecture.md)
-
-## Environment variables
-
-The backend expects these in the root `.env`:
-
-```text
-PORT=3000
-DATABASE_URL=postgresql://farm:farm@localhost:5432/farm_bundle_tracker
-JWT_SECRET=secret
-FRONTEND_URL=http://localhost:5173
-```
-
-`DATABASE_URL` must point at `localhost` (not `postgres`) because the backend runs on your host machine while only the database runs in Docker.
-
-## Troubleshooting
-
-**Port already in use**  
-Change `PORT`, `FRONTEND_PORT`, or `POSTGRES_PORT` in `.env`.
-
-**Backend cannot connect to Postgres**  
-Make sure the database container is running (`npm run db:up`) and `DATABASE_URL` uses `localhost`.
-
-**Missing env vars**  
-Run backend commands via the root scripts (`npm run dev:backend`) so `DOTENV_CONFIG_PATH` points at the root `.env`. If you run from `apps/backend` directly, set `DOTENV_CONFIG_PATH=../../.env` first.
+- [Documentation handbook](./docs/README.md) — routes readers by task
+- [Product requirements](./docs/PRD.md) — v1 problem, scope, and success criteria
+- [Implementation plan](./docs/IMPLEMENTATION_PLAN.md) — delivered work and roadmap
+- [Contributing](./CONTRIBUTING.md) — boundaries, checks, and definition of done
+- [Architecture decisions](./docs/decisions.md) — consequential choices and tradeoffs
