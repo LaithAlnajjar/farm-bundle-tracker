@@ -1,15 +1,12 @@
 import { cn } from "@/shared/lib/utils";
-import { userBadgeStyle, userInitials } from "./userBadge.lib";
+import { avatarForUser } from "./avatar.lib";
+import { PixelAvatar } from "./PixelAvatar";
 
-const sizes = {
-  sm: "size-6 text-[11px]",
-  md: "size-8 text-sm",
-  lg: "size-10 text-lg",
-} as const;
+const sizes = { sm: 24, md: 32, lg: 40 } as const;
 
 /**
- * A real farmhand's stand-in portrait: initials in a framed pixel tile that
- * matches the sprite avatars used elsewhere on the board.
+ * A farmhand's portrait on the board. Each account is dealt a villager from
+ * the town, keyed off its id so the same person always wears the same face.
  */
 export function UserBadge({
   userId,
@@ -23,17 +20,12 @@ export function UserBadge({
   className?: string;
 }) {
   return (
-    <span
-      aria-hidden="true"
-      className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-[3px] border-2 border-bark font-display leading-none font-bold",
-        userBadgeStyle(userId),
-        sizes[size],
-        className,
-      )}
+    <PixelAvatar
+      alt={username}
+      className={cn("border-2", className)}
+      name={avatarForUser(userId)}
+      size={sizes[size]}
       title={username}
-    >
-      {userInitials(username)}
-    </span>
+    />
   );
 }

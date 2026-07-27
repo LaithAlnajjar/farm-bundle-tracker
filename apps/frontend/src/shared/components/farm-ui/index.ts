@@ -1,7 +1,10 @@
+export { BundleSprite } from './BundleSprite';
 export { ChunkyButton } from './ChunkyButton';
+export { ItemSprite } from './ItemSprite';
 export { NoteCard } from './NoteCard';
 export { Pin } from './Pin';
-export { PixelAvatar, AVATAR_LABELS } from './PixelAvatar';
+export { AVATAR_LABELS, AVATAR_NAMES, avatarForUser } from './avatar.lib';
+export { PixelAvatar } from './PixelAvatar';
 export { PixelIcon } from './PixelIcon';
 export { ProgressBar } from './ProgressBar';
 export { SeasonTag } from './SeasonTag';
@@ -15,9 +18,7 @@ export { FarmToastProvider } from './FarmToastProvider';
 export { useFarmToast } from './useFarmToast';
 export { StatusBadge } from './StatusBadge';
 export { UserBadge } from './UserBadge';
-export { userBadgeStyle, userInitials } from './userBadge.lib';
 export {
-  avatarBg,
   chunkyButtonVariants,
   seasonOnDark,
   seasonPanel,
@@ -27,6 +28,7 @@ export {
 export type {
   AvatarName,
   BundleItem,
+  BundleTone,
   IconName,
   ProgressTone,
   Season,

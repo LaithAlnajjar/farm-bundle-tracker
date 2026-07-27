@@ -27,7 +27,7 @@ export const HERO = {
     "The shared notice board where your whole crew pins what's needed, claims what they'll grab, and stamps it done together, season by season.",
   primaryCta: 'Start your board',
   secondaryCta: 'See a live board',
-  onlineAvatars: ['abby', 'sam', 'lena', 'marcus'] satisfies AvatarName[],
+  onlineAvatars: ['abigail', 'sam', 'leah', 'sebastian'] satisfies AvatarName[],
   onlineNote: '5 farmhands on the board right now',
   rewardChip: 'Bridge repaired!',
 } as const;
@@ -37,10 +37,21 @@ export const HERO_BUNDLE: ShowcaseBundle = {
   chip: { kind: 'season', season: 'fall', suffix: 'in season' },
   frame: 'fall',
   items: [
-    { icon: 'mushroom', label: 'Common Mushroom', state: 'collected' },
-    { icon: 'jar', label: 'Wild Plum jam', state: 'collected' },
-    { icon: 'logs', label: 'Hazelnut', state: 'claimed', claimedBy: 'marcus' },
-    { icon: 'sprout', label: 'Blackberry', state: 'needed' },
+    {
+      slug: 'common-mushroom',
+      icon: 'mushroom',
+      label: 'Common Mushroom',
+      state: 'collected',
+    },
+    { slug: 'wild-plum', icon: 'mushroom', label: 'Wild Plum', state: 'collected' },
+    {
+      slug: 'hazelnut',
+      icon: 'mushroom',
+      label: 'Hazelnut',
+      state: 'claimed',
+      claimedBy: 'sebastian',
+    },
+    { slug: 'blackberry', icon: 'mushroom', label: 'Blackberry', state: 'needed' },
   ],
   progress: { value: 2, max: 4 },
   footerNote: '2 of 4',
@@ -111,7 +122,7 @@ export const FEATURES: FeatureCard[] = [
       'Your own changes land immediately; other open boards poll and refresh on focus until live sync arrives.',
   },
   {
-    icon: { kind: 'avatar', avatar: 'lena' },
+    icon: { kind: 'avatar', avatar: 'penny' },
     title: "Claim, don't collide",
     description:
       "Dibs pin your avatar to an item so no one wastes a night catching a fish that's already handled.",
@@ -145,7 +156,7 @@ export const FEATURES: FeatureCard[] = [
 export const BOARD_SHOWCASE = {
   farmName: 'Willow Creek Farm',
   farmMeta: 'Year 2 · Fall · Community Center 14/30',
-  onlineAvatars: ['abby', 'sam', 'lena', 'pia'] satisfies AvatarName[],
+  onlineAvatars: ['abigail', 'sam', 'leah', 'emily'] satisfies AvatarName[],
   filters: { active: 'All bundles', inSeason: 'In season', rest: 'Still needed' },
   filterSummary: '6 rooms · 30 bundles · 16 to go',
   room: {
@@ -163,9 +174,21 @@ export const SHOWCASE_BUNDLES: ShowcaseBundle[] = [
     chip: { kind: 'season', season: 'fall', suffix: 'now' },
     frame: 'fall',
     items: [
-      { icon: 'fish', label: 'Walleye', state: 'collected', live: true },
-      { icon: 'fish', label: 'Bream', state: 'needed' },
-      { icon: 'fish', label: 'Eel', state: 'claimed', claimedBy: 'sam' },
+      {
+        slug: 'walleye',
+        icon: 'fish',
+        label: 'Walleye',
+        state: 'collected',
+        live: true,
+      },
+      { slug: 'bream', icon: 'fish', label: 'Bream', state: 'needed' },
+      {
+        slug: 'eel',
+        icon: 'fish',
+        label: 'Eel',
+        state: 'claimed',
+        claimedBy: 'sam',
+      },
     ],
     progress: { value: 1, max: 3 },
     footerNote: '1 of 3',
@@ -176,43 +199,43 @@ export const SHOWCASE_BUNDLES: ShowcaseBundle[] = [
     chip: { kind: 'complete' },
     frame: 'gold',
     items: [
-      { icon: 'fish', label: 'Sunfish', state: 'golden' },
-      { icon: 'fish', label: 'Catfish', state: 'golden' },
-      { icon: 'fish', label: 'Shad', state: 'golden' },
-      { icon: 'fish', label: 'Tiger Trout', state: 'golden' },
+      { slug: 'sunfish', icon: 'fish', label: 'Sunfish', state: 'golden' },
+      { slug: 'catfish', icon: 'fish', label: 'Catfish', state: 'golden' },
+      { slug: 'shad', icon: 'fish', label: 'Shad', state: 'golden' },
+      { slug: 'tiger-trout', icon: 'fish', label: 'Tiger Trout', state: 'golden' },
     ],
     footerNote: '4 of 4 — turned in!',
-    reward: { icon: 'jar', label: 'by Abby' },
+    reward: { icon: 'jar', label: 'by Abigail' },
   },
   {
     name: 'Crab Pot',
     chip: { kind: 'note', text: 'Any 5 of 10' },
     frame: 'sand',
     items: [
-      { icon: 'fish', label: 'Crayfish', state: 'collected' },
-      { icon: 'fish', label: 'Mussel', state: 'collected' },
-      { icon: 'fish', label: 'Cockle', state: 'needed' },
-      { icon: 'fish', label: 'Clam', state: 'needed' },
+      { slug: 'crayfish', icon: 'fish', label: 'Crayfish', state: 'collected' },
+      { slug: 'mussel', icon: 'fish', label: 'Mussel', state: 'collected' },
+      { slug: 'cockle', icon: 'fish', label: 'Cockle', state: 'needed' },
+      { slug: 'clam', icon: 'fish', label: 'Clam', state: 'needed' },
     ],
     overflow: 6,
     slotSize: 'sm',
     progress: { value: 2, max: 5 },
     footerNote: '2 of 5',
-    reward: { icon: 'pot', label: 'Crab Cakes' },
+    reward: { icon: 'soup', label: 'Crab Cakes' },
   },
 ];
 
 export const SEASONS: SeasonPanel[] = [
   {
     season: 'spring',
-    icon: 'sprout',
+    icon: 'daffodil',
     title: 'Spring',
     description:
       "Foraged blossoms, first fish, and the year's opening plantings.",
   },
   {
     season: 'summer',
-    icon: 'star',
+    icon: 'sunflower',
     title: 'Summer',
     description:
       'Peak harvests and the long-daylight catches worth staying up for.',
@@ -226,7 +249,7 @@ export const SEASONS: SeasonPanel[] = [
   },
   {
     season: 'winter',
-    icon: 'gem',
+    icon: 'crocus',
     title: 'Winter',
     description:
       'Mining hauls, gems, and the rare cold-water fish to close things out.',
@@ -235,8 +258,8 @@ export const SEASONS: SeasonPanel[] = [
 
 export const QUOTE = {
   text: '"We cleared the Community Center two seasons faster once nobody was re-catching the same fish."',
-  avatar: 'abby' satisfies AvatarName,
-  author: 'Abby',
+  avatar: 'abigail' satisfies AvatarName,
+  author: 'Abigail',
   farm: 'Willow Creek Farm',
   crews: ['Willow Creek', 'Pelican Co-op', 'Star Drop Guild', 'Ferngill Collective'],
 } as const;

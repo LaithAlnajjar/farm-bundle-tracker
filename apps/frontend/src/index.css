@@ -151,13 +151,8 @@
   --color-winter-ink: #2f586e;
   --color-winter-bright: #a8d4e6;
 
-  /* Pixel avatar backdrops */
-  --color-ava-abby: #f6ead2;
-  --color-ava-sam: #dce9ef;
-  --color-ava-lena: #f7dfcb;
-  --color-ava-marcus: #eaf2dc;
-  --color-ava-pia: #fdefd3;
-  --color-ava-theo: #e3eef3;
+  /* Backdrop behind a villager portrait, echoing the game's dialogue box. */
+  --color-ava-frame: #f6ead2;
 
   /*
    * Depth is always a solid offset — shadows are never blurred.

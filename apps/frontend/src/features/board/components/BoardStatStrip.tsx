@@ -8,11 +8,12 @@ import {
 import { cn } from "@/shared/lib/utils";
 import type { BoardSummary } from "../lib/boardSelectors";
 
+/** A signature crop per season, straight from the game's sprite sheet. */
 const seasonIcon = {
-  spring: "sprout",
-  summer: "jar",
+  spring: "daffodil",
+  summer: "sunflower",
   fall: "pumpkin",
-  winter: "gem",
+  winter: "crocus",
 } as const;
 
 function StatCard({

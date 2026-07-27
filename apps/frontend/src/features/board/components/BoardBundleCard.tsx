@@ -91,13 +91,13 @@ export function BoardBundleCard({
 
         {complete ? (
           <span className="inline-flex items-center gap-1.5 rounded-[3px] border-2 border-bark bg-gold px-2.5 py-0.5 font-display text-[15px] font-bold text-ink">
-            <PixelIcon className="animate-star-spin" name="star" size={15} />
+            <PixelIcon className="animate-star-spin" name="star" size={16} />
             Stamped
           </span>
         ) : null}
 
         <p className="ml-auto inline-flex items-center gap-1.5 font-body text-[17px] text-ink-soft">
-          <PixelIcon className="flex-none" name="star" size={18} />
+          <PixelIcon className="flex-none" name="star" size={16} />
           {bundle.completionReward}
         </p>
       </header>

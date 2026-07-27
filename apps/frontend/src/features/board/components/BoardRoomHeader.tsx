@@ -1,6 +1,6 @@
-import { PixelIcon } from "@/shared/components/farm-ui";
+import { BundleSprite } from "@/shared/components/farm-ui";
 import { cn } from "@/shared/lib/utils";
-import { roomIcon } from "../lib/boardIcons";
+import { roomTone } from "../lib/boardIcons";
 import type { BoardFilter, BoardRoom } from "../types/board.types";
 
 const filters: { id: BoardFilter; label: string }[] = [
@@ -23,7 +23,7 @@ export function BoardRoomHeader({
 
   return (
     <div className="flex flex-wrap items-center gap-x-3.5 gap-y-2.5 pt-0.5">
-      <PixelIcon className="flex-none" name={roomIcon(room.slug)} size={38} />
+      <BundleSprite className="flex-none" size={32} tone={roomTone(room.slug)} />
       <h1 className="font-display text-[32px] leading-none font-bold text-ink">
         {room.name}
       </h1>

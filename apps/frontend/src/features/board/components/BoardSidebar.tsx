@@ -1,7 +1,12 @@
 import { Link } from "react-router";
-import { PixelIcon, seasonOnDark, UserBadge } from "@/shared/components/farm-ui";
+import {
+  BundleSprite,
+  PixelIcon,
+  seasonOnDark,
+  UserBadge,
+} from "@/shared/components/farm-ui";
 import { cn } from "@/shared/lib/utils";
-import { roomIcon } from "../lib/boardIcons";
+import { roomTone } from "../lib/boardIcons";
 import type { BoardItem, FarmBoard } from "../types/board.types";
 
 /** How many portraits fit before the rest collapse into a "+n" tile. */
@@ -92,7 +97,7 @@ export function BoardSidebar({
               onClick={() => onSelectRoom(room.slug)}
               type="button"
             >
-              <PixelIcon className="flex-none" name={roomIcon(room.slug)} size={22} />
+              <BundleSprite className="flex-none" size={32} tone={roomTone(room.slug)} />
               <span
                 className={cn(
                   "flex-1 truncate",

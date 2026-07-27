@@ -1,5 +1,5 @@
 import { LoaderCircle } from "lucide-react";
-import { PixelIcon, UserBadge } from "@/shared/components/farm-ui";
+import { ItemSprite, PixelIcon, UserBadge } from "@/shared/components/farm-ui";
 import { formatRelativeTime } from "@/shared/lib/formatDate";
 import { cn } from "@/shared/lib/utils";
 import { categoryIcon } from "../lib/boardIcons";
@@ -62,10 +62,12 @@ export function BoardSlotRow({
         pending && "opacity-70",
       )}
     >
-      <PixelIcon
+      <ItemSprite
+        alt=""
         className={cn("flex-none", iconTreatment[state])}
-        name={categoryIcon(slot.item.category)}
-        size={26}
+        fallback={categoryIcon(slot.item.category)}
+        size={32}
+        slug={slot.item.slug}
       />
 
       <span

@@ -7,7 +7,7 @@ import { cn } from '@/shared/lib/utils';
 export function Pin({ className }: { className?: string }) {
   return (
     <img
-      src="/assets/icon-pin.png"
+      src="/assets/icons/pin.png"
       alt=""
       aria-hidden
       width={24}

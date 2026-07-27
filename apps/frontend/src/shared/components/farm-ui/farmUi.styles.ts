@@ -1,5 +1,5 @@
 import { cva } from "class-variance-authority";
-import type { AvatarName, Season } from "./farmUi.types";
+import type { Season } from "./farmUi.types";
 
 /** Pixel-art chunky button: hard offset shadow that compresses on press. */
 export const chunkyButtonVariants = cva(
@@ -97,14 +97,4 @@ export const seasonPanel: Record<
     title: "text-winter-ink",
     body: "text-winter-ink",
   },
-};
-
-/** Avatar -> sprite backdrop, so portraits stay readable on any surface. */
-export const avatarBg: Record<AvatarName, string> = {
-  abby: "bg-ava-abby",
-  lena: "bg-ava-lena",
-  marcus: "bg-ava-marcus",
-  pia: "bg-ava-pia",
-  sam: "bg-ava-sam",
-  theo: "bg-ava-theo",
 };

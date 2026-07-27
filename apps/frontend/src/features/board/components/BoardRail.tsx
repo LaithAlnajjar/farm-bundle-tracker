@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { PixelIcon, UserBadge } from "@/shared/components/farm-ui";
+import { ItemSprite, PixelIcon, UserBadge } from "@/shared/components/farm-ui";
 import { formatRelativeTime } from "@/shared/lib/formatDate";
 import { cn } from "@/shared/lib/utils";
 import type { BoardActivityEntry } from "../lib/boardActivity";
@@ -154,10 +154,11 @@ function ClaimsCard({
                 onClick={() => onGoToClaim(item)}
                 type="button"
               >
-                <PixelIcon
+                <ItemSprite
                   className="flex-none"
-                  name={categoryIcon(item.slot.item.category)}
-                  size={22}
+                  fallback={categoryIcon(item.slot.item.category)}
+                  size={16}
+                  slug={item.slot.item.slug}
                 />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-body text-[19px] leading-tight text-ink">
@@ -208,10 +209,11 @@ function LeavingSoonCard({ items }: { items: BoardItem[] }) {
       <ul className="flex flex-col gap-1.75">
         {items.map((item) => (
           <li className="flex items-center gap-2.5" key={item.slot.id}>
-            <PixelIcon
+            <ItemSprite
               className="flex-none"
-              name={categoryIcon(item.slot.item.category)}
-              size={22}
+              fallback={categoryIcon(item.slot.item.category)}
+              size={16}
+              slug={item.slot.item.slug}
             />
             <span className="min-w-0 flex-1 truncate font-body text-[19px] text-linen">
               {item.slot.item.name}

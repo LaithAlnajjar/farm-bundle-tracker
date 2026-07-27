@@ -10,11 +10,12 @@ import type { FarmBoard } from "../types/board.types";
 
 const seasons: FarmSeason[] = ["spring", "summer", "fall", "winter"];
 
+/** A signature crop per season, straight from the game's sprite sheet. */
 const seasonIcon = {
-  spring: "sprout",
-  summer: "jar",
+  spring: "daffodil",
+  summer: "sunflower",
   fall: "pumpkin",
-  winter: "gem",
+  winter: "crocus",
 } as const;
 
 /** Chunky pill shared by every control in the bar. */

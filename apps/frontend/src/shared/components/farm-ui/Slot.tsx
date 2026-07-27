@@ -1,4 +1,5 @@
 import { cn } from '@/shared/lib/utils';
+import { ItemSprite } from './ItemSprite';
 import { PixelAvatar } from './PixelAvatar';
 import { PixelIcon } from './PixelIcon';
 import type { BundleItem } from './farmUi.types';
@@ -11,14 +12,14 @@ const SIZE: Record<
 > = {
   sm: {
     box: 'size-13',
-    icon: 28,
+    icon: 32,
     badge: 'size-5 -right-1.75 -top-1.75',
     badgeIcon: 12,
     avatar: 24,
   },
   md: {
     box: 'size-16',
-    icon: 32,
+    icon: 48,
     badge: 'size-5.5 -right-1.75 -top-1.75',
     badgeIcon: 14,
     avatar: 26,
@@ -42,7 +43,7 @@ export function Slot({
   size?: SlotSize;
   className?: string;
 }) {
-  const { icon, label, state, claimedBy } = item;
+  const { slug, icon, label, state, claimedBy } = item;
   const sizing = SIZE[size];
 
   return (
@@ -54,8 +55,9 @@ export function Slot({
         className,
       )}
     >
-      <PixelIcon
-        name={icon}
+      <ItemSprite
+        slug={slug}
+        fallback={icon}
         alt={label}
         size={sizing.icon}
         className={cn(state === 'needed' && 'opacity-35 grayscale-[0.7]')}
