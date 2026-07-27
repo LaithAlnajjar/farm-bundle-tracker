@@ -9,6 +9,7 @@ import {
   serial,
   timestamp,
   unique,
+  uniqueIndex,
   varchar,
 } from 'drizzle-orm/pg-core';
 
@@ -38,17 +39,25 @@ export type CatalogItemAvailability = {
   details: string;
 };
 
-export const catalogVersions = pgTable('catalog_versions', {
-  id: serial('id').primaryKey(),
-  slug: varchar('slug', { length: 255 }).notNull().unique(),
-  name: varchar('name', { length: 255 }).notNull(),
-  gameVersion: varchar('game_version', { length: 255 }).notNull(),
-  manifestRevision: varchar('manifest_revision', { length: 64 }).notNull(),
-  manifestChecksum: varchar('manifest_checksum', { length: 64 }).notNull(),
-  deactivatedAt: timestamp('deactivated_at'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
-});
+export const catalogVersions = pgTable(
+  'catalog_versions',
+  {
+    id: serial('id').primaryKey(),
+    slug: varchar('slug', { length: 255 }).notNull().unique(),
+    name: varchar('name', { length: 255 }).notNull(),
+    gameVersion: varchar('game_version', { length: 255 }).notNull(),
+    manifestRevision: varchar('manifest_revision', { length: 64 }).notNull(),
+    manifestChecksum: varchar('manifest_checksum', { length: 64 }).notNull(),
+    deactivatedAt: timestamp('deactivated_at'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex('catalog_versions_one_active_unique')
+      .on(sql`((1))`)
+      .where(sql`${table.deactivatedAt} IS NULL`),
+  ],
+);
 
 export const catalogRooms = pgTable(
   'catalog_rooms',

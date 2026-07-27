@@ -1,50 +1,46 @@
 import { ListFarmsUseCase } from './listFarmsUseCase';
-import type { FarmRepository } from '../domain/repositories/farm.repository';
+import type { FarmListReadRepository } from '../domain/repositories/farmListRead.repository';
 
 describe('ListFarmsUseCase', () => {
   let listFarmsUseCase: ListFarmsUseCase;
-  let listByUserId: jest.MockedFunction<FarmRepository['listByUserId']>;
+  let listForUser: jest.MockedFunction<FarmListReadRepository['listForUser']>;
 
   beforeEach(() => {
-    listByUserId = jest.fn();
-
-    const farmRepository: FarmRepository = {
-      create: jest.fn(),
-      findByIdForUser: jest.fn(),
-      listByUserId,
-      updateName: jest.fn(),
-      softDelete: jest.fn(),
-    };
-
-    listFarmsUseCase = new ListFarmsUseCase(farmRepository);
+    listForUser = jest.fn();
+    listFarmsUseCase = new ListFarmsUseCase({ listForUser });
   });
 
   it('lists the farms belonging to the user', async () => {
     const mockDate = new Date();
-    const mockFarms = [
+    const mockItems = [
       {
-        id: 1,
-        name: 'Farm One',
-        userId: 42,
-        createdAt: mockDate,
-        updatedAt: mockDate,
-        deletedAt: null,
-      },
-      {
-        id: 2,
-        name: 'Farm Two',
-        userId: 42,
-        createdAt: mockDate,
-        updatedAt: mockDate,
-        deletedAt: null,
+        farm: {
+          id: 1,
+          name: 'Farm One',
+          userId: 42,
+          createdAt: mockDate,
+          updatedAt: mockDate,
+          deletedAt: null,
+        },
+        summary: {
+          progress: {
+            completed: 0,
+            total: 30,
+            percentage: 0,
+            complete: false,
+          },
+          currentSeasonNeededItems: 20,
+          currentSeasonUnclaimedItems: 18,
+          myActiveClaims: 2,
+        },
       },
     ];
 
-    listByUserId.mockResolvedValue(mockFarms);
+    listForUser.mockResolvedValue(mockItems);
 
-    await expect(listFarmsUseCase.execute(42)).resolves.toEqual(mockFarms);
+    await expect(listFarmsUseCase.execute(42)).resolves.toEqual(mockItems);
 
-    expect(listByUserId).toHaveBeenCalledWith(42);
-    expect(listByUserId).toHaveBeenCalledTimes(1);
+    expect(listForUser).toHaveBeenCalledWith(42);
+    expect(listForUser).toHaveBeenCalledTimes(1);
   });
 });

@@ -3,13 +3,18 @@ import { and, asc, eq, exists, isNull } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 import { InjectDb } from '@/infrastructure/database/drizzle/drizzle.provider';
 import type { DBClient } from '@/infrastructure/database/drizzle/db';
-import { Farm, type FarmRole } from '../../domain/entities/farm';
+import {
+  Farm,
+  type FarmRole,
+  type FarmSeason,
+} from '../../domain/entities/farm';
 import {
   type CreateFarmData,
   type FarmRepository,
   type UpdateFarmNameData,
 } from '../../domain/repositories/farm.repository';
 import { farmMemberships, farms } from '../persistence/drizzle/farms.schema';
+import { catalogVersions } from '@/modules/catalogs/infrastructure/persistence/drizzle/catalogs.schema';
 
 const currentMembership = alias(farmMemberships, 'current_membership');
 const ownerMembership = alias(farmMemberships, 'owner_membership');
@@ -17,6 +22,8 @@ const ownerMembership = alias(farmMemberships, 'owner_membership');
 const farmSelection = {
   id: farms.id,
   name: farms.name,
+  catalogVersionId: farms.catalogVersionId,
+  currentSeason: farms.currentSeason,
   ownerUserId: ownerMembership.userId,
   createdAt: farms.createdAt,
   updatedAt: farms.updatedAt,
@@ -27,6 +34,8 @@ const farmSelection = {
 type FarmRow = {
   id: number;
   name: string;
+  catalogVersionId: number;
+  currentSeason: FarmSeason;
   ownerUserId: number;
   createdAt: Date;
   updatedAt: Date;
@@ -40,9 +49,14 @@ export class DrizzleFarmRepository implements FarmRepository {
 
   async create(data: CreateFarmData): Promise<Farm> {
     return this.db.transaction(async (tx) => {
+      const [catalog] = await tx
+        .select({ id: catalogVersions.id })
+        .from(catalogVersions)
+        .where(isNull(catalogVersions.deactivatedAt));
+      if (!catalog) throw new Error('ACTIVE_CATALOG_UNAVAILABLE');
       const [farm] = await tx
         .insert(farms)
-        .values({ name: data.name })
+        .values({ name: data.name, catalogVersionId: catalog.id })
         .returning();
       if (!farm) throw new Error('Failed to create farm');
 
@@ -56,6 +70,8 @@ export class DrizzleFarmRepository implements FarmRepository {
         farm.id,
         farm.name,
         data.userId,
+        farm.catalogVersionId,
+        farm.currentSeason,
         farm.createdAt,
         farm.updatedAt,
         farm.deletedAt,
@@ -140,6 +156,8 @@ export class DrizzleFarmRepository implements FarmRepository {
       updated.id,
       updated.name,
       data.userId,
+      updated.catalogVersionId,
+      updated.currentSeason,
       updated.createdAt,
       updated.updatedAt,
       updated.deletedAt,
@@ -179,6 +197,8 @@ export class DrizzleFarmRepository implements FarmRepository {
       row.id,
       row.name,
       row.ownerUserId,
+      row.catalogVersionId,
+      row.currentSeason,
       row.createdAt,
       row.updatedAt,
       row.deletedAt,

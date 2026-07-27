@@ -21,6 +21,7 @@ import { UpdateFarmUseCase } from '../application/updateFarmUseCase';
 import { AuthorizeFarmActionUseCase } from '../application/authorizeFarmActionUseCase';
 import {
   CreateFarmRequestDto,
+  type FarmListItemResponseDto,
   type FarmResponseDto,
   UpdateFarmRequestDto,
 } from './dtos';
@@ -50,10 +51,15 @@ export class FarmsController {
   }
 
   @Get()
-  async list(@CurrentUser() user: AuthUser): Promise<FarmResponseDto[]> {
-    const farms = await this.listFarmsUseCase.execute(user.id);
+  async list(
+    @CurrentUser() user: AuthUser,
+  ): Promise<FarmListItemResponseDto[]> {
+    const items = await this.listFarmsUseCase.execute(user.id);
 
-    return farms.map((farm) => this.toResponse(farm));
+    return items.map(({ farm, summary }) => ({
+      ...this.toResponse(farm),
+      summary,
+    }));
   }
 
   @Get(':id')
@@ -98,6 +104,8 @@ export class FarmsController {
       id: farm.id,
       name: farm.name,
       userId: farm.userId,
+      catalogVersionId: farm.catalogVersionId,
+      currentSeason: farm.currentSeason,
       membershipRole: farm.membershipRole ?? 'owner',
       createdAt: farm.createdAt.toISOString(),
       updatedAt: farm.updatedAt.toISOString(),

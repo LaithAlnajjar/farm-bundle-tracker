@@ -5,3 +5,6 @@ export * from './farmMemberResponse.dto';
 export * from './farmResponse.dto';
 export * from './updateFarmMemberRequest.dto';
 export * from './updateFarmRequest.dto';
+export * from './updateFarmSeasonRequest.dto';
+export * from './setSlotCollectionRequest.dto';
+export * from './setSlotClaimRequest.dto';

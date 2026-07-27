@@ -13,6 +13,7 @@ import type {
 import type { FarmRole } from '../../domain/entities/farm';
 import {
   farmInvites,
+  farmItemClaims,
   farmMemberships,
   farms,
 } from '../persistence/drizzle/farms.schema';
@@ -126,18 +127,32 @@ export class DrizzleFarmCollaborationRepository implements FarmCollaborationRepo
     membershipId: number,
     role: Exclude<FarmRole, 'owner'>,
   ): Promise<FarmMembership | null> {
-    const [updated] = await this.db
-      .update(farmMemberships)
-      .set({ role, updatedAt: new Date() })
-      .where(
-        and(
-          eq(farmMemberships.id, membershipId),
-          eq(farmMemberships.farmId, farmId),
-          ne(farmMemberships.role, 'owner'),
-        ),
-      )
-      .returning({ id: farmMemberships.id });
-    return updated ? this.findMembershipById(farmId, updated.id) : null;
+    const updatedId = await this.db.transaction(async (tx) => {
+      await tx
+        .select({ id: farms.id })
+        .from(farms)
+        .where(eq(farms.id, farmId))
+        .for('update');
+      const [updated] = await tx
+        .update(farmMemberships)
+        .set({ role, updatedAt: new Date() })
+        .where(
+          and(
+            eq(farmMemberships.id, membershipId),
+            eq(farmMemberships.farmId, farmId),
+            ne(farmMemberships.role, 'owner'),
+          ),
+        )
+        .returning({ id: farmMemberships.id });
+      if (!updated) return null;
+      if (role === 'viewer') {
+        await tx
+          .delete(farmItemClaims)
+          .where(eq(farmItemClaims.claimantMembershipId, updated.id));
+      }
+      return updated.id;
+    });
+    return updatedId ? this.findMembershipById(farmId, updatedId) : null;
   }
 
   async transferOwnership(
@@ -291,6 +306,8 @@ export class DrizzleFarmCollaborationRepository implements FarmCollaborationRepo
         .select({
           id: farms.id,
           name: farms.name,
+          catalogVersionId: farms.catalogVersionId,
+          currentSeason: farms.currentSeason,
           ownerUserId: farmMemberships.userId,
           createdAt: farms.createdAt,
           updatedAt: farms.updatedAt,
@@ -321,6 +338,8 @@ export class DrizzleFarmCollaborationRepository implements FarmCollaborationRepo
         row.id,
         row.name,
         row.ownerUserId,
+        row.catalogVersionId,
+        row.currentSeason,
         row.createdAt,
         row.updatedAt,
         row.deletedAt,

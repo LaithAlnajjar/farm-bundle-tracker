@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import type { FarmRepository } from '../domain/repositories/farm.repository';
 import { FARM_REPOSITORY } from '../farms.tokens';
 import type { Farm } from '../domain/entities/farm';
@@ -21,9 +26,21 @@ export class CreateFarmUseCase {
       throw new BadRequestException('Farm name is required');
     }
 
-    return this.farmRepository.create({
-      name,
-      userId: input.userId,
-    });
+    try {
+      return await this.farmRepository.create({
+        name,
+        userId: input.userId,
+      });
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        error.message === 'ACTIVE_CATALOG_UNAVAILABLE'
+      ) {
+        throw new ServiceUnavailableException(
+          'Active catalog is not available',
+        );
+      }
+      throw error;
+    }
   }
 }

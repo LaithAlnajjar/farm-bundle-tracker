@@ -5,9 +5,16 @@ import { DrizzleModule } from './infrastructure/database/drizzle/drizzle.module'
 import { AuthModule } from './modules/auth/auth.module';
 import { FarmsModule } from './modules/farms/farms.module';
 import { UsersModule } from './modules/users/users.module';
+import { CatalogsModule } from './modules/catalogs/catalogs.module';
 
 @Module({
-  imports: [DrizzleModule, UsersModule, AuthModule, FarmsModule],
+  imports: [
+    DrizzleModule,
+    UsersModule,
+    AuthModule,
+    CatalogsModule,
+    FarmsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

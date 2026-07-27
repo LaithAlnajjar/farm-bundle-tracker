@@ -35,6 +35,8 @@ export class FarmInviteRedemptionController {
       id: farm.id,
       name: farm.name,
       userId: farm.userId,
+      catalogVersionId: farm.catalogVersionId,
+      currentSeason: farm.currentSeason,
       membershipRole: farm.membershipRole ?? 'editor',
       createdAt: farm.createdAt.toISOString(),
       updatedAt: farm.updatedAt.toISOString(),

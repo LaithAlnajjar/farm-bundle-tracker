@@ -1,5 +1,9 @@
 import { Module } from '@nestjs/common';
-import { FARM_REPOSITORY } from './farms.tokens';
+import {
+  FARM_BOARD_REPOSITORY,
+  FARM_LIST_READ_REPOSITORY,
+  FARM_REPOSITORY,
+} from './farms.tokens';
 import { DrizzleFarmRepository } from './infrastructure/repositories/farm.repository';
 import { DrizzleModule } from '@/infrastructure/database/drizzle/drizzle.module';
 import { CreateFarmUseCase } from './application/createFarmUseCase';
@@ -29,11 +33,24 @@ import { UpdateFarmMemberRoleUseCase } from './application/updateFarmMemberRoleU
 import { FarmMembersController } from './presentation/farmMembers.controller';
 import { FarmInvitesController } from './presentation/farmInvites.controller';
 import { FarmInviteRedemptionController } from './presentation/farmInviteRedemption.controller';
+import { DrizzleFarmBoardRepository } from './infrastructure/repositories/farmBoard.repository';
+import { GetFarmBoardUseCase } from './application/getFarmBoardUseCase';
+import { ReleaseFarmSlotClaimUseCase } from './application/releaseFarmSlotClaimUseCase';
+import { SetFarmSlotClaimUseCase } from './application/setFarmSlotClaimUseCase';
+import { SetFarmSlotCollectionUseCase } from './application/setFarmSlotCollectionUseCase';
+import { UpdateFarmSeasonUseCase } from './application/updateFarmSeasonUseCase';
+import { FarmBoardController } from './presentation/farmBoard.controller';
+import { DrizzleFarmListReadRepository } from './infrastructure/repositories/farmListRead.repository';
 
 @Module({
   imports: [DrizzleModule, UsersModule],
   providers: [
     { provide: FARM_REPOSITORY, useClass: DrizzleFarmRepository },
+    { provide: FARM_BOARD_REPOSITORY, useClass: DrizzleFarmBoardRepository },
+    {
+      provide: FARM_LIST_READ_REPOSITORY,
+      useClass: DrizzleFarmListReadRepository,
+    },
     {
       provide: FARM_COLLABORATION_REPOSITORY,
       useClass: DrizzleFarmCollaborationRepository,
@@ -48,6 +65,7 @@ import { FarmInviteRedemptionController } from './presentation/farmInviteRedempt
     CreateFarmInviteUseCase,
     DeleteFarmUseCase,
     GetFarmUseCase,
+    GetFarmBoardUseCase,
     LeaveFarmUseCase,
     ListFarmInvitesUseCase,
     ListFarmMembersUseCase,
@@ -55,15 +73,20 @@ import { FarmInviteRedemptionController } from './presentation/farmInviteRedempt
     PreviewFarmInviteUseCase,
     RedeemFarmInviteUseCase,
     RemoveFarmMemberUseCase,
+    ReleaseFarmSlotClaimUseCase,
     RevokeFarmInviteUseCase,
+    SetFarmSlotClaimUseCase,
+    SetFarmSlotCollectionUseCase,
     UpdateFarmUseCase,
     UpdateFarmMemberRoleUseCase,
+    UpdateFarmSeasonUseCase,
   ],
   controllers: [
     FarmsController,
     FarmMembersController,
     FarmInvitesController,
     FarmInviteRedemptionController,
+    FarmBoardController,
   ],
   exports: [],
 })

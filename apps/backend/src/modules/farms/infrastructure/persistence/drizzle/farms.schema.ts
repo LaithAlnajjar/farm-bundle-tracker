@@ -12,6 +12,10 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 import { users } from '@/modules/users/infrastructure/persistence/drizzle/users.schema';
+import {
+  bundleItemSlots,
+  catalogVersions,
+} from '@/modules/catalogs/infrastructure/persistence/drizzle/catalogs.schema';
 
 export const farmMembershipRole = pgEnum('farm_membership_role', [
   'owner',
@@ -19,9 +23,20 @@ export const farmMembershipRole = pgEnum('farm_membership_role', [
   'viewer',
 ]);
 
+export const farmSeason = pgEnum('farm_season', [
+  'spring',
+  'summer',
+  'fall',
+  'winter',
+]);
+
 export const farms = pgTable('farms', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
+  catalogVersionId: integer('catalog_version_id')
+    .notNull()
+    .references(() => catalogVersions.id, { onDelete: 'restrict' }),
+  currentSeason: farmSeason('current_season').notNull().default('spring'),
   deletedAt: timestamp('deleted_at'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
@@ -51,6 +66,56 @@ export const farmMemberships = pgTable(
   ],
 );
 
+export const farmItemCollections = pgTable(
+  'farm_item_collections',
+  {
+    id: serial('id').primaryKey(),
+    farmId: integer('farm_id')
+      .notNull()
+      .references(() => farms.id, { onDelete: 'cascade' }),
+    bundleItemSlotId: integer('bundle_item_slot_id')
+      .notNull()
+      .references(() => bundleItemSlots.id, { onDelete: 'restrict' }),
+    collectedByUserId: integer('collected_by_user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'restrict' }),
+    collectedAt: timestamp('collected_at').notNull().defaultNow(),
+  },
+  (table) => [
+    unique('farm_item_collections_farm_slot_unique').on(
+      table.farmId,
+      table.bundleItemSlotId,
+    ),
+    index('farm_item_collections_farm_id_idx').on(table.farmId),
+    index('farm_item_collections_collector_idx').on(table.collectedByUserId),
+  ],
+);
+
+export const farmItemClaims = pgTable(
+  'farm_item_claims',
+  {
+    id: serial('id').primaryKey(),
+    farmId: integer('farm_id')
+      .notNull()
+      .references(() => farms.id, { onDelete: 'cascade' }),
+    bundleItemSlotId: integer('bundle_item_slot_id')
+      .notNull()
+      .references(() => bundleItemSlots.id, { onDelete: 'restrict' }),
+    claimantMembershipId: integer('claimant_membership_id')
+      .notNull()
+      .references(() => farmMemberships.id, { onDelete: 'cascade' }),
+    claimedAt: timestamp('claimed_at').notNull().defaultNow(),
+  },
+  (table) => [
+    unique('farm_item_claims_farm_slot_unique').on(
+      table.farmId,
+      table.bundleItemSlotId,
+    ),
+    index('farm_item_claims_farm_id_idx').on(table.farmId),
+    index('farm_item_claims_claimant_idx').on(table.claimantMembershipId),
+  ],
+);
+
 export const farmInvites = pgTable(
   'farm_invites',
   {
@@ -76,6 +141,8 @@ export const farmInvites = pgTable(
 export const farmRelations = relations(farms, ({ many }) => ({
   memberships: many(farmMemberships),
   invites: many(farmInvites),
+  collections: many(farmItemCollections),
+  claims: many(farmItemClaims),
 }));
 
 export const farmMembershipRelations = relations(
