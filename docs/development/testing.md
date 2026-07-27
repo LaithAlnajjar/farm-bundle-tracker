@@ -21,15 +21,12 @@ configuration. They boot the same application pipes and filters as production
 and cover catalog completeness, version binding, permissions, claims,
 collection, N-of-M cleanup, attribution, and both farm join paths.
 
-The frontend uses Vitest, jsdom, and React Testing Library for board selectors,
-URL/storage preference normalization, change detection, stable user badges,
-and item interactions including reassignment and release. CI gates
-non-mutating lint, backend unit/integration tests, frontend tests, and both
-builds. Browser E2E remains Phase 6 work.
+The frontend has no automated test suite. It is gated by lint and the
+type-checked production build only; board logic is reviewed through the
+development fixture route below. Browser E2E remains Phase 6 work.
 
 ```bash
 npm run test:integration -w backend
-npm test -w frontend
 ```
 
 During local frontend development, `/__design/board` renders representative
@@ -58,8 +55,8 @@ thin and protect journeys that would be costly to break.
   `*.spec.ts`.
 - HTTP/database integration tests belong under `apps/backend/test` with a
   dedicated Jest configuration and isolated database lifecycle.
-- Future frontend unit or component tests should stay beside the feature they
-  exercise.
+- Any future frontend unit or component tests should stay beside the feature
+  they exercise.
 - Future browser journeys should live in a top-level E2E area because they span
   both applications.
 
@@ -95,6 +92,6 @@ update, structural-drift, and rollback cases remain useful extensions.
 
 ## CI
 
-CI runs backend/frontend lint, unit/component tests, PostgreSQL-backed HTTP
+CI runs backend/frontend lint, backend unit tests, PostgreSQL-backed HTTP
 tests, and both builds. It applies committed migrations to a fresh service and
 seeds the catalog before integration tests. Browser coverage joins in Phase 6.

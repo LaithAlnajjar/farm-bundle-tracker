@@ -170,32 +170,38 @@ Names should communicate ownership or intent. Avoid folders such as `misc`,
 
 ## Board feature
 
-The board is owned by `features/board` and routed at `/farms/:farmId`. Its page
-uses a task-first `Overview`, `Rooms`, and `My Tasks` information architecture
-inside the shared authenticated farm shell. Query parameters are the canonical
-shareable state:
+The board is owned by `features/board` and routed at `/farms/:farmId`. It is a
+single room-at-a-time dashboard with its own full-height chrome: a room sidebar,
+a top bar carrying search and the shared season, a bundle ledger, and a rail of
+board activity, personal claims, the next reward, and items leaving with the
+season. Query parameters are the canonical shareable state:
 
 ```text
-tab, room, q, status, season, assignee
+room, q, filter
 ```
 
-Normalized preferences are persisted under a user-and-farm-scoped
-`bundle-board:preferences:v1:<userId>:<farmId>` key. An explicit board URL wins
+`filter` is one of `all`, `needed`, `mine`, or `season`. Normalized preferences
+are persisted under a user-and-farm-scoped
+`bundle-board:preferences:v2:<userId>:<farmId>` key. An explicit board URL wins
 over storage and starts unspecified fields from defaults; a URL without board
-parameters restores the last normalized preferences. Recognized legacy `view`
-values are translated to the nearest current tab and filters.
+parameters restores the last normalized preferences. Recognized legacy `view`,
+`tab`, `status`, `season`, and `assignee` values collapse onto the nearest
+current filter.
 
-Pure selectors derive overview recommendations, task groupings, and global
-search results from the one authoritative board response. Mutations track
-pending state per slot, replace the board cache with the response, then
-invalidate in the background. In-memory fingerprints distinguish a local
-mutation from later polling/focus changes so the interface can show one useful
-completion or collaboration notice without maintaining activity history.
+Pure selectors derive the room ledger, summary counts, next reward, and
+leaving-soon list from the one authoritative board response. The activity feed
+is reconstructed from the claim and collection timestamps the response already
+carries, so no separate event log is needed and an entry disappears exactly when
+the thing it describes is undone. Mutations track pending state per slot,
+replace the board cache with the response, then invalidate in the background.
+In-memory fingerprints distinguish a local mutation from later polling/focus
+changes so the interface can show one useful completion or collaboration notice.
 
 The same compact item row renders collection, claim, attribution, and optional
-states across all three views. Shared farm UI primitives provide the shell,
-progress, user badges, dialogs, and toast surfaces while remaining unaware of
-board repositories or transport concerns.
+states everywhere it appears. Shared farm UI primitives provide progress, user
+badges, dialogs, and toast surfaces while remaining unaware of board
+repositories or transport concerns. `FarmAppShell` still wraps the farm list and
+farm settings pages, which sit outside the dashboard.
 
 A representative fixture route is available only in development at
 `/__design/board` for phone and desktop visual review. It is omitted from the
