@@ -23,7 +23,7 @@ export function BundleBoard() {
       <div className="page-container px-8 py-21">
         <SectionHeading
           kicker="The whole thing, one screen"
-          subtitle="Every room, bundle and item in one place — always in sync, whether you're at the desk or out in the field on your phone."
+          subtitle="Every room, bundle and item in one place, whether you're at the desk or out in the field on your phone."
         >
           This is your farm's board
         </SectionHeading>
@@ -49,7 +49,7 @@ export function BundleBoard() {
                 aria-hidden
                 className="size-2.5 animate-ping-dot bg-leaf-bright"
               />
-              Live
+              Shared
             </span>
             <div className="flex">
               {onlineAvatars.map((avatar, index) => (

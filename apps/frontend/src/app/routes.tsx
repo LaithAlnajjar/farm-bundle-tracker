@@ -3,6 +3,8 @@ import { RequireAuth } from "@/features/auth/components";
 import { RegisterPage, SignInPage } from "@/features/auth/pages";
 import { FarmsPage, JoinFarmPage, ManageFarmPage } from "@/features/farms";
 import { HomePage } from "@/features/marketing/pages/HomePage";
+import { FarmBoardPage } from "@/features/board";
+import { BoardDesignFixturePage } from "@/features/board/pages/BoardDesignFixturePage";
 
 export function AppRoutes() {
   return (
@@ -20,6 +22,14 @@ export function AppRoutes() {
         }
       />
       <Route
+        path="/farms/:farmId"
+        element={
+          <RequireAuth>
+            <FarmBoardPage />
+          </RequireAuth>
+        }
+      />
+      <Route
         path="/farms/:farmId/manage"
         element={
           <RequireAuth>
@@ -28,6 +38,9 @@ export function AppRoutes() {
         }
       />
       <Route path="/dashboard" element={<Navigate replace to="/farms" />} />
+      {import.meta.env.DEV ? (
+        <Route path="/__design/board" element={<BoardDesignFixturePage />} />
+      ) : null}
     </Routes>
   );
 }

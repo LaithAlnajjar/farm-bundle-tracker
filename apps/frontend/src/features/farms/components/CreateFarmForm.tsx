@@ -1,34 +1,40 @@
 import type { SubmitEvent } from "react";
 import { ChunkyButton } from "@/shared/components/farm-ui";
+import { cn } from "@/shared/lib/utils";
 
 type CreateFarmFormProps = {
   error?: string;
   isPending: boolean;
   onSubmit: (name: string) => void;
+  className?: string;
 };
 
 export function CreateFarmForm({
   error,
   isPending,
   onSubmit,
+  className,
 }: CreateFarmFormProps) {
   const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
     onSubmit(String(data.get("name") ?? "").trim());
-    if (!isPending) form.reset();
   };
 
   return (
     <form
-      className="mb-6 flex flex-col gap-3 rounded-sm border-3 border-bark bg-parchment p-4 sm:flex-row sm:items-end"
+      className={cn(
+        "flex flex-col gap-3 rounded-lg border-2 border-sand-strong bg-parchment p-4",
+        className,
+      )}
       onSubmit={handleSubmit}
     >
-      <label className="flex-1 font-display text-lg font-bold text-ink">
+      <label className="flex-1 font-ui text-sm font-bold text-ink">
         New farm
         <input
-          className="mt-1.5 w-full rounded-sm border-3 border-bark bg-paper px-3 py-2 font-body text-xl font-normal outline-none focus:border-harvest"
+          autoFocus
+          className="mt-1.5 min-h-11 w-full rounded-lg border-2 border-bark bg-paper px-3 font-ui text-base font-normal outline-none focus:border-harvest focus:ring-3 focus:ring-harvest/20"
           maxLength={255}
           name="name"
           placeholder="Four Corners Farm"
@@ -39,7 +45,7 @@ export function CreateFarmForm({
         {isPending ? "Planting…" : "Create farm"}
       </ChunkyButton>
       {error ? (
-        <p className="font-body text-lg text-berry sm:basis-full" role="alert">
+        <p className="font-ui text-sm text-berry sm:basis-full" role="alert">
           {error}
         </p>
       ) : null}

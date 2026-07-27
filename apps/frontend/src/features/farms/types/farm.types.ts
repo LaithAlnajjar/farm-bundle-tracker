@@ -1,12 +1,29 @@
 export type FarmRole = "owner" | "editor" | "viewer";
+export type FarmSeason = "spring" | "summer" | "fall" | "winter";
 
 export interface Farm {
   id: number;
   name: string;
   userId: number;
+  catalogVersionId: number;
+  currentSeason: FarmSeason;
   membershipRole: FarmRole;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface FarmListItem extends Farm {
+  summary: {
+    progress: {
+      completed: number;
+      total: number;
+      percentage: number;
+      complete: boolean;
+    };
+    currentSeasonNeededItems: number;
+    currentSeasonUnclaimedItems: number;
+    myActiveClaims: number;
+  };
 }
 
 export interface FarmMember {

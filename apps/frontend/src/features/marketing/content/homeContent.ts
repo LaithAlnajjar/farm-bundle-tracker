@@ -24,7 +24,7 @@ export const HERO = {
   kicker: 'For co-op farms & completionist crews',
   title: 'Everything your farm needs, pinned to one board.',
   description:
-    "The shared notice board where your whole crew pins what's needed, claims what they'll grab, and stamps it done — live, together, season by season.",
+    "The shared notice board where your whole crew pins what's needed, claims what they'll grab, and stamps it done together, season by season.",
   primaryCta: 'Start your board',
   secondaryCta: 'See a live board',
   onlineAvatars: ['abby', 'sam', 'lena', 'marcus'] satisfies AvatarName[],
@@ -56,7 +56,7 @@ export const HERO_LIVE_NOTE = {
 } as const;
 
 export const TRUST_STRIP = {
-  text: 'One board your whole crew shares — live on desktop & phone.',
+  text: 'One board your whole crew shares on desktop and phone.',
   icons: [
     'parsnip',
     'fish',
@@ -89,7 +89,7 @@ export const HOW_IT_WORKS: HowItWorksStep[] = [
     number: '03',
     title: 'Stamp it collected',
     description:
-      'Two taps to mark an item done. A satisfying stamp pop lands it and the board updates for everyone instantly.',
+      'Two taps to mark an item done. A satisfying stamp lands it and other open boards refresh regularly.',
     icon: 'check',
     frame: 'leaf',
   },
@@ -106,9 +106,9 @@ export const HOW_IT_WORKS: HowItWorksStep[] = [
 export const FEATURES: FeatureCard[] = [
   {
     icon: { kind: 'live' },
-    title: 'Live, always in sync',
+    title: 'Shared and refresh-aware',
     description:
-      'A teammate\'s change glows gold for two seconds, then settles. No refresh, no "who\'s got the Eel?" texts.',
+      'Your own changes land immediately; other open boards poll and refresh on focus until live sync arrives.',
   },
   {
     icon: { kind: 'avatar', avatar: 'lena' },
@@ -136,9 +136,9 @@ export const FEATURES: FeatureCard[] = [
   },
   {
     icon: { kind: 'sprite', icon: 'jar', frame: 'winter' },
-    title: 'Works offline',
+    title: 'Online by design',
     description:
-      'Lost the barn Wi-Fi? Your stamps queue locally and reconcile the second you reconnect. Nothing gets dropped.',
+      'Writes stay server-authoritative and errors remain visible. Offline queues are deliberately outside v1.',
   },
 ];
 
