@@ -102,24 +102,12 @@ export interface FarmBoard {
   rooms: BoardRoom[];
 }
 
-export type BoardTab = "overview" | "rooms" | "tasks";
-export type BoardStatusFilter =
-  | "all"
-  | "needed"
-  | "unclaimed"
-  | "claimed"
-  | "collected"
-  | "optional";
-export type BoardSeasonFilter = FarmSeason | "current" | "all";
-export type BoardAssigneeFilter = "me" | "all" | "unassigned" | `${number}`;
+export type BoardFilter = "all" | "needed" | "mine" | "season";
 
 export interface BoardPreferences {
-  tab: BoardTab;
   room?: string;
   q: string;
-  status: BoardStatusFilter;
-  season: BoardSeasonFilter;
-  assignee: BoardAssigneeFilter;
+  filter: BoardFilter;
 }
 
 export interface BoardItem {
@@ -127,6 +115,8 @@ export interface BoardItem {
   bundle: BoardBundle;
   slot: BoardSlot;
 }
+
+export type SlotState = "collected" | "claimed" | "needed" | "optional";
 
 export interface BoardActions {
   collect: (slotId: number, collected: boolean) => void;

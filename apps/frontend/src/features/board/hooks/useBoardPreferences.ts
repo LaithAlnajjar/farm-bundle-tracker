@@ -34,7 +34,7 @@ export function useBoardPreferences(input: {
 
   const updatePreferences = useCallback(
     (patch: Partial<BoardPreferences>, options?: { replace?: boolean }) => {
-      const next = { ...preferences, ...patch };
+      const next: BoardPreferences = { ...preferences, ...patch };
       if (storageKey) {
         window.localStorage.setItem(storageKey, JSON.stringify(next));
       }

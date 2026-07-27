@@ -1,14 +1,17 @@
 const badgeStyles = [
-  "border-leaf-dark bg-leaf-soft text-leaf-dark",
-  "border-summer-ink bg-summer-soft text-summer-ink",
-  "border-fall-ink bg-fall-soft text-fall-ink",
-  "border-winter-ink bg-winter-soft text-winter-ink",
-  "border-gold-ink bg-gold-soft text-gold-ink",
-  "border-soil bg-parchment text-soil",
+  "bg-leaf-soft text-leaf-dark",
+  "bg-summer-soft text-summer-ink",
+  "bg-fall-soft text-fall-ink",
+  "bg-winter-soft text-winter-ink",
+  "bg-gold-soft text-gold-ink",
+  "bg-parchment text-soil",
 ] as const;
 
 export function userInitials(username: string) {
-  const parts = username.trim().split(/[\s_-]+/).filter(Boolean);
+  const parts = username
+    .trim()
+    .split(/[\s_-]+/)
+    .filter(Boolean);
   if (parts.length > 1) {
     return `${parts[0]?.[0] ?? ""}${parts.at(-1)?.[0] ?? ""}`.toUpperCase();
   }

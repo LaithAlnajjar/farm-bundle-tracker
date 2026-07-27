@@ -100,6 +100,8 @@
   --color-bark: #5b3a1e;
   --color-ink: #3e2712;
   --color-ink-soft: #6b4a26;
+  /* Outermost frame of dark panels — one step darker than --color-ink. */
+  --color-ink-deep: #2b1b0c;
   --color-linen: #e7cfa6;
   --color-linen-dim: #d9be93;
   --color-cream: #f6ead2;
@@ -128,19 +130,26 @@
   --color-oat: #efdfbd;
   --color-oat-ink: #a98f63;
 
-  /* Season accents */
+  /*
+   * Season accents. `-soft`/`-ink` pair up on parchment; `-bright` is the
+   * same hue lifted enough to stay legible on bark.
+   */
   --color-spring: #7fb069;
   --color-spring-soft: #eaf2dc;
   --color-spring-ink: #3e5b22;
+  --color-spring-bright: #8ae06b;
   --color-summer: #f2a541;
   --color-summer-soft: #fdefd3;
   --color-summer-ink: #8a5510;
+  --color-summer-bright: #f2c53d;
   --color-fall: #c8553d;
   --color-fall-soft: #f7dfcb;
   --color-fall-ink: #8a2f1d;
+  --color-fall-bright: #e8956b;
   --color-winter: #7ea8be;
   --color-winter-soft: #e3eef3;
   --color-winter-ink: #2f586e;
+  --color-winter-bright: #a8d4e6;
 
   /* Pixel avatar backdrops */
   --color-ava-abby: #f6ead2;

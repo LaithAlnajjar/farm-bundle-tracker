@@ -1,29 +1,10 @@
 import type {
-  BoardAssigneeFilter,
+  BoardFilter,
   BoardPreferences,
-  BoardSeasonFilter,
-  BoardStatusFilter,
-  BoardTab,
   LegacyBoardView,
 } from "../types/board.types";
 
-const tabs = new Set<BoardTab>(["overview", "rooms", "tasks"]);
-const statuses = new Set<BoardStatusFilter>([
-  "all",
-  "needed",
-  "unclaimed",
-  "claimed",
-  "collected",
-  "optional",
-]);
-const seasons = new Set<BoardSeasonFilter>([
-  "current",
-  "all",
-  "spring",
-  "summer",
-  "fall",
-  "winter",
-]);
+const filters = new Set<BoardFilter>(["all", "needed", "mine", "season"]);
 const legacyViews = new Set<LegacyBoardView>([
   "all",
   "season",
@@ -31,94 +12,74 @@ const legacyViews = new Set<LegacyBoardView>([
   "my-claims",
   "claims",
 ]);
+
+/** Every param the board owns, including the ones only legacy URLs still use. */
 const recognizedKeys = [
-  "tab",
   "room",
   "q",
+  "filter",
+  "tab",
+  "view",
   "status",
   "season",
   "assignee",
-  "view",
   "claimant",
   "seasonScope",
 ];
 
 export const defaultBoardPreferences: BoardPreferences = {
-  tab: "overview",
   q: "",
-  status: "all",
-  season: "current",
-  assignee: "me",
+  filter: "all",
 };
 
 export function boardPreferenceStorageKey(userId: number, farmId: number) {
-  return `bundle-board:preferences:v1:${userId}:${farmId}`;
+  return `bundle-board:preferences:v2:${userId}:${farmId}`;
 }
 
 export function hasBoardParameters(params: URLSearchParams) {
   return recognizedKeys.some((key) => params.has(key));
 }
 
-const isAssignee = (value: string): value is BoardAssigneeFilter =>
-  value === "me" ||
-  value === "all" ||
-  value === "unassigned" ||
-  /^\d+$/.test(value);
-
-export function parseBoardPreferences(params: URLSearchParams): BoardPreferences {
-  const legacy = params.get("view");
-  if (legacy && legacyViews.has(legacy as LegacyBoardView)) {
-    const claimant = params.get("claimant");
-    if (legacy === "my-claims") {
-      return { ...defaultBoardPreferences, tab: "tasks", assignee: "me" };
-    }
-    if (legacy === "claims") {
-      return {
-        ...defaultBoardPreferences,
-        tab: "tasks",
-        assignee:
-          claimant && /^\d+$/.test(claimant)
-            ? (claimant as `${number}`)
-            : "all",
-        season: params.get("seasonScope") === "all" ? "all" : "current",
-      };
-    }
-    return {
-      ...defaultBoardPreferences,
-      tab: "rooms",
-      room: params.get("room") ?? undefined,
-      status: legacy === "needed" ? "needed" : legacy === "season" ? "needed" : "all",
-      season: legacy === "season" ? "current" : "all",
-      assignee: "all",
-    };
+/**
+ * Collapses the retired tab/status/season/assignee URLs onto the single chip
+ * that now carries the same intent, so old bookmarks still land somewhere
+ * recognizable.
+ */
+function parseLegacyFilter(params: URLSearchParams): BoardFilter | null {
+  const view = params.get("view");
+  if (view && legacyViews.has(view as LegacyBoardView)) {
+    if (view === "my-claims" || view === "claims") return "mine";
+    if (view === "season") return "season";
+    if (view === "needed") return "needed";
+    return "all";
   }
+  if (params.get("tab") === "tasks" || params.get("assignee") === "me") {
+    return "mine";
+  }
+  if (params.get("season") === "current") return "season";
+  const status = params.get("status");
+  if (status === "needed" || status === "unclaimed") return "needed";
+  return params.has("tab") || params.has("status") ? "all" : null;
+}
 
-  const tab = params.get("tab") ?? "";
-  const status = params.get("status") ?? "";
-  const season = params.get("season") ?? "";
-  const assignee = params.get("assignee") ?? "";
+export function parseBoardPreferences(
+  params: URLSearchParams,
+): BoardPreferences {
+  const filter = params.get("filter") ?? "";
   return {
-    tab: tabs.has(tab as BoardTab) ? (tab as BoardTab) : "overview",
     room: params.get("room") ?? undefined,
     q: params.get("q") ?? "",
-    status: statuses.has(status as BoardStatusFilter)
-      ? (status as BoardStatusFilter)
-      : "all",
-    season: seasons.has(season as BoardSeasonFilter)
-      ? (season as BoardSeasonFilter)
-      : "current",
-    assignee: isAssignee(assignee) ? assignee : "me",
+    filter: filters.has(filter as BoardFilter)
+      ? (filter as BoardFilter)
+      : (parseLegacyFilter(params) ?? defaultBoardPreferences.filter),
   };
 }
 
 export function boardPreferencesToParams(preferences: BoardPreferences) {
   const params = new URLSearchParams();
-  if (preferences.tab !== "overview") params.set("tab", preferences.tab);
   if (preferences.room) params.set("room", preferences.room);
   if (preferences.q) params.set("q", preferences.q);
-  if (preferences.status !== "all") params.set("status", preferences.status);
-  if (preferences.season !== "current") params.set("season", preferences.season);
-  if (preferences.assignee !== "me") params.set("assignee", preferences.assignee);
+  if (preferences.filter !== "all") params.set("filter", preferences.filter);
   return params;
 }
 
@@ -127,10 +88,9 @@ export function readStoredBoardPreferences(key: string) {
     const stored = window.localStorage.getItem(key);
     if (!stored) return null;
     const parsed = JSON.parse(stored) as Partial<BoardPreferences>;
-    return parseBoardPreferences(boardPreferencesToParams({
-      ...defaultBoardPreferences,
-      ...parsed,
-    }));
+    return parseBoardPreferences(
+      boardPreferencesToParams({ ...defaultBoardPreferences, ...parsed }),
+    );
   } catch {
     return null;
   }

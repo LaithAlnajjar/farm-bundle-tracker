@@ -1,24 +1,24 @@
 import { useEffect, useRef } from "react";
-import { Link, useParams, useSearchParams } from "react-router";
+import { useMutation } from "@tanstack/react-query";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router";
 import { useAuth } from "@/features/auth";
-import { FarmAppShell } from "@/features/farms/components/FarmAppShell";
-import { ChunkyButton, NoteCard, PixelIcon, useFarmToast } from "@/shared/components/farm-ui";
-import { BoardHero } from "../components/BoardHero";
-import { BoardOverview } from "../components/BoardOverview";
-import { BoardRoomsView } from "../components/BoardRoomsView";
-import { BoardTasksView } from "../components/BoardTasksView";
+import {
+  ChunkyButton,
+  NoteCard,
+  PixelIcon,
+  useFarmToast,
+} from "@/shared/components/farm-ui";
+import { BoardDashboard } from "../components/BoardDashboard";
 import { useBoardMutations } from "../hooks/useBoardMutations";
 import { useBoardPreferences } from "../hooks/useBoardPreferences";
 import { useFarmBoard } from "../hooks/useFarmBoard";
+import { boardFingerprint, describeBoardChange } from "../lib/boardChanges";
 import type { BoardActions, FarmBoard } from "../types/board.types";
-import {
-  boardFingerprint,
-  describeBoardChange,
-} from "../lib/boardChanges";
 
 export function FarmBoardPage() {
   const farmId = Number(useParams().farmId);
-  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { logout, user } = useAuth();
   const { showToast } = useFarmToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const boardQuery = useFarmBoard(farmId);
@@ -33,6 +33,10 @@ export function FarmBoardPage() {
   const mutations = useBoardMutations(farmId, (fingerprint) =>
     localFingerprints.current.add(fingerprint),
   );
+  const logoutMutation = useMutation({
+    mutationFn: logout,
+    onSuccess: () => navigate("/", { replace: true }),
+  });
 
   useEffect(() => {
     const board = boardQuery.data;
@@ -56,7 +60,7 @@ export function FarmBoardPage() {
     return <BoardMessage message="This bundle board address is invalid." />;
   }
   if (boardQuery.isPending) {
-    return <BoardMessage message="Pinning up your farm dashboard…" loading />;
+    return <BoardMessage loading message="Pinning up your farm dashboard…" />;
   }
   if (boardQuery.isError || !boardQuery.data) {
     return (
@@ -71,11 +75,6 @@ export function FarmBoardPage() {
     );
   }
 
-  const board = boardQuery.data;
-  const preferences = preferencesState.preferences;
-  const currentMembership = board.claimableMembers.find(
-    (member) => member.userId === user?.id,
-  );
   const actions: BoardActions = {
     collect: (slotId, collected) =>
       mutations.collection.mutate({ slotId, collected }),
@@ -86,62 +85,18 @@ export function FarmBoardPage() {
   };
 
   return (
-    <FarmAppShell
-      activeTab={preferences.tab}
-      farm={board.farm}
-      onTabChange={(tab) =>
-        preferencesState.updatePreferences(
-          tab === "rooms"
-            ? { tab, assignee: "all" }
-            : tab === "tasks"
-              ? { tab, assignee: "me" }
-              : { tab },
-        )
-      }
-    >
-      <main className="page-container space-y-5 px-3 py-4 sm:px-8 sm:py-7">
-        <BoardHero
-          board={board}
-          dataUpdatedAt={boardQuery.dataUpdatedAt}
-          isFetching={boardQuery.isFetching}
-          onRefresh={() => void boardQuery.refetch()}
-          onSeasonChange={(season) => mutations.season.mutate(season)}
-          seasonPending={mutations.season.isPending}
-        />
-
-        {preferences.tab === "overview" ? (
-          <BoardOverview
-            actions={actions}
-            board={board}
-            currentMembership={currentMembership}
-            currentUserId={user?.id}
-            onNavigate={(patch) => preferencesState.updatePreferences(patch)}
-          />
-        ) : null}
-
-        {preferences.tab === "rooms" ? (
-          <BoardRoomsView
-            actions={actions}
-            board={board}
-            currentMembership={currentMembership}
-            currentUserId={user?.id}
-            onChange={preferencesState.updatePreferences}
-            preferences={preferences}
-          />
-        ) : null}
-
-        {preferences.tab === "tasks" ? (
-          <BoardTasksView
-            actions={actions}
-            board={board}
-            currentMembership={currentMembership}
-            currentUserId={user?.id}
-            onChange={preferencesState.updatePreferences}
-            preferences={preferences}
-          />
-        ) : null}
-      </main>
-    </FarmAppShell>
+    <BoardDashboard
+      actions={actions}
+      board={boardQuery.data}
+      currentUser={user ?? undefined}
+      isFetching={boardQuery.isFetching}
+      onPreferencesChange={preferencesState.updatePreferences}
+      onRefresh={() => void boardQuery.refetch()}
+      onSeasonChange={(season) => mutations.season.mutate(season)}
+      onSignOut={() => logoutMutation.mutate()}
+      preferences={preferencesState.preferences}
+      seasonPending={mutations.season.isPending}
+    />
   );
 }
 
@@ -155,10 +110,13 @@ function BoardMessage({
   loading?: boolean;
 }) {
   return (
-    <main className="farm-canvas flex min-h-screen items-center justify-center px-5 font-ui" data-season="spring">
-      <NoteCard className="max-w-xl rounded-xl border-3 border-bark bg-paper p-8 text-center shadow-drop-6">
+    <main className="flex min-h-screen items-center justify-center bg-background px-5">
+      <NoteCard className="max-w-xl p-8 text-center">
         <PixelIcon name="sprout" size={40} />
-        <p className="mt-3 font-display text-2xl font-bold text-ink" role={loading ? "status" : undefined}>
+        <p
+          className="mt-3 font-display text-2xl font-bold text-ink"
+          role={loading ? "status" : undefined}
+        >
           {message}
         </p>
         {action ? <div className="mt-4">{action}</div> : null}

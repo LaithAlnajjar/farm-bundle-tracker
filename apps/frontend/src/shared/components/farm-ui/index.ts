@@ -19,7 +19,9 @@ export { userBadgeStyle, userInitials } from './userBadge.lib';
 export {
   avatarBg,
   chunkyButtonVariants,
+  seasonOnDark,
   seasonPanel,
+  seasonSurface,
   seasonTag,
 } from './farmUi.styles';
 export type {
