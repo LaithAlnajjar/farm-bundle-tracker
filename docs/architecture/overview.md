@@ -55,31 +55,31 @@ failure clears the access token instead of entering a retry loop.
 | Accounts and sessions | `features/auth` | `modules/auth`, `modules/users` | users, refresh tokens |
 | Farm lifecycle and access | `features/farms` | `modules/farms` | farms, memberships, invites |
 | Marketing pages | `features/marketing` | None | None |
-| Community Center catalog | Board UI not implemented | `modules/catalogs` seed infrastructure | versions, rooms, bundles, items, slots |
-| Bundle progress and claims | Planned farm-board feature | Planned farm collaboration domain | Planned per-farm state |
+| Community Center catalog | Consumed by `features/board` | `modules/catalogs` read API and seed infrastructure | versions, rooms, bundles, items, slots |
+| Bundle progress and claims | `features/board` | `modules/farms` board use cases and policy | collections and claims |
 
-The catalogs module currently contains schema and seed infrastructure rather
-than the full set of application and presentation layers. Those layers should
-appear when the read-only catalog API is implemented; empty abstractions are
-not added merely to make every module look symmetrical.
+The catalogs module owns a domain-facing read contract, an authenticated active
+catalog endpoint, its schema, and guarded seed infrastructure. Catalog writes
+remain outside the HTTP product.
 
 ## Current implementation
 
 The working HTTP product supports accounts, rotating sessions, farm creation
 and management, role-based membership, direct member addition, ownership
 transfer, and expiring multi-use invite links. The full standard Community
-Center catalog can be validated and seeded, but it is not exposed through an
-API or rendered as a working board yet.
+Center catalog is validated, seeded, exposed read-only, and rendered as a
+farm-scoped board. Owners and editors can update the shared season, collections,
+and claims; viewers receive the same projection without write controls.
 
-Synchronization is request/refetch based. The local Compose topology provides
+Synchronization is request/refetch based: mutations replace the board cache,
+the active board polls every 15 seconds, and focus triggers a refetch. The local Compose topology provides
 PostgreSQL only. Production containers, a reverse proxy, TLS, backups,
 continuous delivery, and persistent push connections are not present.
 
 ## Direction
 
-The next product slice exposes the catalog and adds per-farm collection and
-claim state. After the tracker is useful over ordinary HTTP, the roadmap adds a
-production topology and an authenticated, farm-scoped push channel with
+After the board's two-account mobile acceptance pass, the roadmap adds a
+production topology and then an authenticated, farm-scoped push channel with
 reconnect and resynchronization semantics.
 
 Those additions should preserve the current ownership rules:

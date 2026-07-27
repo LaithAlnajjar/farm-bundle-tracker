@@ -11,6 +11,7 @@ src/
 ├── app/                 # providers, routes, root composition
 ├── features/            # product workflows
 │   ├── auth/
+│   ├── board/
 │   ├── farms/
 │   └── marketing/
 ├── shared/
@@ -82,6 +83,8 @@ page owns loading, error, empty, and interaction states.
 2. `QueryClientProvider` owns server-state caching.
 3. `AuthProvider` hydrates and exposes the session while using the query client
    to clear private cached data on logout.
+4. `FarmToastProvider` supplies an accessible application toast queue for
+   mutation, copy, refresh, and collaboration feedback.
 
 Provider order is a dependency decision. A provider may use only contexts
 outside it in the tree.
@@ -97,10 +100,10 @@ invite link. Use forms for draft input. Do not copy server results into local
 state merely to render them, and do not introduce a global store until a real
 cross-feature client-state requirement exists.
 
-Query defaults currently retry once and do not refetch on window focus. The
-farm feature explicitly invalidates queries after writes. The future board
-will begin with the same request/refetch model; real-time events will reconcile
-the query cache after the HTTP product is usable.
+Query defaults retry once and do not refetch on window focus. Farm management
+explicitly invalidates affected queries. The board opts into focus refetch and
+a 15-second foreground interval; mutations replace its single farm-board cache
+entry with the server response and then invalidate it in the background.
 
 ## HTTP and session lifecycle
 
@@ -165,18 +168,35 @@ feature behavior must not leak into generic UI primitives.
 Names should communicate ownership or intent. Avoid folders such as `misc`,
 `common`, or `helpers` when a more precise home exists.
 
-## Adding a feature
+## Board feature
 
-For a new board feature:
+The board is owned by `features/board` and routed at `/farms/:farmId`. Its page
+uses a task-first `Overview`, `Rooms`, and `My Tasks` information architecture
+inside the shared authenticated farm shell. Query parameters are the canonical
+shareable state:
 
-1. Create `features/board` with a route page and only the folders required by
-   its first workflow.
-2. Add the route in `app/routes.tsx` and protect it at route level.
-3. Put board API operations in feature services and query/mutation behavior in
-   board hooks.
-4. Compose existing farm UI primitives; keep bundle- or claim-specific UI in
-   the board feature.
-5. Promote a component or utility to `shared` only after another feature needs
-   the same stable abstraction.
-6. Add tests according to the [testing strategy](../development/testing.md)
-   and update this guide if a boundary changes.
+```text
+tab, room, q, status, season, assignee
+```
+
+Normalized preferences are persisted under a user-and-farm-scoped
+`bundle-board:preferences:v1:<userId>:<farmId>` key. An explicit board URL wins
+over storage and starts unspecified fields from defaults; a URL without board
+parameters restores the last normalized preferences. Recognized legacy `view`
+values are translated to the nearest current tab and filters.
+
+Pure selectors derive overview recommendations, task groupings, and global
+search results from the one authoritative board response. Mutations track
+pending state per slot, replace the board cache with the response, then
+invalidate in the background. In-memory fingerprints distinguish a local
+mutation from later polling/focus changes so the interface can show one useful
+completion or collaboration notice without maintaining activity history.
+
+The same compact item row renders collection, claim, attribution, and optional
+states across all three views. Shared farm UI primitives provide the shell,
+progress, user badges, dialogs, and toast surfaces while remaining unaware of
+board repositories or transport concerns.
+
+A representative fixture route is available only in development at
+`/__design/board` for phone and desktop visual review. It is omitted from the
+production route table.

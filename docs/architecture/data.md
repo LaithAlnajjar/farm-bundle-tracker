@@ -10,7 +10,7 @@ and schema tooling one composition point.
 | --- | --- | --- |
 | Users | `users` | Identity, unique email and username, password hash |
 | Auth | `refresh_tokens` | Hashed rotating session tokens and replacement links |
-| Farms | `farms`, `farm_memberships`, `farm_invites` | Collaboration boundary, roles, invite lifecycle |
+| Farms | `farms`, `farm_memberships`, `farm_invites`, `farm_item_collections`, `farm_item_claims` | Collaboration, board state, roles, and invites |
 | Catalogs | `catalog_versions`, `catalog_rooms`, `catalog_bundles`, `catalog_items`, `bundle_item_slots` | Shared versioned Community Center reference data |
 
 The `users` table is referenced by auth and farm records, but the users module
@@ -29,6 +29,15 @@ item slots rather than copying catalog facts per farm.
   to that user.
 - A farm has many invites. The database stores only a unique token hash;
   expiration and revocation determine activity.
+- Every farm references one catalog version and stores the group's shared
+  current season. Farm creation refuses to proceed until an active catalog is
+  seeded.
+- A collection is unique per farm and catalog slot and records the user and
+  time. A claim is unique per farm and slot and references a membership by its
+  primary key. Claim mutations transactionally verify that membership belongs
+  to the same farm and currently has the owner or editor role.
+- Membership removal cascades claims while collection attribution survives.
+  Demotion to viewer also releases that member's claims transactionally.
 - Deleting a farm is a soft delete through `deleted_at`. Membership lookups and
   farm reads exclude deleted farms. Dependent records remain until a future
   retention policy deliberately removes them.
@@ -71,11 +80,11 @@ rules live beside the seed in the
 
 ## Current schema workflow
 
-The repository contains Drizzle schemas but no committed migration files yet.
-Local setup therefore applies the current schema directly:
+The repository contains a baseline and a Phase 3 tracking migration. Fresh
+databases apply them in order:
 
 ```bash
-npm run db:push -w backend
+npm run db:migrate -w backend
 ```
 
 After the schema exists, seed the catalog:
@@ -87,14 +96,10 @@ npm run db:seed:catalog -w backend
 Both commands load the root `.env` through their workspace scripts. The
 [setup guide](../development/setup.md) owns the complete database lifecycle.
 
-## Direction
+CI applies migrations to an empty PostgreSQL service before seeding and running
+HTTP integration tests. Future schema changes must be generated, reviewed, and
+committed rather than applied with `db:push`.
 
-Before production deployment, schema changes will move to generated, reviewed,
-committed migrations executed by CI/CD. Until that workflow exists, docs must
-not instruct contributors to run `db:migrate` on a fresh clone.
-
-Bundle tracking will add per-farm state keyed by the stable bundle item slot:
-absence means needed; a collection record captures who collected it and when;
-a separate claim captures one member's intent. Bundle, room, and farm progress
-will be derived from collection records and required-slot rules rather than
-stored as mutable completion flags.
+Bundle, room, and farm progress is derived from collection rows. Claims are
+stored separately but are released when their slot is collected or their N-of-M
+bundle becomes complete; claims never contribute to completion.

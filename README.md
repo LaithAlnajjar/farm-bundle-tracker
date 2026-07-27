@@ -2,8 +2,8 @@
 
 Farm Bundle Tracker is a shared planning board for friends playing the same
 Stardew Valley farm. It is designed to replace scattered chat messages with one
-place to see the farm, invite the group, and—once the tracking board lands—show
-which Community Center items are still needed and who has claimed them.
+place to see the farm, invite the group, and show which Community Center items
+are still needed and who has claimed them.
 
 The project is also a deliberately complete engineering exercise: a React
 client, a layered NestJS API, PostgreSQL persistence, rotating sessions,
@@ -19,11 +19,11 @@ share expiring invite links, and manage farm settings.*
 
 | Area | Current implementation | Next step |
 | --- | --- | --- |
-| Accounts | Registration, sign-in, rotating refresh sessions, sign-out | Integration and browser coverage |
-| Farm collaboration | Farm CRUD, owner/editor/viewer membership, direct add, ownership transfer, multi-use invites | Complete permission-matrix tests |
-| Community Center catalog | Versioned 1.6.15 manifest, 6 rooms, 30 bundles, 129 possible slots, validated idempotent seed | Read-only board API |
-| Bundle tracking | Product and data-model requirements are agreed | Farm board, collection state, claims, and derived progress |
-| Live updates and delivery | Designed in the v1 roadmap | Production deployment, then authenticated real-time sync |
+| Accounts | Registration, sign-in, rotating refresh sessions, sign-out, HTTP integration coverage | Browser coverage |
+| Farm collaboration | Farm CRUD, owner/editor/viewer membership, direct add, ownership transfer, multi-use invites, permission tests | Phone-sized board acceptance |
+| Community Center catalog | Versioned 1.6.15 manifest, validated idempotent seed, and authenticated read API | Production seeding |
+| Bundle tracking | Version-bound farm boards, shared season, collection state, claims, filters, and derived progress | Two-browser mobile acceptance |
+| Live updates and delivery | 15-second board polling and focus refetch | Production deployment, then authenticated real-time sync |
 
 The [living implementation plan](./docs/IMPLEMENTATION_PLAN.md) records what is
 delivered and what remains without presenting roadmap work as finished.
@@ -61,7 +61,7 @@ You need Node.js 24 and Docker with Compose v2.
 npm install
 cp .env.example .env
 npm run db:up
-npm run db:push -w backend
+npm run db:migrate -w backend
 npm run db:seed:catalog -w backend
 ```
 

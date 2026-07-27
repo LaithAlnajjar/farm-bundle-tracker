@@ -10,16 +10,15 @@ use cases express the work the system performs.
 | --- | --- | --- |
 | `auth` | Sign-in, access-token verification, refresh rotation, logout, current session | Domain, application, infrastructure, presentation |
 | `users` | User entity and persistence contract used by auth and farms | Domain and infrastructure, composed through `UsersModule` |
-| `farms` | Farm lifecycle, memberships, roles, invitations, authorization | Domain, application, infrastructure, presentation |
-| `catalogs` | Versioned Community Center reference data | Drizzle schema and guarded seed infrastructure |
+| `farms` | Farm lifecycle, board state, claims, memberships, roles, invitations, authorization | Domain, application, infrastructure, presentation |
+| `catalogs` | Versioned Community Center reference data | Read layers, Drizzle schema, guarded seed infrastructure |
 
 `AppModule` composes these modules and the shared `DrizzleModule`. Application
 behavior crosses a module boundary through an exported contract. An
 infrastructure read adapter may join another module's schema when assembling a
 module-owned projection—as the farms adapter does for member usernames and
 emails—but it must not mutate the other module's records. The catalogs module
-will gain application and presentation layers when catalog reads become
-product behavior.
+exports its read repository contract; catalog writes remain seed-only.
 
 ## Dependency direction
 
@@ -107,9 +106,9 @@ retain Nest's JSON error shape.
    Drizzle adapter performs it, using a transaction for ownership transfer.
 6. The controller maps the returned membership to `FarmMemberResponseDto`.
 
-This is also the pattern for future board mutations: transport validation,
-one application operation, capability authorization, a domain-facing port,
-and response mapping.
+Board mutations follow the same pattern and serialize writes on the farm row.
+Collection may release several claims when an N-of-M bundle crosses its
+threshold, so each mutation returns a newly assembled authoritative board.
 
 ## Authentication and authorization
 

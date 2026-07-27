@@ -62,16 +62,26 @@ The copied environment publishes PostgreSQL on `localhost:5432`. Without an
 environment override, the Compose file's fallback host port is `5435`; keeping
 the copied `.env` and `DATABASE_URL` aligned avoids that ambiguity.
 
-### 4. Apply the schema
+### 4. Apply committed migrations
 
 ```bash
-npm run db:push -w backend
+npm run db:migrate -w backend
 ```
 
-The repository does not yet contain committed Drizzle migrations. `db:push` is
-therefore the supported fresh-development workflow. Migration generation and
-`db:migrate` are reserved for the migration workflow tracked in Phase 0; do not
-use them as fresh-clone instructions yet.
+Committed Drizzle migrations are the supported schema workflow. If this clone
+previously used `db:push`, perform the one-time reset below before migrating;
+the old database has no migration journal and cannot be adopted implicitly.
+
+```bash
+# Destructive: removes the local PostgreSQL volume and all disposable dev data.
+npm run db:reset
+npm run db:up
+npm run db:migrate -w backend
+npm run db:seed:catalog -w backend
+```
+
+The reset is never performed automatically. Export anything worth keeping
+before running it.
 
 ### 5. Seed the catalog
 
@@ -100,8 +110,8 @@ npm run dev:frontend
 | API | <http://localhost:3000> |
 | PostgreSQL | `localhost:5432` with the example environment |
 
-Register a local account in the browser, create a farm, and use its management
-page to exercise memberships and invite links.
+Register a local account, create a farm, and open its bundle board. Farm
+creation requires the catalog seed because every farm is bound to a version.
 
 ## Daily database commands
 
@@ -116,7 +126,7 @@ npm run db:down
 npm run db:reset
 ```
 
-`db:reset` is destructive. After using it, run `db:up`, `db:push`, and the
+`db:reset` is destructive. After using it, run `db:up`, `db:migrate`, and the
 catalog seed again.
 
 Drizzle commands available in the backend workspace:
@@ -128,9 +138,9 @@ npm run db:migrate -w backend
 npm run db:seed:catalog -w backend
 ```
 
-Only `db:push` and `db:seed:catalog` are part of today's documented local
-workflow. See [data architecture](../architecture/data.md) for the intended
-transition to committed migrations.
+`db:migrate` and `db:seed:catalog` are the supported workflow. `db:push`
+remains available only for disposable schema prototyping and must not be used
+for a change intended to merge.
 
 ## Useful application checks
 
@@ -166,7 +176,7 @@ workspace scripts that already provide it.
 
 ### Tables or catalog records are missing
 
-Run `npm run db:push -w backend`, then
+Run `npm run db:migrate -w backend`, then
 `npm run db:seed:catalog -w backend`. The seed does not create tables.
 
 ### Authentication works once and then fails

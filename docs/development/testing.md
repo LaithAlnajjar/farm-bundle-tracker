@@ -6,11 +6,9 @@ target so contributors neither overlook existing coverage nor overstate it.
 
 ## Current suite
 
-Backend Jest tests live beside source as `*.spec.ts`. They cover authentication
-and farm application behavior with explicit fakes for repository and crypto
-ports. The strongest current cases include refresh rotation and reuse handling,
-sign-in and registration failures, duration parsing, refresh-token entity
-behavior, and core farm create/read/update/delete use cases.
+Backend Jest tests live beside source as `*.spec.ts`. They cover authentication,
+farm application behavior, catalog validation, and board completion rules with
+explicit fakes or pure domain inputs.
 
 Run them from the repository root:
 
@@ -18,14 +16,27 @@ Run them from the repository root:
 npm test -w backend -- --runInBand
 ```
 
-The backend also retains Nest's generated `test/app.e2e-spec.ts`, which checks
-only the `Hello World` route. It is a harness placeholder, not meaningful HTTP
-integration coverage, and it is not part of the current CI job.
+PostgreSQL-backed HTTP tests live in `apps/backend/test` under a separate Jest
+configuration. They boot the same application pipes and filters as production
+and cover catalog completeness, version binding, permissions, claims,
+collection, N-of-M cleanup, attribution, and both farm join paths.
 
-The frontend has no test runner or component/browser test configuration yet.
-Current CI installs dependencies and runs the backend Jest suite only. It does
-not yet gate lint, type checking, application builds, real-database integration
-tests, or browser tests.
+The frontend uses Vitest, jsdom, and React Testing Library for board selectors,
+URL/storage preference normalization, change detection, stable user badges,
+and item interactions including reassignment and release. CI gates
+non-mutating lint, backend unit/integration tests, frontend tests, and both
+builds. Browser E2E remains Phase 6 work.
+
+```bash
+npm run test:integration -w backend
+npm test -w frontend
+```
+
+During local frontend development, `/__design/board` renders representative
+mixed, optional, completed, viewer, and pending board states without requiring
+API setup. The route is development-only and is intended for responsive and
+accessibility review, not as a substitute for the real two-account acceptance
+flow.
 
 ## Target test pyramid
 
@@ -58,8 +69,8 @@ framework hiding it.
 
 ## Permission coverage
 
-The farm capability matrix is a contract and should become a table-driven HTTP
-integration suite. For each farm-scoped route it must prove:
+The board and farm-management capability matrices run through the real HTTP
+harness. For farm-scoped behavior they prove:
 
 - Owner, editor, and viewer access according to the documented capability.
 - Unauthenticated callers receive `401`.
@@ -74,21 +85,16 @@ attempts that could violate an invariant.
 
 ## Catalog coverage
 
-Manifest validation currently runs whenever the seed loads. Dedicated tests
-should make its contract visible without requiring database writes: expected
+Manifest validation runs whenever the seed loads, and dedicated tests make its
+contract visible without database writes: expected
 room/bundle/slot totals, all references resolved, required slots within bounds,
 quality-crop quantities, N-of-M choice bundles, and version-sensitive rewards.
 
-Database integration coverage should prove that a fresh seed is complete, a
-repeat seed is idempotent, metadata changes update safely, structural drift is
-rejected, and any failure rolls back the entire seed.
+Database integration coverage proves completeness and idempotency. Metadata
+update, structural-drift, and rollback cases remain useful extensions.
 
-## CI direction
+## CI
 
-Phase 0 expands CI into independent, readable gates for backend and frontend
-lint/type checks, unit tests, PostgreSQL-backed integration tests, and builds.
-Committed migrations must be applied to a fresh CI database before integration
-tests. Browser coverage joins later when the critical product loop exists.
-
-Until those gates land, contributors should run the checks listed in
-[CONTRIBUTING.md](../../CONTRIBUTING.md) and report any check they could not run.
+CI runs backend/frontend lint, unit/component tests, PostgreSQL-backed HTTP
+tests, and both builds. It applies committed migrations to a fresh service and
+seeds the catalog before integration tests. Browser coverage joins in Phase 6.

@@ -106,3 +106,51 @@ management, and revocation are essential.
 
 **Revisit when.** The project opens to untrusted users, farms need admission
 approval, or invite-level usage limits become a product requirement.
+
+## Claims auto-release when work stops being needed
+
+**Context.** Claims coordinate outstanding work. Keeping them after collection
+or after an N-of-M bundle is complete makes My Claims continue showing tasks
+the farm no longer needs.
+
+**Decision.** Store claims separately from collections, but let collection
+control their lifecycle. Collecting releases that slot's claim; completing a
+choice bundle releases all bundle claims. Only active owners/editors may be
+claimants, and removal or viewer demotion releases their claims. Claims use a
+foreign key to the membership primary key for deletion safety; the locked claim
+transaction validates that the membership belongs to the target farm before
+writing it.
+
+**Consequences.** Claim views stay actionable without manual cleanup. Reopening
+a bundle does not restore deleted intent, and collection transactions must lock
+the farm and evaluate the bundle threshold atomically. Database writes outside
+the application must preserve the same-farm invariant themselves; the HTTP
+integration suite rejects cross-farm membership IDs.
+
+**Revisit when.** Claims become durable assignments or an activity history is
+added and automatic deletion would lose product-significant information.
+
+## Task-first dashboard with URL-addressable planning state
+
+**Context.** A room-first catalog browser made users inspect several places
+before finding useful seasonal work, while separate claim views competed with
+the main board. Filters also disappeared on refresh and could not be shared or
+navigated with browser history.
+
+**Decision.** Make Overview the default farm destination, with Rooms for
+catalog exploration and My Tasks for personal and team planning. Derive all
+three views from one full-board query. Store normalized filters in the URL and
+restore them from a user-and-farm-scoped local key only when the URL contains
+no recognized board state. Keep transient dialogs, expansion, pending actions,
+and notifications in memory.
+
+**Consequences.** Current-season claims and unassigned work are visible
+immediately, navigation remains linkable, and users sharing a browser do not
+inherit each other's farm preferences. The client owns more derived selectors
+and compatibility normalization, but the API and mutation semantics remain
+server-authoritative. A full board remains small enough for client-side search
+and filtering for the vanilla catalog.
+
+**Revisit when.** Catalog size makes client-side derivation measurably slow,
+saved views need cross-device persistence, or real-time events require a
+durable activity model.

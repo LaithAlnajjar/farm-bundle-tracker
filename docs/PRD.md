@@ -116,16 +116,17 @@ Two clearly separated areas, matching the existing module layout:
 **Farm collaboration (per-farm, user-written):**
 
 - `Farm` — a shared save. In v1 it gains a reference to the catalog version it
-  plays against.
+  plays against and a shared current season, initially Spring.
 - `FarmMembership` — user ↔ farm with a role (owner / editor / viewer).
 - `FarmInvite` — a shareable, multi-use code with lifecycle (created, expires,
   revoked). Redemption creates an editor membership and does not consume an
   otherwise active invite.
 - `ItemCollection` — per farm × bundle-item slot: collected or not, by whom,
   when. Absence of a record means "needed."
-- `Claim` — per farm × bundle-item slot: which member intends to get it.
-  Independent of collection state (a claim is intent; collection is outcome).
-  At most one claimant per slot.
+- `Claim` — per farm × bundle-item slot: which owner/editor intends to get it.
+  At most one claimant per slot. Collecting the slot releases its claim; when
+  an N-of-M bundle completes, all claims in that bundle are released and the
+  remaining alternatives become optional.
 
 **Derived, never stored as user-editable state:** bundle completion, room
 completion, farm completion percentage.

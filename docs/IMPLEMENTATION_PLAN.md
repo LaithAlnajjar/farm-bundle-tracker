@@ -1,7 +1,7 @@
 # Farm Bundle Tracker — v1 Implementation Plan
 
 Status: living v1 roadmap
-Last reconciled with the repository: 2026-07-20
+Last reconciled with the repository: 2026-07-22
 Scope source: [PRD.md](./PRD.md) — this plan describes **what** to build and in
 what order, not how. Each phase states its goal and its done criteria. Sizing
 assumes ~5 focused hours/week with no hard deadline; a "phase" is roughly one
@@ -14,10 +14,10 @@ when its done criteria are met, not when its main code exists.
 
 | Phase | Status | Delivered | Remaining before done |
 |---|---|---|---|
-| 0 — Test & CI Foundation | In progress | Backend use-case tests and a minimal CI test job | Real-Postgres HTTP tests, full lint/typecheck/build gates, committed migrations |
-| 1 — Complete the Bundle Catalog | In progress | Schema, full 1.6.15 manifest, validation, provenance, transactional idempotent seed | Read-only catalog API and broader automated seed coverage |
-| 2 — Membership, Invites & Authorization | In progress | Memberships, roles, direct add, eight-day multi-use invites, ownership transfer, authorization policy, management UI | Permission-matrix integration coverage and end-to-end acceptance of both join paths |
-| 3 — Bundle Tracking Core | Planned | Product and domain requirements agreed | Per-farm state, claims, board API and UI, derived progress |
+| 0 — Test & CI Foundation | Complete | Unit tests, real-Postgres HTTP suite, full CI gates, committed migrations | — |
+| 1 — Complete the Bundle Catalog | Complete | Full validated 1.6.15 manifest, guarded idempotent seed, read-only API, automated coverage | — |
+| 2 — Membership, Invites & Authorization | Complete | Memberships, roles, both join paths, ownership transfer, capability policy, management UI, permission-matrix HTTP coverage | — |
+| 3 — Bundle Tracking Core | In progress | Version-bound state, shared season, claims, board API/UI, derived progress, polling, automated coverage | Two-account phone-sized manual acceptance |
 | 4 — Production Deployment & CD | Planned | Deployment goals agreed | Production topology, automated delivery, backups and tested restore |
 | 5 — Real-Time Collaboration | Planned | Collaboration requirements agreed | Transport decision, authenticated push, reconciliation and tests |
 | 6 — Hardening & v1 Close-Out | Planned | Success criteria agreed | Browser E2E, resilience, operational hardening and real-usage review |
@@ -54,9 +54,9 @@ Two deliberate ordering choices, both worth knowing before reading the phases:
 
 ## Phase 0 — Test & CI Foundation
 
-**Status:** in progress. Unit-level backend coverage and a minimal GitHub
-Actions job exist. The real-database integration harness, complete CI gates,
-and committed migration workflow are still required by this phase.
+**Status:** complete. Unit tests, a production-configured HTTP harness against
+PostgreSQL, committed migrations, and full lint/test/build CI gates are in
+place.
 
 **Goal:** every subsequent phase is developed against a pipeline that already
 gates changes, using test patterns proven on the existing code.
@@ -86,9 +86,9 @@ a real Postgres in CI; schema changes flow through committed migrations.
 
 ## Phase 1 — Complete the Bundle Catalog
 
-**Status:** in progress. The versioned schema, complete standard manifest,
-validation, provenance record, checksum, and guarded seed are implemented. The
-read-only catalog API and explicit automated seed coverage remain.
+**Status:** complete. The versioned schema, complete standard manifest,
+validation, provenance, checksum, guarded seed, authenticated read API, and
+automated dataset/idempotency coverage are implemented.
 
 **Goal:** the full vanilla Community Center dataset exists in the database as
 versioned reference data, exposed read-only.
@@ -124,10 +124,9 @@ learning-over-speed choice, and it's what makes production seeding safe later.
 
 ## Phase 2 — Membership, Invites & Authorization
 
-**Status:** in progress. The backend and frontend collaboration flows are
-implemented, including direct addition, ownership transfer, and invite
-management. The phase remains open until its permission matrix and join flows
-have integration coverage and acceptance evidence.
+**Status:** complete. Backend and frontend collaboration flows, both join
+paths, ownership transfer, invite management, and the HTTP permission matrix
+are implemented and covered.
 
 **Goal:** farms stop being single-user; access is governed by a real
 role-based authorization layer.
@@ -163,7 +162,10 @@ story); testing depth (the matrix suite).
 
 ## Phase 3 — Bundle Tracking Core
 
-**Status:** planned.
+**Status:** in progress. Persistence, APIs, the task-first cozy dashboard,
+farm-list summaries, shared season, refetch synchronization, and automated
+coverage are implemented. The milestone remains open until the two-account
+phone-and-desktop acceptance flow is performed.
 
 **Goal:** the actual product: a farm's bundle board where members mark items
 collected and claim outstanding work. **Milestone M1.**
@@ -173,18 +175,20 @@ collected and claim outstanding work. **Milestone M1.**
 - Per-farm item state: mark a bundle item slot collected / not collected,
   recording who and when; derived bundle/room/farm completion computed from
   slot state and the slots-required rule — never stored as editable state.
-- Claims: claim, release, and reassign a slot (any editor, per PRD); at most
-  one claimant per slot; claims and collection state are independent.
+- Claims: claim, release, and reassign a needed slot to any owner/editor; at
+  most one claimant per slot. Collection releases the slot's claim, and N-of-M
+  completion releases all remaining claims in that bundle.
 - Endpoints for the board (full farm board state in one shape the UI can
   render), for slot mutations, and for claim mutations — all behind the
   Phase 2 policy.
-- Frontend: the farm bundle board (rooms → bundles → slots) built on the
-  existing farm-ui components; one-tap collect toggle; claim controls showing
-  who's getting what; a "my claims" view; progress at bundle/room/farm level;
-  comfortable on a phone (this phase includes the mobile layout pass for the
-  board).
-- Sync in this phase is refetch-based (query invalidation / focus refetch) —
-  deliberately good enough to use, replaced in Phase 5.
+- Frontend: a shared authenticated farm shell and task-first Overview, Rooms,
+  and My Tasks dashboard; one-tap collect and self-claim; responsive
+  reassignment details; unambiguous needed, claimed, collected, and optional
+  states; URL-addressable filters with user/farm-scoped preference restore;
+  farm-list summaries; and deliberate phone and desktop layouts.
+- Sync in this phase is refetch-based (authoritative mutation responses,
+  15-second foreground polling, and focus refetch) — deliberately good enough
+  to use, replaced in Phase 5.
 - Tests: completion-derivation rules as domain unit tests (the N-of-M slot
   logic is the heart of the domain); board and mutation endpoints as
   integration tests including role enforcement.

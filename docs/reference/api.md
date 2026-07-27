@@ -61,6 +61,68 @@ refresh call itself is never retried through that mechanism.
 | `PATCH /farms/:id` | Owner | Rename a farm |
 | `DELETE /farms/:id` | Owner | Soft-delete a farm; returns `204` |
 
+Farm responses include the bound `catalogVersionId` and shared
+`currentSeason`. Creating a farm returns `503` when no active catalog has been
+seeded.
+
+`GET /farms` is the one farm endpoint with an additive, list-only projection.
+Each base farm response includes:
+
+```ts
+summary: {
+  progress: {
+    completed: number;
+    total: number;
+    percentage: number;
+    complete: boolean;
+  };
+  currentSeasonNeededItems: number;
+  currentSeasonUnclaimedItems: number;
+  myActiveClaims: number;
+}
+```
+
+Progress counts completed bundles with the same N-of-M rules as the full
+board. Seasonal needed counts exclude collected and optional slots;
+`currentSeasonUnclaimedItems` is the unassigned subset. `myActiveClaims`
+contains only claims assigned to the caller. The server computes all summaries
+with bounded aggregate reads while preserving the stable farm-list order.
+Create, get, update, and invite-redemption responses intentionally remain the
+base farm shape without this synthetic summary.
+
+## Catalog route
+
+| Method and path | Required access | Purpose |
+| --- | --- | --- |
+| `GET /catalogs/active` | Authenticated | Return the active version with ordered rooms, bundles, item slots, requirements, rewards, and availability |
+
+Catalog data is read-only over HTTP. The guarded seed command is its only write
+entry point.
+
+## Board routes
+
+| Method and path | Required access | Purpose |
+| --- | --- | --- |
+| `GET /farms/:farmId/board` | Member | Return the complete renderable farm board and derived progress |
+| `PUT /farms/:farmId/board/season` | Owner/editor | Change the shared Spring/Summer/Fall/Winter context |
+| `PUT /farms/:farmId/board/slots/:slotId/collection` | Owner/editor | Set the slot's desired collected state |
+| `PUT /farms/:farmId/board/slots/:slotId/claim` | Owner/editor | Claim or reassign a needed slot to an owner/editor membership |
+| `DELETE /farms/:farmId/board/slots/:slotId/claim` | Owner/editor | Idempotently release a claim |
+
+Board mutations return the updated full board. Collection requests use an
+explicit `{ "collected": boolean }`; claim requests use
+`{ "claimantMembershipId": number }`. Repeating an already-current mutation
+preserves attribution timestamps.
+
+The board nests farm/catalog identity, caller capabilities, farm progress,
+claimable members, rooms, bundles, and slots. Collection and claim attribution
+contain public user identity plus ISO timestamps. Progress, `needed`, and
+`claimable` are derived by the server.
+
+Collected slots and completed bundles cannot receive claims. Collecting a slot
+releases its claim; completing an N-of-M bundle releases all remaining claims
+in that bundle and makes uncollected alternatives optional.
+
 Farm names are trimmed by application behavior, must contain at least one
 character, and are limited to 255 characters by the request DTO.
 
@@ -97,13 +159,12 @@ redemption fail as not found.
 | Capability | Owner | Editor | Viewer |
 | --- | :---: | :---: | :---: |
 | View farm and member data | Yes | Yes | Yes |
-| Edit the future bundle board | Yes | Yes | No |
+| Edit the bundle board and shared season | Yes | Yes | No |
 | Manage members and transfer ownership | Yes | No | No |
 | Manage invites | Yes | No | No |
 | Rename or delete the farm | Yes | No | No |
 
-The `edit-board` capability exists in the domain policy for the next product
-slice, but no board endpoints are implemented yet.
+All board writes request the existing `edit-board` capability.
 
 ## Errors
 
@@ -114,6 +175,7 @@ slice, but no board endpoints are implemented yet.
 | `403 Forbidden` | A farm member is known but lacks the required capability |
 | `404 Not Found` | Resource absent, invite inactive, user identifier absent, or caller is not a farm member |
 | `409 Conflict` | Unique account/membership conflict or failed concurrent ownership transition |
+| `503 Service Unavailable` | Farm creation cannot resolve an active seeded catalog |
 
 Returning `404` for a non-member is deliberate: it avoids confirming whether a
 farm exists. Clients should branch on status and user intent, not parse error
@@ -121,7 +183,6 @@ message strings as a stable machine contract.
 
 ## Direction
 
-Catalog reads, board state, collection mutations, claim mutations, and
-real-time events remain roadmap work. Their wire shapes will be documented only
-when implemented. If the API adopts OpenAPI, generated schemas become the
-detailed reference while this page remains the guide to lifecycle and policy.
+Real-time events remain roadmap work. If the API adopts OpenAPI, generated
+schemas become the detailed reference while this page remains the guide to
+lifecycle and policy.

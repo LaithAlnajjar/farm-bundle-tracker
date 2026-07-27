@@ -9,7 +9,8 @@ Run workspace commands from the repository root:
 npm run dev:backend
 npm run build -w backend
 npm test -w backend -- --runInBand
-npm run db:push -w backend
+npm run test:integration -w backend
+npm run db:migrate -w backend
 npm run db:seed:catalog -w backend
 ```
 
