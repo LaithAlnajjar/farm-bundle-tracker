@@ -156,6 +156,32 @@ Use `cn` for conditional class composition and
 `class-variance-authority` for reusable component variants. Product copy and
 feature behavior must not leak into generic UI primitives.
 
+## Sprites
+
+Artwork lives under `public/assets` and is served as plain files, never bundled:
+
+```text
+assets/items/<catalog-slug>.png   # 16×16, one per catalog item
+assets/icons/<name>.png           # 16×16 UI glyphs (IconName)
+assets/rooms/bundle-<tone>.png    # 16×16 Junimo Note bundle pouches
+assets/avatars/<villager>.png     # 64×64 portraits (AvatarName)
+```
+
+Four components read them, and nothing else should build these paths by hand:
+
+- `ItemSprite` — an item's own sprite by catalog slug, falling back to the
+  category glyph via `categoryIcon` when a custom catalog carries a slug we
+  have no artwork for
+- `PixelIcon` — a UI glyph from the `IconName` union
+- `BundleSprite` — a room's pouch, chosen by `roomTone`
+- `PixelAvatar` / `UserBadge` — a villager portrait; `avatarForUser` deals one
+  per account id so a member always wears the same face
+
+Every sprite renders with `image-rendering: pixelated`. Sizes should stay whole
+multiples of the source (16/32/48 for sprites, 64 for portraits) so pixels land
+on a clean grid. See `public/assets/README.md` for where the art came from and
+how to refresh it.
+
 ## Naming
 
 - React components and pages: `PascalCase`, with route pages ending in `Page`
