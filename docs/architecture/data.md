@@ -80,7 +80,7 @@ rules live beside the seed in the
 
 ## Current schema workflow
 
-The repository contains a baseline and a Phase 3 tracking migration. Fresh
+The repository contains a baseline and a bundle-tracking migration. Fresh
 databases apply them in order:
 
 ```bash

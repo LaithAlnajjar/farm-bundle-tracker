@@ -23,7 +23,7 @@ collection, N-of-M cleanup, attribution, and both farm join paths.
 
 The frontend has no automated test suite. It is gated by lint and the
 type-checked production build only; board logic is reviewed through the
-development fixture route below. Browser E2E remains Phase 6 work.
+development fixture route below. Browser E2E is not implemented yet.
 
 ```bash
 npm run test:integration -w backend
@@ -94,4 +94,5 @@ update, structural-drift, and rollback cases remain useful extensions.
 
 CI runs backend/frontend lint, backend unit tests, PostgreSQL-backed HTTP
 tests, and both builds. It applies committed migrations to a fresh service and
-seeds the catalog before integration tests. Browser coverage joins in Phase 6.
+seeds the catalog before integration tests. Browser coverage remains a future
+improvement.

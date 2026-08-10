@@ -76,11 +76,11 @@ the active board polls every 15 seconds, and focus triggers a refetch. The local
 PostgreSQL only. Production containers, a reverse proxy, TLS, backups,
 continuous delivery, and persistent push connections are not present.
 
-## Direction
+## Potential improvements
 
-After the board's two-account mobile acceptance pass, the roadmap adds a
-production topology and then an authenticated, farm-scoped push channel with
-reconnect and resynchronization semantics.
+A production topology and an authenticated, farm-scoped push channel with
+reconnect and resynchronization semantics are natural next steps after the
+board's two-account mobile acceptance pass.
 
 Those additions should preserve the current ownership rules:
 
@@ -89,8 +89,6 @@ Those additions should preserve the current ownership rules:
   than stored as editable truth.
 - The browser continues to treat the server as the authority and uses its query
   cache as a synchronized projection, not an independent data store.
-- Deployment documentation is written from the delivered topology, not from a
-  speculative design.
 
 Continue with the [frontend](./frontend.md), [backend](./backend.md), or
 [data](./data.md) architecture guide. The [API contract](../reference/api.md)

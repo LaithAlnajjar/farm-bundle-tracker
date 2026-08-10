@@ -181,8 +181,8 @@ Returning `404` for a non-member is deliberate: it avoids confirming whether a
 farm exists. Clients should branch on status and user intent, not parse error
 message strings as a stable machine contract.
 
-## Direction
+## Potential improvements
 
-Real-time events remain roadmap work. If the API adopts OpenAPI, generated
-schemas become the detailed reference while this page remains the guide to
-lifecycle and policy.
+Real-time events are not currently implemented. If the API adopts OpenAPI,
+generated schemas can become the detailed reference while this page remains
+the guide to lifecycle and policy.

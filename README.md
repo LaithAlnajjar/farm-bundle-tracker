@@ -7,8 +7,8 @@ are still needed and who has claimed them.
 
 The project is also a deliberately complete engineering exercise: a React
 client, a layered NestJS API, PostgreSQL persistence, rotating sessions,
-role-based collaboration, validated reference data, and a roadmap toward
-real-time synchronization and production delivery.
+role-based collaboration, validated reference data, and a responsive shared
+board with explicit authorization boundaries.
 
 ![Farm collaboration management screen](./docs/assets/farm-management.png)
 
@@ -24,9 +24,6 @@ share expiring invite links, and manage farm settings.*
 | Community Center catalog | Versioned 1.6.15 manifest, validated idempotent seed, and authenticated read API | Production seeding |
 | Bundle tracking | Version-bound farm boards, shared season, collection state, claims, filters, and derived progress | Two-browser mobile acceptance |
 | Live updates and delivery | 15-second board polling and focus refetch | Production deployment, then authenticated real-time sync |
-
-The [living implementation plan](./docs/IMPLEMENTATION_PLAN.md) records what is
-delivered and what remains without presenting roadmap work as finished.
 
 ## Engineering highlights
 
@@ -91,7 +88,5 @@ continue into the [frontend](./docs/architecture/frontend.md),
 ## Documentation
 
 - [Documentation handbook](./docs/README.md) — routes readers by task
-- [Product requirements](./docs/PRD.md) — v1 problem, scope, and success criteria
-- [Implementation plan](./docs/IMPLEMENTATION_PLAN.md) — delivered work and roadmap
 - [Contributing](./CONTRIBUTING.md) — boundaries, checks, and definition of done
 - [Architecture decisions](./docs/decisions.md) — consequential choices and tradeoffs

@@ -1,17 +1,12 @@
 # Documentation handbook
 
-This handbook explains the product, the implemented system, and the direction
-of the v1 build. It is organized so a reader can stop at the level of detail
-they need.
+This handbook explains the product and its implemented system. It is organized
+so a reader can stop at the level of detail they need.
 
 ## Evaluate the project
 
 - [Repository overview](../README.md) — product, current capabilities, stack,
   and engineering highlights
-- [Product requirements](./PRD.md) — users, flows, domain, non-goals, and v1
-  success criteria
-- [Implementation plan](./IMPLEMENTATION_PLAN.md) — current progress,
-  milestone order, and remaining work
 - [Architecture decisions](./decisions.md) — why the consequential technical
   choices were made
 
@@ -41,10 +36,9 @@ they need.
 
 ## How these documents stay honest
 
-Architecture pages describe the current implementation first, then explain the
-direction already committed in the product plan. The PRD owns product intent;
-the implementation plan owns delivery status. A missing feature should not be
-described as available merely because its shape is known.
+Architecture pages describe the current implementation first and label
+potential improvements clearly. A missing feature should not be described as
+available merely because its shape is known.
 
 Package READMEs are local signposts. Setup defaults, API behavior, and
 architecture conventions remain authoritative here so they do not drift across
