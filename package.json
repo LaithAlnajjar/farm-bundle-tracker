@@ -5,17 +5,15 @@
     "apps/*"
   ],
   "scripts": {
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces",
+    "lint:check": "npm run lint:check --workspaces",
+    "test": "npm test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces",
     "db:up": "docker compose up -d postgres",
     "db:down": "docker compose down",
     "db:reset": "docker compose down -v",
     "dev:backend": "DOTENV_CONFIG_PATH=../../.env npm run start:dev -w backend",
     "dev:frontend": "DOTENV_CONFIG_PATH=../../.env npm run dev -w frontend"
-  },
-  "dependencies": {
-    "jsonwebtoken": "^9.0.3"
-  },
-  "devDependencies": {
-    "@types/jest": "^30.0.0",
-    "@types/jsonwebtoken": "^9.0.10"
   }
 }

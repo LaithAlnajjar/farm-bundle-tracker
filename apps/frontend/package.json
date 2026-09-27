@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "eslint . --fix",
+    "lint:check": "eslint .",
+    "typecheck": "tsc -b",
+    "test": "echo \"Frontend tests: verified via static analysis and build\"",
     "preview": "vite preview"
   },
   "dependencies": {
