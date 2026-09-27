@@ -7,21 +7,31 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  validate:
+    name: Lint, Typecheck, Test & Build
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@v4
         with:
           node-version: "24"
-          package-manager-cache: false
+          cache: "npm"
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Run backend tests
-        run: npm test -w backend -- --runInBand
+      - name: Lint (all workspaces)
+        run: npm run lint:check
+
+      - name: Typecheck (all workspaces)
+        run: npm run typecheck
+
+      - name: Run test suites
+        run: npm test
+
+      - name: Build applications (all workspaces)
+        run: npm run build
