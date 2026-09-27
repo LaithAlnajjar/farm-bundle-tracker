@@ -18,6 +18,8 @@ describe('ListFarmsUseCase', () => {
           id: 1,
           name: 'Farm One',
           userId: 42,
+          catalogVersionId: 1,
+          currentSeason: 'spring' as const,
           createdAt: mockDate,
           updatedAt: mockDate,
           deletedAt: null,

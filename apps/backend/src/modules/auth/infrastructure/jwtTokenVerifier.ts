@@ -36,7 +36,8 @@ export class JwtTokenVerifier implements TokenVerifier {
     }
 
     return (
-      (typeof payload.userId === 'string' || typeof payload.userId === 'number') &&
+      (typeof payload.userId === 'string' ||
+        typeof payload.userId === 'number') &&
       Number.isInteger(Number(payload.userId)) &&
       typeof payload.email === 'string'
     );

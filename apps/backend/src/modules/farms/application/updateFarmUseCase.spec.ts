@@ -1,6 +1,7 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { UpdateFarmUseCase } from './updateFarmUseCase';
 import type { FarmRepository } from '../domain/repositories/farm.repository';
+import type { Farm } from '../domain/entities/farm';
 
 describe('UpdateFarmUseCase', () => {
   let updateFarmUseCase: UpdateFarmUseCase;
@@ -22,10 +23,12 @@ describe('UpdateFarmUseCase', () => {
 
   it('updates the farm when it exists and belongs to the user', async () => {
     const mockDate = new Date();
-    const mockFarm = {
+    const mockFarm: Farm = {
       id: 1,
       name: 'Updated Farm',
       userId: 42,
+      catalogVersionId: 1,
+      currentSeason: 'spring',
       createdAt: mockDate,
       updatedAt: mockDate,
       deletedAt: null,
@@ -61,7 +64,11 @@ describe('UpdateFarmUseCase', () => {
     updateName.mockResolvedValue(null);
 
     await expect(
-      updateFarmUseCase.execute({ id: 1, userId: 42, name: 'Updated Farm' }),
+      updateFarmUseCase.execute({
+        id: 1,
+        userId: 42,
+        name: 'Updated Farm',
+      }),
     ).rejects.toThrow(NotFoundException);
 
     expect(updateName).toHaveBeenCalledWith({

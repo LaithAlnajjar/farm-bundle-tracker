@@ -1,6 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { CreateFarmUseCase } from './createFarmUseCase';
 import type { FarmRepository } from '../domain/repositories/farm.repository';
+import type { Farm } from '../domain/entities/farm';
 
 describe('CreateFarmUseCase', () => {
   let createFarmUseCase: CreateFarmUseCase;
@@ -22,10 +23,12 @@ describe('CreateFarmUseCase', () => {
 
   it('creates a farm belonging to the user', async () => {
     const mockDate = new Date();
-    const mockFarm = {
+    const mockFarm: Farm = {
       id: 1,
       name: 'test',
       userId: 1,
+      catalogVersionId: 1,
+      currentSeason: 'spring',
       createdAt: mockDate,
       updatedAt: mockDate,
       deletedAt: null,

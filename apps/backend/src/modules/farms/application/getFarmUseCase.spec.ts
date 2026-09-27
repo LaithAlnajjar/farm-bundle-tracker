@@ -1,6 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { GetFarmUseCase } from './getFarmUseCase';
 import type { FarmRepository } from '../domain/repositories/farm.repository';
+import type { Farm } from '../domain/entities/farm';
 
 describe('GetFarmUseCase', () => {
   let getFarmUseCase: GetFarmUseCase;
@@ -22,10 +23,12 @@ describe('GetFarmUseCase', () => {
 
   it('finds a farm with the given id and userId', async () => {
     const mockDate = new Date();
-    const mockFarm = {
+    const mockFarm: Farm = {
       id: 1,
       name: 'test',
       userId: 1,
+      catalogVersionId: 1,
+      currentSeason: 'spring',
       createdAt: mockDate,
       updatedAt: mockDate,
       deletedAt: null,

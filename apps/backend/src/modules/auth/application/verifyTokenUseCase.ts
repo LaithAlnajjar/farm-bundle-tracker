@@ -8,9 +8,9 @@ export class VerifyTokenUseCase {
     @Inject(TOKEN_VERIFIER) private readonly tokenVerifier: TokenVerifier,
   ) {}
 
-  async execute(token: string): Promise<{ userId: number; email: string }> {
-    const { userId, email } = await this.tokenVerifier.verify(token);
+  execute(token: string): Promise<{ userId: number; email: string }> {
+    const { userId, email } = this.tokenVerifier.verify(token);
 
-    return { userId, email };
+    return Promise.resolve({ userId, email });
   }
 }
