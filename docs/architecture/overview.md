@@ -72,17 +72,19 @@ farm-scoped board. Owners and editors can update the shared season, collections,
 and claims; viewers receive the same projection without write controls.
 
 Synchronization is request/refetch based: mutations replace the board cache,
-the active board polls every 15 seconds, and focus triggers a refetch. The local Compose topology provides
-PostgreSQL only. Production containers, a reverse proxy, TLS, backups,
-continuous delivery, and persistent push connections are not present.
+the active board polls every 15 seconds, and focus triggers a refetch.
+Local development provides PostgreSQL through Docker Compose, while production
+runs on AWS Lightsail with containerized NestJS, managed PostgreSQL volumes,
+and Nginx reverse proxying with automated TLS termination and static asset
+serving (detailed in the [AWS Lightsail deployment guide](../deployment/lightsail.md)).
 
 ## Potential improvements
 
-A production topology and an authenticated, farm-scoped push channel with
-reconnect and resynchronization semantics are natural next steps after the
-board's two-account mobile acceptance pass.
+An authenticated, farm-scoped push channel (e.g. WebSockets / SSE) with
+reconnect and resynchronization semantics is a natural future enhancement to
+complement the existing 15-second polling synchronization.
 
-Those additions should preserve the current ownership rules:
+Any additions should preserve the established ownership rules:
 
 - HTTP and real-time entry points reuse the same farm authorization policy.
 - Derived bundle, room, and farm progress is computed from slot state rather
@@ -92,4 +94,5 @@ Those additions should preserve the current ownership rules:
 
 Continue with the [frontend](./frontend.md), [backend](./backend.md), or
 [data](./data.md) architecture guide. The [API contract](../reference/api.md)
-describes the implemented HTTP surface.
+describes the implemented HTTP surface, and the [deployment guide](../deployment/lightsail.md)
+covers the production deployment.
