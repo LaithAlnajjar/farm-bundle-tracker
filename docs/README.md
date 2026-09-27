@@ -23,12 +23,6 @@ so a reader can stop at the level of detail they need.
 5. [API contract](./reference/api.md) — implemented route groups, session
    behavior, permissions, validation, and errors
 
-## Deploy to production
-
-- [AWS Lightsail deployment guide](./deployment/lightsail.md) — single-instance
-  Ubuntu architecture, Docker Compose topology, Nginx reverse proxy, TLS,
-  process supervision, zero-downtime updates, and production operations.
-
 ## Run or change the project
 
 - [Development setup](./development/setup.md) is the source of truth for

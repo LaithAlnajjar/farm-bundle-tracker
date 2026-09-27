@@ -8,7 +8,7 @@
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
 [![NestJS](https://img.shields.io/badge/NestJS-11-E0234E?style=for-the-badge&logo=nestjs)](https://nestjs.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
-[![AWS Lightsail](https://img.shields.io/badge/AWS-Lightsail-FF9900?style=for-the-badge&logo=amazon-aws)](https://aws.amazon.com/lightsail/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
 **A shared, real-time planning board for multiplayer Stardew Valley farms.**
 
@@ -27,7 +27,7 @@ Beyond gameplay utility, this project is a production-grade full-stack reference
 - **Enterprise-Grade Authentication:** Short-lived in-memory access tokens paired with rotating hashed refresh tokens in `HttpOnly`, `SameSite` cookies.
 - **Capability-Based Access Control:** Zero resource-enumeration leaks (unauthorized farm access yields generic `404 Not Found`).
 - **Transactional State Reconciliation:** Atomic collection operations that automatically release slot and bundle claims upon completion.
-- **Production-Hardened Infrastructure:** Containerized API and PostgreSQL deployed to AWS Lightsail behind an automated TLS-terminating Nginx reverse proxy.
+- **Production-Hardened Infrastructure:** Containerized API and PostgreSQL deployed behind an automated TLS-terminating Nginx reverse proxy.
 
 ---
 
@@ -77,7 +77,7 @@ The application is deployed live in production at **[https://bundle-tracker.com]
 | **Catalog Engine** | Stardew Valley 1.6.15 reference catalog with provenance manifest, SHA checksums, and idempotent migration seeder. | Immutable catalog schema with slot-level metadata and image spritesheet assets. |
 | **Bundle Tracking** | Version-bound farm state, active season switching, item collection toggles, personal task claims. | Relational integrity in PostgreSQL 16; atomic claim release on collection. |
 | **Live Sync** | 15-second adaptive polling with automatic window focus refetch and optimistic cache updates. | TanStack Query cache synchronization with server-authoritative reconciliation. |
-| **Production Delivery** | Containerized deployment on AWS Lightsail, systemd process supervision, Nginx reverse proxy, Certbot SSL. | Multi-stage Docker builds, isolated internal Docker network, zero exposed DB ports. |
+| **Production Delivery** | Containerized deployment, systemd process supervision, Nginx reverse proxy, Certbot SSL. | Multi-stage Docker builds, isolated internal Docker network, zero exposed DB ports. |
 
 ---
 
@@ -91,7 +91,7 @@ flowchart TD
         TokenMemory["In-Memory Access Token"]
     end
 
-    subgraph Host ["AWS Lightsail Production Host"]
+    subgraph Host ["Production Host"]
         Nginx["Nginx Reverse Proxy & TLS (Port 443)"]
         StaticFS["Built SPA Static Assets"]
 
@@ -129,7 +129,7 @@ flowchart TD
 | **Backend API** | NestJS 11, Node.js 24, TypeScript, class-validator, class-transformer |
 | **Database & ORM** | PostgreSQL 16, Drizzle ORM, Drizzle Kit |
 | **Security & Auth** | JSON Web Tokens (HMAC-SHA256), bcrypt password hashing, HTTP-only SameSite cookies |
-| **Production Infrastructure** | AWS Lightsail (Ubuntu LTS), Docker Compose, Nginx, Let's Encrypt / Certbot |
+| **Production Infrastructure** | Linux, Docker Compose, Nginx, Let's Encrypt / Certbot |
 | **Developer Experience** | npm workspaces, ESLint 9/10 (flat config), Prettier, Jest, GitHub Actions CI |
 
 ---
@@ -198,7 +198,6 @@ Continuous integration runs on every pull request and push to `main` via [GitHub
 Comprehensive engineering documentation is available in [`docs/`](./docs/):
 
 - **[Documentation Handbook](./docs/README.md)** — Master index and reading guide.
-- **[AWS Lightsail Deployment Guide](./docs/deployment/lightsail.md)** — In-depth production runbook covering Nginx, SSL, Docker Compose, and zero-downtime updates.
 - **[Architecture Decisions Log (ADRs)](./docs/decisions.md)** — Context, tradeoffs, and consequences for major technical choices.
 - **[System Architecture Overview](./docs/architecture/overview.md)** — System boundaries, data flow, and state ownership.
 - **[Frontend Architecture](./docs/architecture/frontend.md)** — Feature-first structure, cache strategy, and component composition.

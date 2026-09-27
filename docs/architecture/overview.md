@@ -74,9 +74,7 @@ and claims; viewers receive the same projection without write controls.
 Synchronization is request/refetch based: mutations replace the board cache,
 the active board polls every 15 seconds, and focus triggers a refetch.
 Local development provides PostgreSQL through Docker Compose, while production
-runs on AWS Lightsail with containerized NestJS, managed PostgreSQL volumes,
-and Nginx reverse proxying with automated TLS termination and static asset
-serving (detailed in the [AWS Lightsail deployment guide](../deployment/lightsail.md)).
+runs containerized NestJS and PostgreSQL services behind a reverse proxy.
 
 ## Potential improvements
 
@@ -94,5 +92,4 @@ Any additions should preserve the established ownership rules:
 
 Continue with the [frontend](./frontend.md), [backend](./backend.md), or
 [data](./data.md) architecture guide. The [API contract](../reference/api.md)
-describes the implemented HTTP surface, and the [deployment guide](../deployment/lightsail.md)
-covers the production deployment.
+describes the implemented HTTP surface.
