@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-bundle--tracker.com-brightgreen?style=for-the-badge&logo=google-chrome)](https://bundle-tracker.com)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-app.bundle--tracker.com-brightgreen?style=for-the-badge&logo=google-chrome)](https://app.bundle-tracker.com)
 [![CI](https://img.shields.io/badge/CI-Passing-success?style=for-the-badge&logo=githubactions)](https://github.com/LaithAlnajjar/farm-bundle-tracker/actions)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
@@ -12,7 +12,7 @@
 
 **A shared, real-time planning board for multiplayer Stardew Valley farms.**
 
-[**Explore Live Production App → https://bundle-tracker.com**](https://bundle-tracker.com)
+[**Explore Live Production App → https://app.bundle-tracker.com**](https://app.bundle-tracker.com)
 
 </div>
 
@@ -33,10 +33,10 @@ Beyond gameplay utility, this project is a production-grade full-stack reference
 
 ## ⚡ Try It Live (30-Second Tour)
 
-The application is deployed live in production at **[https://bundle-tracker.com](https://bundle-tracker.com)**.
+The application is deployed live in production at **[https://app.bundle-tracker.com](https://app.bundle-tracker.com)**.
 
 1. **Instant Access:**
-   - Click **[bundle-tracker.com](https://bundle-tracker.com)**.
+   - Click **[app.bundle-tracker.com](https://app.bundle-tracker.com)**.
    - Register any test account (e.g. `reviewer@example.com` / `reviewer1` / password `password123`) — no email verification required.
 2. **Create or Join a Farm:**
    - Create your own farm in one click (e.g., *"Starfruit Acres"*).
